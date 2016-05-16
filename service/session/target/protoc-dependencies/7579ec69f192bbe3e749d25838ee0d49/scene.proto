@@ -1,0 +1,198 @@
+import "weizhu.proto";
+import "community.proto";
+import "discover_v2.proto";
+
+package weizhu.scene;
+
+option java_package         = "com.weizhu.proto";
+option java_outer_classname = "SceneProtos";
+// option optimize_for = LITE_RUNTIME;
+
+// 内容状态
+enum State {
+  NORMAL  = 0;
+  DISABLE = 1;
+  DELETE  = 2;
+}
+
+// 场景
+message Scene {
+  required int32  scene_id          = 1; // 场景id
+  required string scene_name        = 2; // 场景名称
+  required string image_name        = 3; // 场景图标. 带后缀名图片名称，格式(md5.jpg). 根据scene image服务地址可以拼接为完整访问url
+  required string scene_desc        = 4; // 场景介绍描述，最多10个字
+  optional int32  parent_scene_id   = 5; // 父场景id，不填该字段表示为根场景
+  required bool   is_leaf_scene     = 6; // 是否是叶子场景。叶子场景可以有条目，非叶子场景不能有条目且必须获取下一级场景列表
+  optional string item_id_order_str = 7; // 条目id序列，用于为条目排序
+  required State  state             = 8; // 场景状态，删除，作废和正常显示三个状态
+  required int64  create_admin_id   = 9; // 创建场景的管理员id
+  required int32  create_time       = 10; // 创建时间
+  optional int64  update_admin_id   = 11; // 修改场景的管理员id
+  optional int32  update_time       = 12; // 修改时间
+}
+
+// 条目
+message Item {
+ 
+  // 场景中条目的索引 
+  message ItemIndex {
+    required int32  item_id              = 1; // 条目id
+    required int32  scene_id             = 2; // 场景id
+    optional int64  discover_item_id     = 3; // 发现中的条目id
+    optional int32  community_item_id    = 4; // 社区中的条目id
+    optional int32  item_order           = 5; // 条目显示时的序号
+    required State  state                = 6; // 条目状态，删除，作废和正常显示三个状态
+    required int64  create_admin_id      = 7; // 创建条目的管理员id
+    required int32  create_time          = 8; // 创建时间
+    optional int64  update_admin_id      = 9; // 修改条目的管理员id
+    optional int32  update_time          = 10; // 修改时间
+  }
+  
+  required ItemIndex    item_index   = 1; // 场景中条目的索引   
+  
+  // 点击模块展示的内容
+  oneof source_item {
+    weizhu.discover_v2.Item.Base  discover_item   = 2; // 发现中的条目
+    weizhu.community.Post         community_post  = 3; // 社区中的帖子
+  }
+}
+
+
+// 获取场景主页信息
+message GetSceneHomeResponse {
+  repeated Scene   scene          = 1; // 场景列表 
+}
+
+message GetSceneItemRequest {
+  optional int32  scene_id       = 1; // 场景id
+  optional int32  size           = 2; // 获取数据大小，不能为0，最大100.超过100自动裁剪为100
+  optional bytes  offset_index   = 3; // 获取数据偏移索引。初次获取，不设此字段。翻页时传入上次获取到的值  
+  optional string item_title     = 4; // 条目的标题，模糊查询的关键字
+}
+
+message GetSceneItemResponse {
+  repeated Item   item           = 1; // 条目列表
+  required bool   has_more       = 2; // 是否还有更多
+  required bytes  offset_index   = 3; // 翻页偏移索引
+}
+
+
+
+
+
+// 工具－－盖帽神器（超值推荐）
+
+
+// 分类
+message RecommenderCategory {
+  required int32  category_id                = 1; // 分类id
+  required string category_name              = 2; // 分类名称
+  required string image_name                 = 3; // 分类图标. 带后缀名图片名称，格式(md5.jpg). 根据tool image服务地址可以拼接为完整访问url
+  required string category_desc              = 4; // 分类介绍描述，最多10个字
+  optional int32  parent_category_id         = 5; // 父分类id，不填该字段表示为根分类
+  required bool   is_leaf_category           = 6; // 是否是叶子分类。叶子分类可以有条目，非叶子分类不能有条目且必须获取下一级分类列表
+  required State  state                      = 7; // 分类状态，删除，作废和正常显示三个状态
+  required int64  create_admin_id            = 8; // 创建分类的管理员id
+  required int32  create_time                = 9; // 创建时间
+  optional int64  update_admin_id            = 10; // 修改分类的管理员id
+  optional int32  update_time                = 11; // 修改时间
+}
+
+// 竞争对手的条目
+message RecommenderCompetitorProduct {
+  required int32  competitor_product_id     = 1; // 竞争对手的产品id
+  required string competitor_product_name   = 2; // 竞争对手的产品名称
+  required string image_name                = 3; // 产品图标. 带后缀名图片名称，格式(md5.jpg). 根据tool image服务地址可以拼接为完整访问url
+  required int32  category_id               = 4; // 分类id
+  optional int32  allow_model_id            = 5; // 
+  required State  state                     = 6; // 条目状态，删除，作废和正常显示三个状态
+  required int64  create_admin_id           = 7; // 创建条目的管理员id
+  required int32  create_time               = 8; // 创建时间
+  optional int64  update_admin_id           = 9; // 修改条目的管理员id
+  optional int32  update_time               = 10; // 修改时间
+}
+
+// 推荐的条目
+message RecommenderRecommendProduct {
+  required int32                  recommend_product_id   = 1; // 推荐的产品id
+  required string                 recommend_product_name = 2; // 推荐的产品名称
+  required string                 recommend_product_desc = 3; // 推荐的产品名称
+  required string                 image_name             = 4; // 产品图标. 带后缀名图片名称，格式(md5.jpg). 根据tool image服务地址可以拼接为完整访问url
+  optional int32                  allow_model_id         = 5; // 
+  required State                  state                  = 6; // 条目状态，删除，作废和正常显示三个状态
+  required int64                  create_admin_id        = 7; // 创建条目的管理员id
+  required int32                  create_time            = 8; // 创建时间
+  optional int64                  update_admin_id        = 9; // 修改条目的管理员id
+  optional int32                  update_time            = 10; // 修改时间
+  repeated RecommenderPriceWebUrl price_web_url          = 11; // 产品价格参考页面的url
+  
+  // 点击条目显示的内容
+  oneof content {
+    weizhu.discover_v2.WebUrl   web_url  = 12; // web链接
+    weizhu.discover_v2.Document document = 13; // 文档类型课件
+    weizhu.discover_v2.Video    video    = 14; // 视频类型课件
+    weizhu.discover_v2.Audio    audio    = 15; // 音频类型课件
+    weizhu.discover_v2.AppUri   app_uri  = 16; // app内部跳转uri
+  }
+}
+
+// 产品价格的web页面url
+message RecommenderPriceWebUrl {
+  required int32  url_id                = 1; // ID
+  required int32  recommend_product_id  = 2; // 推荐的产品id
+  required string url_name              = 3; // url名称
+  required string url_content           = 4; // url地址内容
+  required string image_name            = 5; // web页面地址图片
+  required bool   is_weizhu             = 6; // 是否是微助自己的url。true: 微助的url，需要带上身份cookie。 false: 外部url，不要带上身份cookie
+  required int64  create_admin_id       = 7; // 创建条目的管理员id
+  required int32  create_time           = 8; // 创建时间
+}
+
+// 获取超值推荐的所有分类
+message GetRecommenderHomeResponse {
+  repeated RecommenderCategory   category   = 1; // 分类列表
+}
+
+// 获取竞争对手的产品请求
+// competitor_product_name有值时为全量搜索
+message GetRecommenderCompetitorProductRequest {
+  optional int32  category_id               = 1; // 一级分类id
+  optional string competitor_product_name   = 2; // 用于模糊搜索
+  optional bytes  offset_index              = 3; // 获取数据偏移索引。初次获取，不设此字段。翻页时传入上次获取到的值
+  required int32  size                      = 4; // 获取数目，必须小于等于100
+}
+message GetRecommenderCompetitorProductResponse {
+  repeated RecommenderCompetitorProduct   competitor_product  = 1; // 分类列表
+  required bool                has_more            = 2; // 是否还有更多
+  required bytes               offset_index        = 3; // 翻页偏移索引
+}
+
+// 获取推荐的产品请求
+message GetRecommenderRecommendProductRequest {
+  required int32  competitor_product_id     = 1; // 竞争对手的产品id
+}
+message GetRecommenderRecommendProductResponse {
+  repeated RecommenderRecommendProduct    recommend_product   = 1; // 分类列表
+}
+
+service SceneService {
+  
+  // 获取场景基本信息
+  rpc GetSceneHome (weizhu.EmptyRequest) returns (GetSceneHomeResponse);
+  
+  // 获取场景条目
+  rpc GetSceneItem (GetSceneItemRequest) returns (GetSceneItemResponse);
+  
+  
+  
+  // 工具－－盖帽神器（超值推荐）
+  
+  // 获取超值推荐的所有分类
+  rpc GetRecommenderHome (weizhu.EmptyRequest) returns (GetRecommenderHomeResponse);
+  
+  // 获取竞争对手的产品请求
+  rpc GetRecommenderCompetitorProduct (GetRecommenderCompetitorProductRequest) returns (GetRecommenderCompetitorProductResponse);
+   
+  // 获取推荐的产品请求
+  rpc GetRecommenderRecommendProduct (GetRecommenderRecommendProductRequest) returns (GetRecommenderRecommendProductResponse);
+}

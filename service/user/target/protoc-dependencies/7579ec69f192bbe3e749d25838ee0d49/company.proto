@@ -1,0 +1,48 @@
+import "weizhu.proto";
+
+package weizhu.company;
+
+option java_package = "com.weizhu.proto";
+option java_outer_classname = "CompanyProtos";
+
+message Company {
+  required int64  company_id   = 1;
+  required string company_name = 2;
+  repeated string company_key  = 3;
+  required string server_name  = 4;
+}
+
+message Server {
+  message Address {
+    required string host = 1;
+    required int32  port = 2;
+  }
+  required string  server_name = 1;
+  repeated Address address     = 2;
+}
+
+message VerifyCompanyKeyRequest {
+  required string company_key = 1;
+}
+
+message VerifyCompanyKeyResponse {
+  optional Company company = 1;
+}
+
+message GetCompanyResponse {
+  optional Company company = 1;
+}
+
+message GetCompanyListResponse {
+  repeated Company company = 1; 
+}
+
+service CompanyService {
+
+  rpc VerifyCompanyKey (VerifyCompanyKeyRequest) returns (VerifyCompanyKeyResponse);
+  
+  rpc GetCompany (weizhu.EmptyRequest) returns (GetCompanyResponse);
+  
+  rpc GetCompanyList (weizhu.EmptyRequest) returns (GetCompanyListResponse);
+  
+}

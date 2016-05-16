@@ -1,0 +1,85 @@
+import "weizhu.proto";
+package weizhu.boss;
+
+option java_package = "com.weizhu.proto";
+option java_outer_classname = "BossProtos";
+
+// Boss会话信息
+message BossSession {
+  required string boss_id    = 1; // boss id
+  required int64  session_id = 2; // 会话id
+}
+
+message BossSessionData {
+  required BossSession session     = 1;
+  required int32       login_time  = 2; // 登录时间戳(单位:秒)
+  required string      login_host  = 3;
+  required string      user_agent  = 4;
+  required int32       active_time = 5; // 最近访问服务器时间戳(单位:秒)
+  optional int32       logout_time = 6;
+}
+
+// 匿名Boss身份
+message BossAnonymousHead {
+  required string request_uri = 1; // 请求web uri
+  required string user_agent  = 2; // 浏览器UA
+  required string remote_host = 3; // 调用客户端ip
+  optional int64  company_id  = 4; 
+}
+
+// Boss请求头
+message BossHead {
+  required BossSession session     = 1; // 会话信息
+  required string      request_uri = 2; // 请求web uri
+  required string      user_agent  = 3; // 浏览器UA
+  required string      remote_host = 4; // 调用客户端ip
+  optional int64       company_id  = 5; 
+}
+
+message VerifySessionRequest {
+  required string session_key = 1; // 会话Key
+}
+
+message VerifySessionResponse {
+  // 验证会话Key返回结果
+  enum Result {
+    SUCC                    = 0; // 验证成功
+    FAIL_SESSION_DECRYPTION = 1; // 会话Key解码失败
+    FAIL_SESSION_EXPIRED    = 2; // 会话Key过期
+    
+    FAIL_UNKNOWN            = 99;
+  }
+  
+  optional Result       result    = 1 [default = FAIL_UNKNOWN]; // 调用结果 
+  optional string       fail_text = 2; // 失败文本
+  optional BossSession  session   = 3; // 会话信息
+}
+
+// boss登陆请求
+message LoginRequest {
+  required string boss_id       = 1; // boss id
+  required string boss_password = 2; // boss密码
+}
+
+// boss登陆返回
+message LoginResponse {
+  enum Result {
+    SUCC                   = 0; // 调用成功
+    FAIL_PASSWORD_INVALID  = 1; // 管理员密码格式错误
+    
+    FAIL_UNKNOWN           = 99;
+  }
+  optional Result result      = 1 [default = FAIL_UNKNOWN]; // 调用结果 
+  optional string fail_text   = 2; // 错误文本, 供客户端展示
+  optional string session_key = 3; // 会话key
+}
+
+service BossService {
+
+  rpc VerifySession (VerifySessionRequest) returns (VerifySessionResponse);
+
+  rpc Login (LoginRequest) returns (LoginResponse);
+  
+  rpc Logout (weizhu.EmptyRequest) returns (weizhu.EmptyResponse);
+
+}

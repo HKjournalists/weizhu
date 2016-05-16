@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<meta name="format-detection" content="telephone=no">
+		<title>讲师认证</title>
+		<link type="text/css" rel="stylesheet" href="./common2.css"/>
+		<script type="text/javascript" src="./zepto.js"></script>
+		<script type="text/javascript" src="./template-native.js"></script>
+		<style type="text/css">
+			#basic-info{
+				height:120px;
+			}
+			#basic-info .bcg{
+				background:url(../images/train/thumb.png) no-repeat;
+				width:100%;
+				height:120px;
+				position:absolute;
+				-webkit-filter:brightness(.5);
+				z-index:0;
+			}
+			.is-apply{
+				position:absolute;
+				left:12px;
+				top:12px;
+				width:40px;
+				height:40px;
+			}
+			.theme-area{
+				float:left;
+				height:100px;
+				padding:12px 0px 12px 12px;
+				
+				width:35%;
+			}
+			.theme-icon{
+				width:80%;
+				height:95%;
+			}
+			.verify-icon{
+				position: absolute;
+			    left: 12px;
+			    top: 83px;
+			    width: 28%;
+			    height: 23px;
+			}
+			.theme-desc{
+				margin-left:35%;
+				width:60%;
+				height:100px;
+				
+				padding-top:12px;
+			}
+			.content{
+				position:absolute;
+				z-index:1;
+				width:100%;
+				
+			}
+			.theme-title{
+				
+				height:50px;
+				color:#fff;
+				
+			}
+			.number{
+				height:43px;
+				padding-top:20px;
+				display:none;
+			}
+			.total{
+				margin-top:4px;
+				color:#d7d5d5;
+				display:inline-block;
+				float:left;
+				font-size:14px;
+			}
+			.total:before{
+				content:"";;
+				display:inline-block;
+				
+				background:url(../images/train/portrait.png) no-repeat;
+				background-size:18px 28px;
+				width:18px;
+				height:28px;
+				margin-right:10px;
+				vertical-align:top;
+				
+			}
+			.real{
+				color:#ffffff;
+				margin-top:4px;
+				display:inline-block;
+				float:right;
+				margin-right:12px;
+				
+			}
+			.input-comments::-webkit-input-placeholder{
+				font-size:14px;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="main_wraper">
+			<section id="basic-info">
+				
+				<div>
+			</section>
+			<script type="text/template" id="basic-info-html">
+				<div class="bcg"></div>
+				<div class="content">
+					<div class="theme-area"><%if(!!image_name){%><img class="verify-icon" src="<%=image_url%>"/><%}%><%else{%><img class="theme-icon" src="<%=image_url%>"/><%}%><%if(is_apply){%><img class="is-apply" src="../images/train/apply-in-done1.png"/><%}%><%else{%><img class="is-apply" src="../images/train/apply-in-none1.png"/><%}%>
+						<%if(is_verify == "审核中"){%>
+						<img class="verify-icon" src="../images/train/doing.png"/>
+						<%}else if(is_verify == "不通过"){%>	
+						<img class="verify-icon" src="../images/train/undone.png"/>
+						<%}else if(is_verify == "已通过"){%>	
+						<img class="verify-icon" src="../images/train/done.png"/>
+						<%}else if(is_verify == "已过期"){%>
+						<img class="verify-icon" src="../images/train/exceed.png"/>
+						<%}%>
+					</div>
+					<div class="theme-desc"><div class="theme-title"><%=verify_name%></div><div class="number"><span class="total">&nbsp;&nbsp;<%=apply_user_count%>&nbsp;&nbsp;人</span><span class="real">已报名<%=user_apply_count%>人</span></div></div>				
+				</div>
+			</script>
+			
+			<section id="description" style="background-color:#fff;padding:12px 12px 2px 12px;">
+				
+			</section>
+			<script type="text/template" id="description-html">
+				<div class="description">
+					<%if(!!describe_text){%><p style="line-height:20px;"><%=describe_text%></p><%}%>
+					<a class="look-more">展开</a>
+					<a class="pull-up2" style="display:none">收起</a>
+				</div>
+			</script>
+			<section  class="card time-place-teacher" id="time-place-teacher">
+				
+			</section>
+			<script type="text/template" id="time-place-teacher-html">
+				<div class="card-items">
+					<ul>
+						<li class="item"><span class="item-title time is-show">开始时间 :</span>&nbsp;<span class="item-title time-value"><%=start_time%></span></li>
+						<li class="item"><span class="item-title time">结束时间 :</span>&nbsp;<span class="item-title time-value"><%=end_time%></span></li>						
+						<li class="item"><span class="item-title place">地点 :</span>&nbsp;<span class="item-title place-value" style="display:inline-block;width:70%;vertical-align:top;"><%=address%></span></li>	
+					</ul>
+				</div>
+			</script>
+			
+			<section class="card relavant-courses" id="relavant-courses">
+				
+			</section>
+			<script type="text/template" id="relavant-courses-html">
+				<div class="card-header"><div><img src="../images/train/courses.png"/></div><span>课件名称 :</span></div>
+				<div class="card-items">
+					<ul>
+						<% if(!!discover_item){%>
+							<%for(var i=0;i<discover_item.length;i++){%>
+								<li><span><%if(true){%><%=discover_item[i].item_name%><%}%></span></li>
+							<%}%>
+						<%}%>
+					</ul>
+				</div>
+				<div class="view-comment"><img src="../images/train/comment_icon.png">&nbsp;&nbsp;<span>评论</span></div>
+			</script>
+			<section class="apply-number" id="apply-number">
+				
+			</section>
+			<script type="text/template" id="apply-number-html">
+				<div class="header">已报名<%=number%>人</div>
+				<div class="person-lists">
+					<ul>
+						<% for(var i=0;i<user_apply.length;i++){%>
+						<li user_id=<%=user_apply[i].user_id%>>
+							<div class="people-icon"><img src="<%=user_apply[i].image_url%>" width="38px" height="38px"></div>
+							<div class="single-info">
+								<div class="name"><span><%=user_apply[i].user_name%></span></div>
+								<div class="workplace" style="margin-top:2px"><span><%=user_apply[i].department%></span></div>
+							</div>
+						</li>
+						<%}%>
+					</ul>
+				</div>
+			
+			</script>
+			<section class="input-comment-area">
+				<div class="comment-bar" >
+ 					<div class="icon"></div>
+ 					<div class="input-box">
+ 						<input class="input-comments" type="text" placeholder="写评论"/>
+					</div>
+				</div>				
+ 				<div class="mask"></div>
+ 				<div class="input-comment"><!-- z-index:10 -->
+ 					<!-- z-index:-1 -->
+ 					<div class="txt-publish-wraper">
+ 						<textarea id="txt-publish"></textarea>
+ 					</div>
+ 					<div class="header">
+ 						<!-- <div class="cancel-left"><a href="javascript:void(0)">取消</a></div> -->
+ 						<div class="save-right"><a href="javascript:void(0)">发布</a></div>
+ 						<!-- <div class="write-comment"><span>写评论</span></div> -->
+ 					</div>
+ 				</div>
+			</section>
+ 			<section class="card forum-post">
+ 				
+ 				<div class="comment-area">
+	 				<div class="comment-title"><div class="comment-title-logo"><img src="../images/train/comment-title-icon.png"></div><span class="comment-title-name"><strong>热门评论</strong></span></div>
+	 				<div class="show-comments">
+	 					<ul class="comment-lists" id="comment-lists">
+	 						
+	 					</ul>
+	 					<script id="comment-lists-html" type="text/template" >
+								<% for(var i=0;i<comments.length;i++){%>
+								<li>
+									<div class="desc">
+	 									<div class="people-icon"><img src="<%=comments[i].image_url%>"/><p><%=comments[i].name%></p></div>
+	 									<div class="post-info">
+	 										<div class="name"><span><%=comments[i].user_name%></span></div>
+	 										<div class="post-time">
+	 											<span><%=comments[i].comment_time%></span>
+	 										</div>
+	 									</div>
+	 									<div class="like"><span><%=comments[i].like%>顶</span></div>
+	 								</div>
+									<p class="comment-content"><%=comments[i].content%></p>
+								</li>
+								<%}%>
+	 					</script>
+	 					
+	 					<a class="look-more" style="display:none;">查看更多</a>
+	 				</div>
+	 			</div>
+ 			</section> 
+ 		</div> 
+ 		<div id="operation" class="operation">
+ 			
+ 		</div>
+ 		<script type="text/template" id="operation-html">
+			<div class="operation-bar">
+				<%if(is_apply){%><a class="sign-up" href="javascript:void(0)">取消报名</a><%}else{%><a class="sign-up" href="javascript:void(0)">报名</a><%}%>
+				
+			</div>
+		</script>
+ 		<div class="success-signup" style="color:#fff">报名成功</div>
+ 		<div class="fail-signup" style="color:#fff">报名失败</div>
+ 		<div class="cancel-success-signup" style="color:#fff">取消报名成功</div>
+ 		<div class="cancel-fail-signup" style="color:#fff">取消报名失败</div>
+ 		<div class="leave-tips-suc" style="color:#fff">请假成功</div>
+ 		<div class="leave-tips-fail" style="color:#fff">请假失败</div>
+ 		<div class="cancel-leave-tips-suc" style="color:#fff">取消请假成功</div>
+ 		<div class="cancel-leave-tips-fail" style="color:#fff">取消请假失败</div>
+ 		<div class="check-in-suc" style="color:#fff">签到成功</div>
+ 		<div class="check-in-fail" style="color:#fff">签到失败</div>
+ 		<div class="check-in-sure" style="color:#fff">您到达签到地点了吗<a class="check-in-cancel">取消</a><a class="check-in-save">确认</a></div>
+		<div class="click-mask"></div>
+		<div class="leave">
+			<p>请您输入请假事由</p>
+			<div class="input-leave-reason" style="width:50px;width:80%;">
+ 				<input class="input-leave-reason-content" type="text" placeholder="  写评论"/>
+ 				<a class="leave-cancel">取消</a><a class="leave-save">确认</a>
+			</div>
+		</div>
+		<div class="leave-check-in">
+			<p>您已经到达活动地点了吗</p> 
+			<a class="check-in-leave-cancel">取消</a><a class="check-in-leave-save">确认</a>
+		</div>
+		<div class="check-in-tips-success" style="display:none;vertical-align:center;background-color: #f0f1f5; width: 80%;height: 250px;position: fixed; z-index: 10; left: 10%; top: 31%; border-radius: 3px;">
+			<div class="tips" style="width:50%;margin-top:50px;margin-left:28%;"><img src="../images/train/offline_training_auth_icon_success.png"/><div style="margin-top:20px;width:104px;text-align:center;"><span style="color:#333;">认证成功</span></div></div>
+		</div>
+		<div class="check-in-tips-fail" style="display:none;vertical-align:center;background-color: #f0f1f5; width: 80%;height: 250px;position: fixed; z-index: 10; left: 10%; top: 31%; border-radius: 3px;">
+			<div class="tips" style="width:50%;margin-top:50px;margin-left:28%;"><img src="../images/train/offline_training_auth_icon_fail.png"/><div style="margin-top:20px;width:104px;text-align:center;"><span style="color:#333;">认证失败</span></div></div>
+		</div>
+    		<script type="text/javascript">
+				$(function(){
+					var verify_state = decodeURI(location.search.split('=')[1].split('&')[0]);
+					var verify_id = location.search.substr(1).split("&")[1].split('=')[1];
+					if(!!location.search.substr(1).split("&")[2]){
+						$(".click-mask").show();
+						$(".check-in-tips-success").show();
+						setTimeout(function(){
+							$(".click-mask").hide();
+							$(".check-in-tips-success").hide();
+						},1500);
+					}
+					var trains_doing = [
+							   			   {"comments":[{"comment_id":1,"image_url":"../images/train/people-icon.png","floor":1,"user_name":"姚沐雨","comment_time":"2016-05-24 16:00","like":20,"content":"绩效结果的获得不容易，千丝万缕相互关联，多种因素相互影响，长期的成功不是靠感觉运气，而是靠数据支撑下的系统工具方法。"},{"comment_id":2,"image_url":"../images/train/people-icon2.png","floor":1,"user_name":"张晨","comment_time":"2016-05-25 18:00","like":20,"content":"系统化思考对于业务提升的重要意义，不是凭借经验或教条，而是逐步梳理出来的全面的严密的分析结构，然后选择根本原因。"},{"comment_id":3,"image_url":"../images/train/people-icon3.png","floor":1,"user_name":"李晨","comment_time":"2016-05-29 22:00","like":20,"content":"先技控，再人控，通过这两天的学习，我对绩效改进有了全面系统的认识，接下来我会有意识地做合适的减法，聚焦问题用杠杆撬动问题。"},{"comment_id":4,"image_url":"../images/train/people-icon4.png","floor":1,"user_name":"姜海伟","comment_time":"2016-05-21 13:00","like":20,"content":"先技控，再人控，通过这两天的学习，我对绩效改进有了全面系统的认识，接下来我会有意识地做合适的减法，聚焦问题用杠杆撬动问题。"}],"number":20,"user_apply":[{"department":"营销部","image_url": "../images/train/people-icon.png","user_id":10000124207,"user_name": "方文杰"},{"department":"营销部","image_url": "../images/train/people-icon2.png","user_id": 10000124209,"user_name": "龚宁"},{"department":"营销部","image_url": "../images/train/people-icon3.png","user_id": 10000124211,"user_name": "李亚莉"}],"verify_id":1,"verify_name":"国家初级绩效改进师认证","start_time": "09-26 16:00","end_time":"09-27 16:00","is_verify":"审核中","is_apply":true,"describe_text":"国家绩效改进师既是绩效改进领域的专业人才，同时也是企业各级管理者能力提升的重要标志，将按照全国统一标准分为初级、中级和高级进行系统地培养、考核和管理。初级绩效改进师需要理解绩效改进的基本原理、流程、方法和工具；部分或完整参与一个有关绩效改进项目。","verify_state":"进行中","address":"华夏科技大厦","discover_item":[{"item_id": "8", "item_name": "绩效改进师（初级）认证基础知识"},{"item_id": "9", "item_name": "绩效改进师两大思维模式之一：《结构性思维》"},{"item_id": "10", "item_name": " 绩效改进师（初级）认证工作坊"}],"image_url":"../images/train/offline_training_auth_theme_icon.png"},
+							   			   {"comments":[{"comment_id":1,"image_url":"../images/train/people-icon.png","floor":1,"user_name":"姚明","comment_time":"2016-05-22 16:00","like":20,"content":"课程效果不错"},{"comment_id":2,"image_url":"../images/train/people-icon2.png","floor":1,"user_name":"平春秋","comment_time":"2016-05-25 18:00","like":20,"content":"听了以后受益匪浅"},{"comment_id":3,"image_url":"../images/train/people-icon3.png","floor":1,"user_name":"王亮","comment_time":"2016-05-27 19:00","like":20,"content":"很经典"},{"comment_id":4,"image_url":"../images/train/people-icon4.png","floor":1,"user_name":"苗海洋","comment_time":"2016-05-19 10:00","like":20,"content":"老师都很权威"}],"number":30,"user_apply":[{"department":"策划部","image_url": "../images/train/people-icon.png","user_id":10000124207,"user_name": "方文杰"},{"department":"营销部","image_url": "../images/train/people-icon2.png","user_id": 10000124209,"user_name": "龚宁"},{"department":"营销部","image_url": "../images/train/people-icon3.png","user_id": 10000124211,"user_name": "李亚莉"}],"verify_id":2,"verify_name":"结构性思维讲师认证","start_time": "09-27 18:00","end_time":"09-28 18:00","is_verify":"审核中","is_apply":false,"describe_text":"很好","verify_state":"进行中","address":"软件元","discover_item":[{"item_id": "8", "item_name": "卡萨帝 BCD-408WDCAU1"},{"item_id": "9", "item_name": "卡萨帝 BCD-455WDCAU1"},{"item_id": "10", "item_name": "卡萨帝 BCD-728WDCA"}],"image_url":"../images/train/offline_training_auth_theme_icon2.png"},
+							    			];
+					var trains_done = [
+						   			   {"comments":[{"comment_id":1,"image_url":"../images/train/people-icon.png","floor":1,"user_name":"张亮","comment_time":"2016-05-24 16:00","like":20,"content":"影响绩效的因素很多。"},{"comment_id":2,"image_url":"../images/train/people-icon2.png","floor":1,"user_name":"李继伟","comment_time":"2016-05-24 16:00","like":20,"content":"效果很好哦"},{"comment_id":3,"image_url":"../images/train/people-icon3.png","floor":1,"user_name":"王晨","comment_time":"2016-05-24 16:00","like":20,"content":"老师都很敬业"},{"comment_id":4,"image_url":"../images/train/people-icon4.png","floor":1,"user_name":"钱鸣","comment_time":"2016-05-24 16:00","like":20,"content":"很棒的课程"}],"number":40,"user_apply":[{"department":"营销部","image_url": "../images/train/people-icon4.png","user_id":10000124207,"user_name": "方文杰"},{"department":"营销部","image_url": "../images/train/people-icon2.png","user_id": 10000124209,"user_name": "龚宁"},{"department":"营销部","image_url": "../images/train/people-icon3.png","user_id": 10000124211,"user_name": "李亚莉"}],"verify_id":1,"verify_name":"萃取讲师认证","start_time": "04-26 16:00","end_time":"04-27 18:00","is_verify":"审核中","is_apply":true,"describe_text":"这是一个很好的培训这是一个很好的培训这是一个很好的培训","verify_state":"已结束","address":"华夏科技大厦","discover_item":[{"item_id": "8", "item_name": "卡萨帝 BCD-408WDCAU1"},{"item_id": "9", "item_name": "卡萨帝 BCD-455WDCAU1"},{"item_id": "10", "item_name": "卡萨帝 BCD-728WDCA"}],"image_url":"../images/train/offline_training_auth_theme_icon.png"},
+						   			   {"comments":[{"comment_id":1,"image_url":"../images/train/people-icon.png","floor":1,"user_name":"王亮","comment_time":"2016-05-24 16:00","like":20,"content":"课程效果很好"},{"comment_id":2,"image_url":"../images/train/people-icon2.png","floor":1,"user_name":"李思雨","comment_time":"2016-05-24 16:00","like":20,"content":"感觉这门课对自己对工作很有帮助"},{"comment_id":3,"image_url":"../images/train/people-icon3.png","floor":1,"user_name":"王海晨","comment_time":"2016-05-24 16:00","like":20,"content":"很好的课程"},{"comment_id":4,"image_url":"../images/train/people-icon4.png","floor":1,"user_name":"谢丽娜","comment_time":"2016-05-24 16:00","like":20,"content":"对结构性思维的课程有了新的认识"}],"number":50,"user_apply":[{"department":"市场部","image_url": "../images/train/people-icon.png","user_id":10000124207,"user_name": "方文杰"},{"department":"营销部","image_url": "../images/train/people-icon2.png","user_id": 10000124209,"user_name": "龚宁"},{"department":"营销部","image_url": "../images/train/people-icon3.png","user_id": 10000124211,"user_name": "李亚莉"}],"verify_id":2,"verify_name":"UED设计讲师认证","start_time": "04-27 16:00","end_time":"04-28 18:00","is_verify":"不通过","is_apply":false,"describe_text":"很好","verify_state":"已结束","address":"软件元","discover_item":[{"item_id": "8", "item_name": "卡萨帝 BCD-408WDCAU1"},{"item_id": "9", "item_name": "卡萨帝 BCD-455WDCAU1"},{"item_id": "10", "item_name": "卡萨帝 BCD-728WDCA"}],"image_url":"../images/train/offline_training_auth_theme_icon2.png"},
+						    			];
+							
+				    if(verify_state == "已结束"){
+						for(var i=0;i<trains_done.length;i++){
+							   if(verify_id == trains_done[i].verify_id){
+								   trains_done[i];
+								   document.getElementById('basic-info').innerHTML = template('basic-info-html',trains_done[i]); 
+								   
+								   document.getElementById('description').innerHTML = template('description-html',trains_done[i]);						
+								   document.getElementById('time-place-teacher').innerHTML = template('time-place-teacher-html',trains_done[i]);
+								   document.getElementById('relavant-courses').innerHTML = template('relavant-courses-html',trains_done[i]);		   
+								   document.getElementById('apply-number').innerHTML = template('apply-number-html',trains_done[i]);
+								   document.getElementById('comment-lists').innerHTML = template('comment-lists-html',trains_done[i]);
+								   document.getElementById('operation').innerHTML = template('operation-html',trains_done[i]);
+								   return;
+								}		   
+				  	   }
+						
+						
+						
+				}else{
+					for(var i=0;i<trains_doing.length;i++){
+						   if(verify_id == trains_doing[i].verify_id){
+							   trains_done[i];
+							   document.getElementById('basic-info').innerHTML = template('basic-info-html',trains_doing[i]); 
+							   document.getElementById('description').innerHTML = template('description-html',trains_doing[i]);						
+							   document.getElementById('time-place-teacher').innerHTML = template('time-place-teacher-html',trains_doing[i]);
+							   document.getElementById('relavant-courses').innerHTML = template('relavant-courses-html',trains_doing[i]);	
+							   document.getElementById('apply-number').innerHTML = template('apply-number-html',trains_doing[i]);
+							   document.getElementById('comment-lists').innerHTML = template('comment-lists-html',trains_doing[i]);
+							   document.getElementById('operation').innerHTML = template('operation-html',trains_doing[i]);
+							   return;
+							}		   
+			  	   }
+				
+				
+				}
+			
+				}
+				
+				
+				
+				
+		);
+		</script>
+		<script type="text/javascript">
+			$(function(){
+				
+				var real_height_des = $(".description p").height();
+				if(real_height_des>60){
+					$(".description p").css("height","60px");
+					$(".description p").css("overflow","hidden");
+					$(".description .look-more").show();	
+					$(".description .look-more").click(function(){
+						$(".description p").css("height",real_height_des);
+						$(".description .look-more").hide();	
+						$(".pull-up2").show();
+					});
+					$(".description .pull-up2").click(function(){
+						$(".description p").css("height",60);
+						$(".description .look-more").show();	
+						$(".pull-up2").hide();
+					});
+				}
+				if(real_height_des<60 || real_height_des==60){
+					
+					$(".description .look-more").hide();	
+				}
+				
+				$(".input-box").click(function(){
+					$(".input-comment-area .mask").show();
+					$(".input-comment-area .comment-bar span").hide();
+					$(".input-comment").show();
+					$(this).find(".input-comments").attr("placeholder","");
+					$("#txt-publish").focus();
+				});	
+				
+				$(".save-right").click(function(){
+					var text_publish = $(this).parent().parent().find("#txt-publish").val();
+					var new_comment_list = [];
+					if(!!text_publish){
+						$(".input-comment-area .mask").hide();
+						$(".input-comment").hide();
+						$(".input-comments").attr("placeholder","写评论");
+						$(".comment-bar .icon").show();
+						$(".comment-lists").append('<li><div class="desc"><div class="people-icon"><img src="../images/train/people-icon.png"/></div><div class="post-info" style="padding-left:20px"><div class="name"><span>匿名</span></div><div class="post-time"><span>'+timeFormat(new Date().getTime()/1000)+'</span></div></div><div class="like"><span>0顶</span></div></div><p class="comment-content">'+text_publish+'</p></li>');		
+						$(this).parent().parent().find("#txt-publish").val("");
+						//alert($(".comment-lists li").height());
+						var comment_lists_height = $("#comment-lists").height();
+						if(comment_lists_height>735){
+							$(".forum-post .look-more").show();
+							//$(".comment-lists").css("height","735px");
+						}
+						$(".forum-post .look-more").click(function(){
+							//$(".comment-lists").css("height",comment_lists_height);
+							//$(this).hide();
+						});
+						
+					}else{
+						$("#txt-publish").css("border","1px solid red");
+					}	
+				});
+				
+				$(".input-comment-area .mask").click(function(){
+					$(this).hide();
+					$(".input-comment").hide();
+					$(".input-comments").attr("placeholder","写评论");
+					$(".comment-bar span").show();
+				});
+				
+				
+				
+				$(document).on("click",".person-lists li",function(){
+					
+					var user_id = $(this).attr('user_id');
+					var uri = 'weizhu://com.weizhu/user/user?id='+user_id;
+			        if(!!window.WZWebInterface){
+			            window.WZWebInterface.onWZAction(uri);
+			        }else{
+			            document.location = uri;
+			        }
+				});	
+				$(".sign-up").click(function(){
+					var text = $(this).text();
+					if(text == "报名"){
+						$(this).text('取消报名');
+					}else{
+						$(this).text('报名');
+					}
+					
+				});
+				
+			});
+			function timeFormat(time){
+				var date = new Date(time*1000);
+				var hours=date.getHours(),minutes=date.getMinutes(),months=date.getMonth(),days=date.getDate();
+				months=months+1;
+				if(hours<10){
+					hours="0"+hours;
+				}
+				if(minutes<10){
+					minutes="0"+minutes;
+				}
+				if(months<10){
+					months="0"+months;
+				}
+				if(days<10){
+					days="0"+days;
+				}
+				return date.getFullYear()+'-'+months+'-'+days+' '+hours+':'+minutes;
+				}
+		</script>	
+    		
+	</body>
+</html>

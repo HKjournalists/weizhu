@@ -1,0 +1,6 @@
+com/weizhu/service/qa/QAServiceImpl.class
+com/weizhu/service/qa/QADB.class
+com/weizhu/service/qa/QAUtil.class
+com/weizhu/service/qa/QAServiceModule.class
+com/weizhu/service/qa/AdminQAServiceImpl.class
+com/weizhu/service/qa/QACache.class

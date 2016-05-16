@@ -1,0 +1,302 @@
+import "weizhu.proto";
+import "tag.proto";
+
+package weizhu.admin.tag;
+
+option java_package = "com.weizhu.proto";
+option java_outer_classname = "AdminTagProtos";
+
+message TagResource {
+  required int32               tag_id   = 1;
+  required weizhu.tag.Resource resource = 2;
+}
+
+message TagResourceCount {
+  required int32  tag_id         = 1;
+  required string resource_type  = 2;
+  required int32  resource_count = 3;
+}
+
+message TagUser {
+  required int32  tag_id  = 1;
+  required int64  user_id = 2;
+  optional string desc    = 3;
+}
+
+// 获取所有标签分类
+message GetCategoryResponse {
+  repeated weizhu.tag.Category category = 1;
+}
+
+// 根据id获取分类请求
+message GetCategoryByIdRequest {
+  repeated int32 category_id = 1;
+}
+
+// 根据id获取分类响应
+message GetCategoryByIdResponse {
+  repeated weizhu.tag.Category category = 1;
+}
+
+// 创建分类请求
+message CreateCategoryRequest {
+  required string category_name = 1;
+}
+
+// 创建分类响应
+message CreateCategoryResponse {
+  enum Result {
+    SUCC              = 0;
+    FAIL_NAME_INVALID = 1; // 分类名称错误
+     
+    FAIL_UNKNOWN      = 99;
+  }
+  optional Result result    = 1 [default = FAIL_UNKNOWN]; // 返回结果
+  optional string fail_text = 2; // 错误文本
+}
+
+// 编辑分类请求
+message UpdateCategoryRequest {
+  required int32  category_id   = 1;
+  required string category_name = 2;
+}
+
+// 编辑分类响应
+message UpdateCategoryResponse {
+  enum Result {
+    SUCC                    = 0;
+    FAIL_CATEGORY_NOT_EXIST = 1;
+    FAIL_NAME_INVALID       = 2; // 分类名称错误
+     
+    FAIL_UNKNOWN            = 99;
+  }
+  optional Result result    = 1 [default = FAIL_UNKNOWN]; // 返回结果
+  optional string fail_text = 2; // 错误文本
+}
+
+// 设置分类顺序请求
+message UpdateCategoryOrderRequest {
+  repeated int32 category_order_id = 1;
+}
+
+// 设置分类顺序响应
+message UpdateCategoryOrderResponse {
+  enum Result {
+    SUCC                    = 0;
+     
+    FAIL_UNKNOWN            = 99;
+  }
+  optional Result result    = 1 [default = FAIL_UNKNOWN]; // 返回结果
+  optional string fail_text = 2; // 错误文本
+}
+
+// 设置分类状态请求
+message UpdateCategoryStateRequest {
+  repeated int32            category_id = 1;
+  required weizhu.tag.State state       = 2;
+}
+
+// 设置分类状态响应
+message UpdateCategoryStateResponse {
+  enum Result {
+    SUCC                    = 0;
+     
+    FAIL_UNKNOWN            = 99;
+  }
+  optional Result result    = 1 [default = FAIL_UNKNOWN]; // 返回结果
+  optional string fail_text = 2; // 错误文本
+}
+
+// 获取标签列表请求
+message GetTagListRequest {
+  required int32  start       = 1; // 开始位置
+  required int32  length      = 2; // 查询的条数
+  optional string tag_name    = 3; // 标签关键字
+  optional int32  category_id = 4; // 过滤条件：分类id
+  optional string resource_id = 5;
+}
+
+// 获取标签列表响应
+message GetTagListResponse {
+  repeated weizhu.tag.Tag      tag                    = 1;
+  required int32               total_size             = 2; // 所有item个数
+  required int32               filtered_size          = 3; // 过滤后的item总个数
+  repeated weizhu.tag.Category ref_category           = 4;
+  repeated TagResourceCount    ref_tag_resource_count = 5;
+}
+
+// 创建标签请求
+message CreateTagRequest {
+  required string              tag_name     = 1;
+  required bool                is_recommend = 2;
+  repeated int32               category_id  = 3;
+  repeated weizhu.tag.Resource resource     = 4;
+}
+
+// 创建标签响应
+message CreateTagResponse {
+  enum Result {
+    SUCC                  = 0;
+    FAIL_NAME_INVALID     = 1;
+    FAIL_CATEGORY_INVALID = 2;
+    
+    FAIL_UNKNOWN             = 99;
+  }
+  optional Result result    = 1 [default = FAIL_UNKNOWN];
+  optional string fail_text = 2;
+}
+
+// 批量设置标签推荐请求
+message UpdateTagRecommendRequest {
+  repeated int32 tag_id       = 1;
+  required bool  is_recommend = 2;
+}
+
+// 批量设置标签推荐响应
+message UpdateTagRecommendResponse {
+  enum Result {
+    SUCC                  = 0;
+    
+    FAIL_UNKNOWN             = 99;
+  }
+  optional Result result    = 1 [default = FAIL_UNKNOWN];
+  optional string fail_text = 2;
+}
+
+// 批量删除标签请求
+message DeleteTagRequest {
+  repeated int32 tag_id = 1;
+}
+
+// 批量删除标签响应
+message DeleteTagResponse {
+  enum Result {
+    SUCC         = 0;
+    
+    FAIL_UNKNOWN = 99;
+  }
+  optional Result result    = 1 [default = FAIL_UNKNOWN];
+  optional string fail_text = 2;
+}
+
+// 批量创建标签分类关联请求
+message CreateTagCategoryRequest {
+  repeated int32 tag_id      = 1;
+  repeated int32 category_id = 2;
+}
+
+// 批量创建标签分类关联响应
+message CreateTagCategoryResponse {
+  enum Result {
+    SUCC                  = 0;
+    FAIL_TAG_INVALID      = 1;
+    FAIL_CATEGORY_INVALID = 2;
+    
+    FAIL_UNKNOWN         = 99;
+  }
+  optional Result result    = 1 [default = FAIL_UNKNOWN];
+  optional string fail_text = 2;
+}
+
+// 批量删除标签分类关联请求
+message DeleteTagCategoryRequest {
+  repeated int32 tag_id      = 1;
+  repeated int32 category_id = 2;
+}
+
+// 批量删除标签分类关联响应
+message DeleteTagCategoryResponse {
+  enum Result {
+    SUCC                  = 0;
+    FAIL_TAG_INVALID      = 1;
+    FAIL_CATEGORY_INVALID = 2;
+    
+    FAIL_UNKNOWN         = 99;
+  }
+  optional Result result    = 1 [default = FAIL_UNKNOWN];
+  optional string fail_text = 2;
+}
+
+// 根据资源批量获取标签请求
+message GetTagByResourceRequest {
+  repeated weizhu.tag.Resource resource = 1; 
+}
+
+// 根据资源批量获取标签响应
+message GetTagByResourceResponse {
+  repeated weizhu.tag.Tag tag = 1;
+}
+
+// 获取标签资源关联列表请求
+message GetTagResourceListRequest {
+  required string resource_type = 1;
+  required int32  start         = 2; // 开始位置
+  required int32  length        = 3; // 查询的条数
+  optional string tag_name      = 4; // 标签关键字
+}
+
+// 获取标签资源关联列表响应
+message GetTagResourceListResponse {
+  repeated TagResource    tag_resource  = 1;
+  required int32          total_size    = 2; // 所有item个数
+  required int32          filtered_size = 3; // 过滤后的item总个数
+  repeated weizhu.tag.Tag ref_tag       = 4;
+}
+
+// 批量创建标签资源关联请求
+message CreateTagResourceRequest {
+  repeated int32               tag_id   = 1;
+  repeated weizhu.tag.Resource resource = 2;
+}
+
+// 批量创建标签资源关联响应
+message CreateTagResourceResponse {
+  enum Result {
+    SUCC                  = 0;
+    FAIL_TAG_INVALID      = 1;
+    FAIL_RESOURCE_INVALID = 2;
+    
+    FAIL_UNKNOWN         = 99;
+  }
+  optional Result result    = 1 [default = FAIL_UNKNOWN];
+  optional string fail_text = 2;
+}
+
+// 批量删除标签资源关联请求
+message DeleteTagResourceRequest {
+  repeated int32               tag_id   = 1;
+  repeated weizhu.tag.Resource resource = 2;
+}
+
+// 批量删除标签资源关联响应
+message DeleteTagResourceResponse {
+  enum Result {
+    SUCC                  = 0;
+    FAIL_TAG_INVALID      = 1;
+    FAIL_RESOURCE_INVALID = 2;
+    
+    FAIL_UNKNOWN         = 99;
+  }
+  optional Result result    = 1 [default = FAIL_UNKNOWN];
+  optional string fail_text = 2;
+}
+
+// 获取标签订阅用户列表请求
+message GetTagUserListRequest {
+  required int32  start    = 1; // 开始位置
+  required int32  length   = 2; // 查询的条数
+  optional string tag_name = 3; // 标签关键字
+}
+
+// 获取标签订阅用户列表响应
+message GetTagUserListResponse {
+  repeated TagUser        tag_user      = 1;
+  required int32          total_size    = 2; // 所有item个数
+  required int32          filtered_size = 3; // 过滤后的item总个数
+  repeated weizhu.tag.Tag ref_tag       = 4;
+}
+
+// 标签管理后台服务
+service AdminTagService {
+
+}

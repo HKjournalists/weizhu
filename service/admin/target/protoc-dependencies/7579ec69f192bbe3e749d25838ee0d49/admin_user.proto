@@ -1,0 +1,539 @@
+import "weizhu.proto";
+import "user.proto";
+
+package weizhu.admin.user;
+
+option java_package = "com.weizhu.proto";
+option java_outer_classname = "AdminUserProtos";
+
+message RawUser {
+  required string         raw_id      = 1;
+  required string         user_name   = 2;
+  optional string         gender      = 3;
+  repeated string         mobile_no   = 4;
+  repeated string         phone_no    = 5;
+  optional string         email       = 6;
+  optional string         level       = 7;
+  optional bool           is_expert   = 8;
+  repeated string         ability_tag = 9;
+  repeated RawUserTeam    user_team   = 10;
+  repeated RawUserExtends user_exts   = 11;
+}
+
+message RawUserTeam {
+  repeated string team     = 1;
+  optional string position = 2;
+}
+
+message RawUserExtends {
+  required string name  = 1;
+  required string value = 2;
+}
+
+message ImportUserRequest {
+  repeated RawUser raw_user = 1;
+}
+
+message ImportUserResponse {
+  enum Result {
+    SUCC                   = 0;
+    FAIL_PERMISSION_DENIED = 1;
+    FAIL_USER_INVALID      = 2;
+    
+    FAIL_UNKNOWN           = 99;
+  }  
+  message InvalidUser {
+    required int32  invalid_index = 1;
+    required string invalid_text  = 2;
+  }
+
+  optional Result      result              = 1 [default = FAIL_UNKNOWN];
+  optional string      fail_text           = 2;
+  repeated InvalidUser invalid_user        = 3;
+  optional int32       create_user_cnt     = 4;
+  optional int32       update_user_cnt     = 5;
+  optional int32       create_team_cnt     = 6;
+  optional int32       create_position_cnt = 7;
+  optional int32       create_level_cnt    = 8;
+}
+
+message CreateUserRequest {
+  required string                      raw_id    = 1;
+  required string                      user_name = 2;
+  optional weizhu.user.UserBase.Gender gender    = 3;    
+  repeated string                      mobile_no = 4;
+  repeated string                      phone_no  = 5;
+  optional string                      email     = 6;
+  optional int32                       level_id  = 7;
+  repeated weizhu.user.UserTeam        user_team = 8;
+}
+
+message CreateUserResponse {
+  enum Result {
+    SUCC                   = 0;
+    FAIL_PERMISSION_DENIED = 1;
+    FAIL_RAW_ID_INVALID    = 2;
+    FAIL_NAME_INVALID      = 3;
+    FAIL_MOBILE_NO_INVALID = 4;
+    FAIL_EMAIL_INVALID     = 5;
+    FAIL_LEVEL_INVALID     = 6;
+    FAIL_TEAM_INVALID      = 7;
+    FAIL_POSITION_INVALID  = 8;
+    
+    FAIL_UNKNOWN           = 99;
+  }
+  
+  optional Result result    = 1 [default = FAIL_UNKNOWN];
+  optional string fail_text = 2;
+  optional int64  user_id   = 3;
+}
+
+message UpdateUserRequest {
+  required int64                       user_id     = 1;
+  required string                      user_name   = 2;
+  optional weizhu.user.UserBase.Gender gender      = 3;
+  repeated string                      mobile_no   = 4;
+  repeated string                      phone_no    = 5;
+  optional string                      email       = 6;
+  optional bool                        is_expert   = 7;
+  optional int32                       level_id    = 8;
+  optional weizhu.user.UserBase.State  state       = 9;
+  repeated weizhu.user.UserTeam        user_team   = 10;
+}
+
+message UpdateUserResponse {
+  enum Result {
+    SUCC                   = 0;
+    FAIL_PERMISSION_DENIED = 1;
+    FAIL_NAME_INVALID      = 2;
+    FAIL_MOBILE_NO_INVALID = 3;
+    FAIL_EMAIL_INVALID     = 4;
+    FAIL_LEVEL_INVALID     = 5;
+    FAIL_STATE_INVALID     = 6;
+    FAIL_TEAM_INVALID      = 7;
+    FAIL_POSITION_INVALID  = 8;
+    FAIL_USER_NOT_EXIST    = 9;
+    
+    FAIL_UNKNOWN           = 99;
+  }
+  
+  optional Result result    = 1 [default = FAIL_UNKNOWN];
+  optional string fail_text = 2;
+}
+
+message DeleteUserRequest {
+  repeated int64 user_id = 1;
+}
+
+message DeleteUserResponse {
+  enum Result {
+    SUCC                   = 0;
+    FAIL_PERMISSION_DENIED = 1;
+    
+    FAIL_UNKNOWN           = 99;
+  }
+  
+  optional Result result    = 1 [default = FAIL_UNKNOWN];
+  optional string fail_text = 2;
+}
+
+message GetUserListRequest {
+  required int32  start       = 1;
+  required int32  length      = 2;
+  optional bool   is_expert   = 3;
+  optional int32  team_id     = 4;
+  optional int32  position_id = 5;
+  optional string keyword     = 6;
+  optional string mobile_no   = 7;
+}
+
+message GetUserListResponse {
+  repeated weizhu.user.User     user          = 1; 
+  required int32                total_size    = 2;
+  required int32                filtered_size = 3;
+  repeated weizhu.user.Team     ref_team      = 4; // 引用团队信息
+  repeated weizhu.user.Position ref_position  = 5; // 引用职位信息
+  repeated weizhu.user.Level    ref_level     = 6; // 引用职级信息
+}
+
+message GetUserByIdRequest {
+  repeated int64 user_id = 1;
+}
+
+message GetUserByIdResponse {
+  repeated weizhu.user.User     user          = 1; 
+  repeated weizhu.user.Team     ref_team      = 2; // 引用团队信息
+  repeated weizhu.user.Position ref_position  = 3; // 引用职位信息
+  repeated weizhu.user.Level    ref_level     = 4; // 引用职级信息
+}
+
+message GetUserExtendsNameResponse {
+  repeated string extends_name = 1;
+}
+
+message SetExpertRequest {
+  required int64 user_id   = 1;
+  required bool  is_expert = 2;
+}
+
+message SetExpertResponse {
+  enum Result {
+    SUCC                   = 0;
+    FAIL_PERMISSION_DENIED = 1;
+    FAIL_USER_NOT_EXIST    = 2;
+    
+    FAIL_UNKNOWN           = 99;
+  }
+  
+  optional Result result    = 1 [default = FAIL_UNKNOWN];
+  optional string fail_text = 2;
+}
+
+message SetStateRequest {
+  repeated int64                       user_id = 1;
+  required weizhu.user.UserBase.State  state   = 2;
+}
+
+message SetStateResponse {
+  enum Result {
+    SUCC                   = 0;
+    FAIL_PERMISSION_DENIED = 1;
+    FAIL_USER_NOT_EXIST    = 2;
+    
+    FAIL_UNKNOWN           = 99;
+  }
+  
+  optional Result result    = 1 [default = FAIL_UNKNOWN];
+  optional string fail_text = 2;
+}
+
+message CreatePositionRequest {
+  required string position_name = 1; // 职位名称
+  required string position_desc = 2; // 职位描述
+}
+
+message CreatePositionResponse {
+  enum Result {
+    SUCC                   = 0;
+    FAIL_PERMISSION_DENIED = 1;
+    FAIL_NAME_INVALID      = 2;
+    FAIL_DESC_INVALID      = 3;
+    
+    FAIL_UNKNOWN           = 99;
+  }
+  
+  optional Result result      = 1 [default = FAIL_UNKNOWN];
+  optional string fail_text   = 2;
+  optional int32  position_id = 3;
+}
+
+message UpdatePositionRequest {
+  required int32  position_id   = 1; // 职位id
+  required string position_name = 2; // 职位名称
+  required string position_desc = 3; // 职位描述
+}
+
+message UpdatePositionResponse {
+  enum Result {
+    SUCC                    = 0;
+    FAIL_PERMISSION_DENIED  = 1;
+    FAIL_NAME_INVALID       = 2;
+    FAIL_DESC_INVALID       = 3;
+    FAIL_POSITION_NOT_EXIST = 4;
+    
+    FAIL_UNKNOWN            = 99;
+  }
+  
+  optional Result result      = 1 [default = FAIL_UNKNOWN];
+  optional string fail_text   = 2;
+}
+
+message DeletePositionRequest {
+  repeated int32 position_id = 1;
+}
+
+message DeletePositionResponse {
+  enum Result {
+    SUCC                   = 0;
+    FAIL_PERMISSION_DENIED = 1;
+    
+    FAIL_UNKNOWN           = 99;
+  }
+  
+  optional Result result    = 1 [default = FAIL_UNKNOWN];
+  optional string fail_text = 2;
+}
+
+message GetPositionResponse {
+  repeated weizhu.user.Position position = 1;
+}
+
+message CreateLevelRequest {
+  required string level_name = 1; // 职级名称
+}
+
+message CreateLevelResponse {
+  enum Result {
+    SUCC                   = 0;
+    FAIL_PERMISSION_DENIED = 1;
+    FAIL_NAME_INVALID      = 2;
+    
+    FAIL_UNKNOWN           = 99;
+  }
+  
+  optional Result result    = 1 [default = FAIL_UNKNOWN];
+  optional string fail_text = 2;
+  optional int32  level_id  = 3;
+}
+
+message UpdateLevelRequest {
+  required int32  level_id   = 1; // 职级id
+  required string level_name = 2; // 职级名称
+}
+
+message UpdateLevelResponse {
+  enum Result {
+    SUCC                   = 0;
+    FAIL_PERMISSION_DENIED = 1;
+    FAIL_NAME_INVALID      = 2;
+    FAIL_LEVEL_NOT_EXIST   = 3;
+    
+    FAIL_UNKNOWN           = 99;
+  }
+  
+  optional Result result    = 1 [default = FAIL_UNKNOWN];
+  optional string fail_text = 2;
+}
+
+message DeleteLevelRequest {
+  repeated int32 level_id = 1;
+}
+
+message DeleteLevelResponse {
+  enum Result {
+    SUCC                   = 0;
+    FAIL_PERMISSION_DENIED = 1;
+    
+    FAIL_UNKNOWN           = 99;
+  }
+  
+  optional Result result    = 1 [default = FAIL_UNKNOWN];
+  optional string fail_text = 2;
+}
+
+message GetLevelResponse {
+  repeated weizhu.user.Level level = 1;
+}
+
+message CreateTeamRequest {
+  required string team_name      = 1;
+  optional int32  parent_team_id = 2;
+}
+
+message CreateTeamResponse {
+  enum Result {
+    SUCC                   = 0;
+    FAIL_PERMISSION_DENIED = 1;
+    FAIL_NAME_INVALID      = 2;
+    FAIL_PARAENT_INVALID   = 3;
+    
+    FAIL_UNKNOWN           = 99;
+  }
+  
+  optional Result result    = 1 [default = FAIL_UNKNOWN];
+  optional string fail_text = 2;
+  optional int32  team_id   = 3;
+}
+
+message UpdateTeamRequest {
+  required int32  team_id        = 1; // 团队id
+  required string team_name      = 2; // 团队名称
+}
+
+message UpdateTeamResponse {
+  enum Result {
+    SUCC                   = 0;
+    FAIL_PERMISSION_DENIED = 1;
+    FAIL_NAME_INVALID      = 2;
+    FAIL_TEAM_NOT_EXIST    = 4;
+    
+    FAIL_UNKNOWN           = 99;
+  }
+  
+  optional Result result    = 1 [default = FAIL_UNKNOWN];
+  optional string fail_text = 2;
+}
+
+message DeleteTeamRequest {
+  repeated int32 team_id   = 1;
+  required bool  recursive = 2;
+}
+
+message DeleteTeamResponse {
+  enum Result {
+    SUCC                   = 0;
+    FAIL_PERMISSION_DENIED = 1;
+    FAIL_HAS_SUB_TEAM      = 2;
+    
+    FAIL_UNKNOWN           = 99;
+  }
+  
+  optional Result result    = 1 [default = FAIL_UNKNOWN];
+  optional string fail_text = 2;
+}
+
+message GetTeamRequest {
+  optional int32 team_id = 1;
+}
+
+message GetTeamResponse {
+  repeated weizhu.user.UserTeam sub_user_team       = 1; // 子用户团队关系列表
+  repeated int32                sub_team_id         = 2; // 子团队id列表
+  repeated int32                sub_team_id_has_sub = 3; // 子团队id列表中还有子团队的团队id
+  repeated weizhu.user.User     ref_user            = 4; // 引用用户信息
+  repeated weizhu.user.Team     ref_team            = 5; // 引用团队信息
+  repeated weizhu.user.Position ref_position        = 6; // 引用职位信息
+  repeated weizhu.user.Level    ref_level           = 7; // 引用职级信息
+}
+
+message GetTeamByIdRequest {
+  repeated int32 team_id = 1;
+}
+
+message GetTeamByIdResponse {
+  repeated weizhu.user.Team team = 1;
+}
+
+// 获取team下所有用户id，如果传入team_id数为0，则获取未在组织结构中的用户id列表
+message GetTeamAllUserIdRequest {
+  repeated int32 team_id = 1;
+}
+
+message GetTeamAllUserIdResponse {
+  repeated int64 user_id = 1;
+}
+
+message GetAllTeamResponse {
+  repeated weizhu.user.Team team = 1;
+}
+
+message GetUserAbilityTagRequest {
+  repeated int64 user_id = 1;
+}
+
+message GetUserAbilityTagResponse {
+  repeated weizhu.user.UserAbilityTag ability_tag = 1;
+}
+
+message SetUserAbilityTagRequest {
+  required int64  user_id  = 1; // 用户id
+  repeated string tag_name = 2; // 标签名称，最多10个字
+}
+
+message SetUserAbilityTagResponse {
+  enum Result {
+    SUCC = 0;                  // 标记成功
+    FAIL_USER_NOT_EXSIT   = 1; // 用户不存在
+    FAIL_TAG_NAME_INVALID = 2; // 标签名称错误
+    FAIL_TAG_NUM_LIMIT    = 3; // 超过单人标签最大数目 (上限50)
+    
+    FAIL_UNKNOWN          = 99;
+  }
+  optional Result result    = 1 [default = FAIL_UNKNOWN];
+  optional string fail_text = 2;
+}
+
+message GetAbilityTagUserIdRequest {
+  repeated string tag_name  = 1;
+  optional bool   is_expert = 2;
+}
+
+message GetAbilityTagUserIdResponse {
+  repeated int64 user_id = 1;
+}
+
+message GetUserByMobileNoUniqueRequest {
+  repeated string mobile_no = 1;
+}
+
+message GetUserByMobileNoUniqueResponse {
+  repeated weizhu.user.User     user          = 1; 
+  repeated weizhu.user.Team     ref_team      = 2; // 引用团队信息
+  repeated weizhu.user.Position ref_position  = 3; // 引用职位信息
+  repeated weizhu.user.Level    ref_level     = 4; // 引用职级信息
+}
+
+message RegisterUserRequest {
+  required string                      user_name   = 1; // 
+  optional weizhu.user.UserBase.Gender gender      = 2;
+  optional string                      email       = 3;
+  repeated string                      team        = 4;
+  optional string                      position    = 5;
+  required string                      mobile_no   = 6;
+  repeated string                      exts_name   = 7;
+  repeated string                      exts_value  = 8;
+  optional string                      level       = 9;
+  optional string                      phone_no    = 10;
+  optional weizhu.user.UserBase.State  state       = 11;
+}
+
+message RegisterUserResponse {
+  // 使用手机号+验证码登录返回结果
+  enum Result {
+    SUCC                   = 0; // 调用成功, 返回session_key 和 user_id
+    FAIL_NAME_INVALID      = 1; // 手机号不正确
+    FAIL_EMAIL_INVALID     = 2;
+    FAIL_TEAM_INVALID      = 3;
+    FAIL_POSITION_INVALID  = 4;
+    FAIL_MOBILE_NO_INVALID = 5;
+    FAIL_LEVEL_INVALID     = 6;
+    
+    FAIL_UNKNOWN           = 99;
+  }
+  
+  optional Result result     = 1 [default = FAIL_UNKNOWN]; // 返回结果
+  optional string fail_text  = 2; // 错误文本, 供客户端展示
+  optional int64  user_id    = 3;
+}
+
+service AdminUserService {
+
+  rpc ImportUser (ImportUserRequest) returns (ImportUserResponse);
+  
+  rpc CreateUser (CreateUserRequest) returns (CreateUserResponse);
+  rpc DeleteUser (DeleteUserRequest) returns (DeleteUserResponse); 
+  rpc UpdateUser (UpdateUserRequest) returns (UpdateUserResponse);
+  rpc GetUserList (GetUserListRequest) returns (GetUserListResponse);
+  rpc GetUserById (GetUserByIdRequest) returns (GetUserByIdResponse);
+  rpc GetUserExtendsName (weizhu.EmptyRequest) returns (GetUserExtendsNameResponse);
+  
+  rpc SetExpert (SetExpertRequest) returns (SetExpertResponse); 
+  rpc SetState (SetStateRequest) returns (SetStateResponse); 
+  
+  rpc CreatePosition (CreatePositionRequest) returns (CreatePositionResponse);
+  rpc UpdatePosition (UpdatePositionRequest) returns (UpdatePositionResponse);
+  rpc DeletePosition (DeletePositionRequest) returns (DeletePositionResponse);
+  rpc GetPosition (weizhu.EmptyRequest) returns (GetPositionResponse);
+  
+  rpc CreateLevel (CreateLevelRequest) returns (CreateLevelResponse);
+  rpc UpdateLevel (UpdateLevelRequest) returns (UpdateLevelResponse);
+  rpc DeleteLevel (DeleteLevelRequest) returns (DeleteLevelResponse);
+  rpc GetLevel (weizhu.EmptyRequest) returns (GetLevelResponse);
+  
+  rpc CreateTeam (CreateTeamRequest) returns (CreateTeamResponse);
+  rpc UpdateTeam (UpdateTeamRequest) returns (UpdateTeamResponse);
+  rpc DeleteTeam (DeleteTeamRequest) returns (DeleteTeamResponse);
+  rpc GetTeam (GetTeamRequest) returns (GetTeamResponse);
+  rpc GetTeamById (GetTeamByIdRequest) returns (GetTeamByIdResponse);
+  rpc GetTeamAllUserId (GetTeamAllUserIdRequest) returns (GetTeamAllUserIdResponse);
+  rpc GetAllTeam (weizhu.EmptyRequest) returns (GetAllTeamResponse);
+  
+  rpc ReloadTeam (weizhu.EmptyRequest) returns (weizhu.EmptyResponse);
+  
+  rpc GetUserAbilityTag (GetUserAbilityTagRequest) returns (GetUserAbilityTagResponse);
+  rpc SetUserAbilityTag (SetUserAbilityTagRequest) returns (SetUserAbilityTagResponse);
+  rpc GetAbilityTagUserId (GetAbilityTagUserIdRequest) returns (GetAbilityTagUserIdResponse);
+  
+  rpc GetUserByMobileNoUnique (GetUserByMobileNoUniqueRequest) returns (GetUserByMobileNoUniqueResponse);
+  rpc RegisterUser (RegisterUserRequest) returns (RegisterUserResponse);
+}

@@ -1,0 +1,1 @@
+DROP TABLE IF EXISTS weizhu_home_user_info;

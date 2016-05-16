@@ -1,0 +1,117 @@
+<div id="business-user-wrap" data-options="region:'center',border:false" class="easyui-layout" style="width:100%;height:100%;">
+    <div data-options="region:'north',border:false" style="width: 100%;">
+        <div class="easyui-panel" data-options="border:false">
+            <div style="padding:10px 20px;">
+                <form id="business-user-search-form" class="easyui-form form-layout-inline" method="get">
+                	<div class="form-item">
+                		<label>专家：</label>
+                		<input class="easyui-combobox" type="text" name="is_expert" data-options="valueField:'value',textField:'name',data:[{name:'全部',value:''},{name:'专家',value:'true'},{name:'非专家',value:'false'}],editable:false,panelHeight:'auto'"></input>
+                	</div>
+                	<div class="form-item">
+                		<label>部门名称：</label>
+                		<input name="team_id"></input>
+                	</div>
+                	<div class="form-item">
+                		<label>职务名称：</label>
+                		<input name="position_id"></input>
+                	</div>
+                	<div class="form-item">
+                		<label>员工姓名：</label>
+                		<input class="easyui-textbox" type="text" name="keyword"></input>
+                	</div>
+                	<div class="form-item">
+                		<label>手机号码：</label>
+                		<input class="easyui-textbox" type="text" name="mobile_no"></input>
+                	</div>
+                	<a href="javascript:void(0)" class="easyui-linkbutton reset-btn" iconCls="icon-reset">重置</a>
+                    <a href="javascript:void(0)" class="easyui-linkbutton search-btn" iconCls="icon-search"><%=lang.common.search_btn%></a>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div data-options="region:'center',border:false">
+        <table id="business-user-table" style="width:100%;height: 100%;"></table>
+    </div>
+    <div id="business-user-edit" class="easyui-window" data-options="title:'新建员工信息',collapsible:false,maximizable:false,minimizable:false,closed: true,modal:true,width:500,height:400">
+        <div class="easyui-layout" style="width:100%;height:100%;">
+            <div region="center" border="false" style="padding:10px 12px;">
+                <form id="business-user-edit-form" class="easyui-form form-layout-column" method="post" data-options="novalidate:true">
+                	<input type="hidden" name="user_id"/>
+                    <div class="form-item">
+                        <label>工号：</label>
+                        <input class="easyui-textbox form-item-box" type="text" name="raw_id" data-options="required:true,width:350,prompt:'请输入员工号，1~50个字符',validType:'length[1,50]'" />
+                    </div>
+                    <div class="form-item">
+                        <label>姓名：</label>
+                        <input class="easyui-textbox form-item-box" type="text" name="user_name" data-options="required:true,width:350,prompt:'请输入员工姓名，1~8个字符',validType:'length[1,50]'" />
+                    </div>
+                    <div class="form-item">
+                        <label>性别：</label>
+                        <input class="easyui-combobox form-item-box" type="text" name="gender" data-options="required:true,width:350,valueField:'value',textField:'name',data:[{name:'男',value:'MALE'},{name:'女',value:'FEMALE'}],editable:false,panelHeight:'auto'" />
+                    </div>
+                    <div class="form-item">
+                        <label>所属部门：</label>
+                        <input class="form-item-box" type="text" name="team_id" />
+                    </div>
+                    <div class="form-item">
+                        <label>职务：</label>
+                        <input class="form-item-box" type="text" name="position_id" />
+                    </div>
+                    <div class="form-item">
+                        <label>职级：</label>
+                        <input class="form-item-box" type="text" name="level_id" />
+                    </div>
+                    <div class="form-item">
+                        <label>手机号码：</label>
+                        <input class="easyui-textbox form-item-box" type="text" name="mobile_no" data-options="required:true,width:350,prompt:'请输入员工手机号码，多个号码用逗号隔开，1~190个字符',validType:['mobile','length[1,190]']" />
+                    </div>
+                    <div class="form-item">
+                        <label>座机：</label>
+                        <input class="easyui-textbox form-item-box" type="text" name="phone_no" data-options="width:350,prompt:'请输入员工座机号码，多个号码用逗号隔开，1~190个字符',validType:['phone','length[1,190]']" />
+                    </div>
+					<div class="form-item">
+                        <label>邮箱：</label>
+                        <input class="easyui-textbox form-item-box" type="text" name="email" data-options="width:350,prompt:'请输入员工邮箱，1~190个字符',validType:['email','length[1,190]']" />
+                    </div>
+                </form>
+            </div>
+            <div region="south" border="false" style="text-align:right;padding:10px 12px;">
+                <a href="javascript:void(0)" class="easyui-linkbutton edit-save" onclick='Wz.business.userManage.saveEdit();' data-options="iconCls:'icon-ok'">保存</a>
+                <a href="javascript:void(0)" class="easyui-linkbutton edit-cancel" onclick="$(this).parents('.easyui-window').window('close');" data-options="iconCls:'icon-cancel'">取消</a>
+            </div>
+        </div>
+    </div>
+    <div id="business-user-import-win" class="easyui-window" data-options="title:'导入员工信息',collapsible:false,maximizable:false,minimizable:false,closed: true,modal:true,width:400,height:180">
+        <div class="easyui-layout" style="width:100%;height:100%;">
+            <div region="center" border="false" style="padding:10px 12px;">
+                <form id="business-user-import-form" class="easyui-form form-layout-column" method="post" data-options="novalidate:true" enctype="multipart/form-data">
+                    <div class="form-item">
+                        <p>请按照<a href="javascript:void(0)" class="download-btn" src_url="">人员导入模板</a>填写您要导入的人员信息后上传。<i class="important-info">填写时请勿修改、挪动表单内项目，请勿修改文件名。</i></p>
+                    </div>
+                    <div class="form-item">
+                        <input class="easyui-filebox" name="import_user_file" style="width:350px" data-options="buttonText:'选择文件'">
+                    </div>
+                </form>
+            </div>
+            <div region="south" border="false" style="text-align:right;padding:10px 12px;">
+                <a href="javascript:void(0)" class="easyui-linkbutton edit-save" onclick='Wz.business.userManage.importUsers();' data-options="iconCls:'icon-ok'">上传</a>
+                <a href="javascript:void(0)" class="easyui-linkbutton edit-cancel" onclick="$(this).parents('.easyui-window').window('close');" data-options="iconCls:'icon-cancel'">取消</a>
+            </div>
+        </div>
+    </div>
+    <div id="business-user-onlineinfo-win" class="easyui-window" data-options="title:'在线信息',collapsible:false,maximizable:false,minimizable:false,closed: true,modal:true,width:800,height:400">
+        <div class="easyui-layout" style="width:100%;height:100%;">
+        	<input type="hidden" name="user_id" />
+        	<div region="north" border="false" style="padding:10px 12px;height:50px;">
+                <div class="user-code-info">
+                </div>
+            </div>
+            <div region="center" border="false" style="padding:10px 12px;">
+                <table id="business-user-session-table" style="width:100%;height: 100%;"></table>
+            </div>
+            <div region="south" border="false" style="text-align:right;padding:10px 12px;">
+                <a href="javascript:void(0)" class="easyui-linkbutton edit-cancel" onclick="$(this).parents('.easyui-window').window('close');" data-options="iconCls:'icon-cancel'">关闭</a>
+            </div>
+        </div>
+    </div>
+</div>

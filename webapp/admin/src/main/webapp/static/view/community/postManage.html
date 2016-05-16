@@ -1,0 +1,126 @@
+<div id="community-post-wrap" data-options="region:'center',border:false" class="easyui-layout" style="width:100%;height:100%;">
+    <div data-options="region:'north',border:false" style="width: 100%;">
+        <div class="easyui-panel" data-options="border:false">
+            <div style="padding:10px 20px;">
+                <form id="community-post-search-form" class="easyui-form form-layout-inline" method="get">
+                	<div class="form-item">
+                		<label>板块名称：</label>
+                		<input name="board_id"></input>
+                	</div>
+                	<div class="form-item">
+                		<label>标题：</label>
+                		<input class="easyui-textbox" type="text" name="post_title"></input>
+                	</div>
+                	<div class="form-item">
+                		<label>仅显示推荐：</label>
+                		<input type="checkbox" name="is_recommend"></input>
+                	</div>
+                	<a href="javascript:void(0)" class="easyui-linkbutton reset-btn" iconCls="icon-reset">重置</a>
+                    <a href="javascript:void(0)" class="easyui-linkbutton search-btn" iconCls="icon-search"><%=lang.common.search_btn%></a>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div data-options="region:'center',border:false">
+    	<table id="community-post-table" style="width:100%;height: 100%;"></table>
+    </div>
+    <div id="community-post-edit-win" class="easyui-window" data-options="title:'我来发帖',collapsible:false,maximizable:false,minimizable:false,closed: true,modal:true,width:500,height:400">
+        <div class="easyui-layout" style="width:100%;height:100%;">
+            <div region="center" border="false" style="padding:10px 12px;">
+                <form id="community-post-edit-form" class="easyui-form form-layout-column" method="post" data-options="novalidate:true">
+                    <div class="form-item">
+                        <label>板块名称：</label>
+                        <input class="form-item-box" type="text" name="board_id" />
+                    </div>
+                    <div class="form-item">
+                        <label>标题：</label>
+                        <input class="easyui-textbox form-item-box" type="text" name="title" data-options="required:true,width:350,prompt:'请输入您的帖子标题，1~50个字符',validType:'length[1,50]'" />
+                    </div>
+                    <div class="form-item">
+                        <label>正文：</label>
+                        <input class="easyui-textbox form-item-box" type="text" name="text" data-options="width:350,multiline:true,prompt:'请在这里输入帖子正文',height:150" />
+                    </div>
+                    <div class="form-item">
+                        <label>图片：</label>
+                        <input type="text" name="image_name" />
+                    </div>
+                    <div class="form-item">
+                        <label>标签：</label>
+                        <input type="text" name="tag" />
+                    </div>
+                    <div class="form-item">
+                        <label>发帖人：</label>
+                        <input type="text" name="create_user_id" />
+                    </div>
+                </form>
+            </div>
+            <div region="south" border="false" style="text-align:right;padding:10px 12px;">
+                <a href="javascript:void(0)" class="easyui-linkbutton edit-save" onclick='Wz.community.postManage.saveEdit();' data-options="iconCls:'icon-ok'">发布</a>
+                <a href="javascript:void(0)" class="easyui-linkbutton edit-cancel" onclick="$(this).parents('.easyui-window').window('close');" data-options="iconCls:'icon-cancel'">取消</a>
+            </div>
+        </div>
+    </div>
+    <div id="community-post-move-win" class="easyui-window" data-options="title:'迁移帖子',collapsible:false,maximizable:false,minimizable:false,closed: true,modal:true,width:500,height:150">
+        <div class="easyui-layout" style="width:100%;height:100%;">
+            <div region="center" border="false" style="padding:10px 12px;">
+                <form id="community-post-move-form" class="easyui-form form-layout-column" method="post" data-options="novalidate:true">
+                	<input type="hidden" name="post_id" />
+                    <div class="form-item">
+                        <label>所属板块：</label>
+                        <input class="form-item-box" type="text" name="board_id" />
+                    </div>
+                </form>
+            </div>
+            <div region="south" border="false" style="text-align:right;padding:10px 12px;">
+                <a href="javascript:void(0)" class="easyui-linkbutton edit-save" onclick='Wz.community.postManage.saveMove();' data-options="iconCls:'icon-ok'">保存</a>
+                <a href="javascript:void(0)" class="easyui-linkbutton edit-cancel" onclick="$(this).parents('.easyui-window').window('close');" data-options="iconCls:'icon-cancel'">取消</a>
+            </div>
+        </div>
+    </div>
+    <div id="community-post-commentlist-win" class="easyui-window" data-options="title:'查看详情',collapsible:false,maximizable:false,minimizable:false,closed: true,modal:true,width:900,height:500">
+        <div class="easyui-layout" style="width:100%;height:100%;">
+        	<div region="west" border="false" style="padding:10px 12px;width:300px;" data-options="title:'帖子内容',split:true">
+              	<div class="community-post-wrap">
+              		<h4 class="community-post-title">成功送给奋斗并坚持的人！坚持是王道！2016年，一起共勉。</h4>
+              		<div class="community-post-info">
+              			<span class="community-post-author">方文杰</span>
+              			<span class="like-btn"><span class="l-btn-icon icon-heart"></span><span class="like-count">0</span></span>
+              			<p class="community-post-time">2016-02-16 15:28</p>
+              		</div>
+              		<p class="community-post-text">
+              			不管做什么行业，都有一年的学徒期，两年的生存期，三年的职业期，最后再步入事业期，一旦认定某个行业，开始了就坚持下去，跳岗，就意味着重新开始，半途而废只能让你停留在生存期，然后不断的降低自己的要求，最终一事无成，人一旦习惯凑合，那这辈子可能会永远凑合下去，成功送给奋斗并坚持的人！坚持是王道！2016年，一起共勉。
+					</p>
+					<img class="community-post-image" src="http://7xlo7y.com1.z0.glb.clouddn.com/image/original/7bd340e572b78b1e28f2724641fde105.jpg" />
+              	</div>
+            </div>
+            <div region="center" border="false" data-options="title:'评论列表',split:true">
+            	<table id="community-post-comment-table" style="width:100%;height: 100%;"></table>
+            </div>
+            <div region="south" border="false" style="text-align:right;padding:5px 12px;height:42px;" data-options="split:true">
+                <a href="javascript:void(0)" class="easyui-linkbutton edit-cancel" onclick="$(this).parents('.easyui-window').window('close');" data-options="iconCls:'icon-cancel'">关闭</a>
+            </div>
+        </div>
+    </div>
+    <div id="community-post-comment-edit-win" class="easyui-window" data-options="title:'我来评论',collapsible:false,maximizable:false,minimizable:false,closed: true,modal:true,width:500,height:300">
+        <div class="easyui-layout" style="width:100%;height:100%;">
+            <div region="center" border="false" style="padding:10px 12px;">
+                <form id="community-post-comment-edit-form" class="easyui-form form-layout-column" method="post" data-options="novalidate:true">
+                	<input type="hidden" name="post_id" />
+                	<input type="hidden" name="reply_comment_id" />
+                	<div class="form-item">
+                        <label>发帖人：</label>
+                        <input type="text" name="create_user_id" />
+                    </div>
+                    <div class="form-item">
+                        <label>我的评论：</label>
+                        <input class="easyui-textbox form-item-box" type="text" name="content" data-options="required:true,width:350,multiline:true,prompt:'在这里，您可以输入自己的评论^_^',height:150" />
+                    </div>
+                </form>
+            </div>
+            <div region="south" border="false" style="text-align:right;padding:10px 12px;">
+                <a href="javascript:void(0)" class="easyui-linkbutton edit-save" onclick='Wz.community.postManage.saveComment();' data-options="iconCls:'icon-ok'">保存</a>
+                <a href="javascript:void(0)" class="easyui-linkbutton edit-cancel" onclick="$(this).parents('.easyui-window').window('close');" data-options="iconCls:'icon-cancel'">取消</a>
+            </div>
+        </div>
+    </div>
+</div>

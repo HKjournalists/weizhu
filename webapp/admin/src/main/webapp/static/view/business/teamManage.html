@@ -1,0 +1,22 @@
+<div id="business-team-wrap" data-options="region:'center',border:false" class="easyui-layout" style="width:100%;height:100%;">
+   <table id="business-team-table" style="width:100%;height: 100%;"></table>
+   <div id="business-team-edit-win" class="easyui-window" data-options="title:'添加部门',collapsible:false,maximizable:false,minimizable:false,closed: true,modal:true,width:500,height:150">
+        <div class="easyui-layout" style="width:100%;height:100%;">
+            <div region="center" border="false" style="padding:10px 12px;">
+            	<input type="hidden" name="type" />
+                <form id="business-team-edit-form" class="easyui-form form-layout-column" method="post" data-options="novalidate:true">
+                    <input type="hidden" name="team_id" />
+                    <input type="hidden" name="parent_team_id" />
+                    <div class="form-item">
+                        <label>部门名称：</label>
+                        <input class="easyui-textbox form-item-box" type="text" name="team_name" data-options="required:true,width:350,prompt:'请输入部门名称，1~50个字符',validType:'length[1,50]'" />
+                    </div>
+                </form>
+            </div>
+            <div region="south" border="false" style="text-align:right;padding:10px 12px;">
+                <a href="javascript:void(0)" class="easyui-linkbutton edit-save" onclick='Wz.business.teamManage.saveTeam();' data-options="iconCls:'icon-ok'">保存</a>
+                <a href="javascript:void(0)" class="easyui-linkbutton edit-cancel" onclick="$(this).parents('.easyui-window').window('close');" data-options="iconCls:'icon-cancel'">取消</a>
+            </div>
+        </div>
+    </div>
+</div>

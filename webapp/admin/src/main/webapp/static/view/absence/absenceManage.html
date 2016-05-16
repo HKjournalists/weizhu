@@ -1,0 +1,80 @@
+<div id="absence-absence-wrap" data-options="region:'center',border:false" class="easyui-layout" style="width:100%;height:100%;">
+    <div data-options="region:'north',border:false" style="width: 100%;">
+        <div class="easyui-panel" data-options="border:false">
+            <div style="padding:10px 20px;">
+                <form id="absence-search-form" class="easyui-form form-layout-inline" method="get">
+                	<div class="form-item">
+                		<label>姓名：</label>
+                		<input name="user_name" type="text" class="easyui-textbox">
+                	</div>
+                	<div class="form-item">
+                		<label>起始时间:</label>
+                		<input type="text" class="easyui-datetimebox" name="start_time" data-options="editable:false">
+                	</div>
+                	<div class="form-item">
+                		<label>结束时间:</label>
+                		<input type="text" class="easyui-datetimebox" name="end_time" data-options="editable:false">
+                	</div>
+                	<div class="form-item">
+                		<label>请假状态：</label>
+                		<input class="easyui-combobox" type="text" name="action" data-options="valueField:'value',textField:'name',data:[{name:'全部',value:''},{name:'请假中',value:'LEAVE'},{name:'已销假',value:'COME_BACK'}],editable:false,panelHeight:'auto'"></input>
+                    </div>
+                    <a href="javascript:void(0)" class="easyui-linkbutton reset-btn" iconCls="icon-reset">重置</a>
+                    <a href="javascript:void(0)" class="easyui-linkbutton search-btn" iconCls="icon-search"><%=lang.common.search_btn%></a>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div data-options="region:'center',border:false">
+        <table id="absence-table" style="width:100%;height: 100%;"></table>
+    </div>
+    <div id="absence-edit-win" class="easyui-window" data-options="title:'修改假条',collapsible:false,maximizable:false,minimizable:false,closed: true,modal:true,width:500,height:460">
+        <div class="easyui-layout" style="width:100%;height:100%;">
+            <div region="center" border="false" style="padding:10px 12px;">
+                <form id="absence-edit-form" class="easyui-form form-layout-column" method="post" data-options="novalidate:true">
+                	<input type="hidden" name="absence_id"/>
+                    <div class="form-item">
+                        <label>姓名：</label>
+                        <input class="easyui-textbox form-item-box" type="text" name="user_name" data-options="editable:false,width:350" />
+                    </div>
+                    <div class="form-item">
+                        <label>部门：</label>
+                        <input class="easyui-textbox form-item-box" type="text" name="team" data-options="editable:false,width:350" />
+                    </div>
+                    <div class="form-item">
+                        <label>手机号：</label>
+                        <input class="easyui-textbox form-item-box" type="text" name="mobile_no" data-options="editable:false,width:350" />
+                    </div>
+                    <div class="form-item">
+                        <label>请假类型：</label>
+                        <input class="easyui-combobox form-item-box" type="text" name="type" data-options="required:true,value:'事假',width:350,valueField:'value',textField:'name',data:[{name:'事假',value:'事假'},{name:'病假',value:'病假'},{name:'年假',value:'年假'},{name:'婚假',value:'婚假'},{name:'产假',value:'产假'},{name:'丧假',value:'丧假'}],editable:false,panelHeight:'auto'" />
+                    </div>
+                    <div class="form-item">
+                        <label>开始时间：</label>
+                        <input class="form-item-box" type="text" name="start_time" />
+                    </div>
+                    <div class="form-item">
+                        <label>结束时间：</label>
+                        <input class="form-item-box" type="text" name="pre_end_time" />
+                    </div>
+                    <div class="form-item">
+                        <label>销假时间：</label>
+                        <input class="form-item-box" type="text" name="fac_end_time" />
+                    </div>
+                    <div class="form-item">
+                        <label>请假天数：</label>
+                        <input class="easyui-numberbox form-item-box" type="text" name="days" data-options="suffix:'天',required:true,width:350,prompt:'请输入请假天数，只能输入数字1-200',min:1,max:200" />
+                    </div>
+					<div class="form-item">
+                        <label>备注：</label>
+                        <input class="easyui-textbox form-item-box" type="text" name="desc" data-options="width:350,height:100,multiline:true,prompt:'您可以在这里输入备注信息，1~190个字符',validType:'length[1,190]'" />
+                    </div>
+                </form>
+            </div>
+            <div region="south" border="false" style="text-align:right;padding:10px 12px;">
+                <a href="javascript:void(0)" class="easyui-linkbutton edit-save" onclick='Wz.absence.absenceManage.saveEdit();' data-options="iconCls:'icon-ok'">保存</a>
+                <a href="javascript:void(0)" class="easyui-linkbutton edit-cancel" onclick="$(this).parents('.easyui-window').window('close');" data-options="iconCls:'icon-cancel'">取消</a>
+            </div>
+        </div>
+    </div>
+</div>

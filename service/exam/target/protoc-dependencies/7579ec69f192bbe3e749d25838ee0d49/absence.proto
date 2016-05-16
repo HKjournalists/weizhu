@@ -1,0 +1,147 @@
+import "weizhu.proto";
+
+package weizhu.absence;
+
+option java_package = "com.weizhu.proto";
+option java_outer_classname = "AbsenceProtos";
+
+enum State {
+  NORMAL  = 0; // 用户，管理员，超级管理员 可见
+  DISABLE = 1; // 管理员，超级管理员 可见
+  DELETE  = 2; // 超级管理员 可见
+}
+
+message Absence {
+  required int32  absence_id   = 1;
+  required string type         = 2;
+  required int32  start_time   = 3;
+  required int32  pre_end_time = 4;
+  optional int32  fac_end_time = 5;
+  required string desc         = 6;
+  required string days         = 7;
+  
+  optional string state        = 8;
+  optional int32  create_time  = 9;
+  optional int64  create_user  = 10; 
+  
+  repeated int64  user_id      = 11; // 通知人员
+}
+
+message GetAbsenceByIdRequest {
+  repeated int32 absence_id = 1;
+}
+
+message GetAbsenceByIdResponse {
+  repeated Absence absence = 1;
+}
+
+message GetAbsenceNowResponse {
+  optional Absence absence = 1;
+}
+
+message CreateAbsenceRequest {
+  required string type       = 1;
+  required int32  start_time = 2;
+  required int32  end_time   = 3;
+  required string desc       = 4;
+  required string days       = 5;
+  repeated int64  user_id    = 6;
+}
+
+message CreateAbsenceResponse {
+  enum Result {
+    SUCC = 0;
+    FAIL_TYPE_INVALID = 1;
+    FAIL_TIME_INVALID = 2;
+    FAIL_DESC_INVALID = 3;
+    FAIL_DAYS_INVALID = 4;
+    
+    FAIL_UNKNOWN      = 99;
+  }
+  optional Result result     = 1 [default = FAIL_UNKNOWN];
+  optional string fail_text  = 2;
+  optional int32  absence_id = 3;
+}
+
+message CancelAbsenceRequest {
+  required int32  absence_id = 1;
+  required string days       = 2;
+}
+
+message CancelAbsenceResponse {
+  enum Result {
+    SUCC = 0;
+    FAIL_ABSENCE_ID_INVALID = 1;
+    FAIL_DAYS_INVALID       = 2;
+    
+    FAIL_UNKNOWN            = 99;
+  }
+  optional Result result    = 1 [default = FAIL_UNKNOWN];
+  optional string fail_text = 2;
+}
+
+message GetAbsenceCliRequest {
+  required int32 size            = 1;
+  optional int32 last_absence_id = 2;
+}
+
+message GetAbsenceCliResponse {
+  repeated Absence absence      = 1;
+  required bool    has_more     = 2;
+}
+
+message GetAbsenceSerRequest {
+  enum Action {
+    LEAVE     = 1;
+    COME_BACK = 2;
+  }
+  required int32  start      = 1;
+  required int32  length     = 2;
+  repeated int64  user_id    = 3;
+  optional int32  start_time = 4;
+  optional int32  end_time   = 5;
+  optional Action action     = 6;
+}
+
+message GetAbsenceSerResponse {
+  repeated Absence absence       = 1;
+  required int32   total         = 2;
+  required int32   filtered_size = 3;
+}
+
+message UpdateAbsenceRequest {
+  required int32  absence_id   = 1;
+  required string type         = 2;
+  required int32  start_time   = 3;
+  required int32  pre_end_time = 4;
+  optional int32  fac_end_time = 5;
+  required string days         = 6;
+  required string desc         = 7;
+}
+
+message UpdateAbsenceResponse {
+  enum Result {
+    SUCC = 0;
+    FAIL_TYPE_INVALID    = 1;
+    FAIL_TIME_INVALID    = 2;
+    FAIL_DESC_INVALID    = 3;
+    FAIL_DAYS_INVALID    = 4;
+    FAIL_ABSENCE_INVALID = 5;
+    
+    FAIL_UNKNOWN         = 99;
+  }
+  optional Result result    = 1 [default = FAIL_UNKNOWN];
+  optional string fail_text = 2;
+}
+
+service AbsenceService {
+  rpc GetAbsenceById (GetAbsenceByIdRequest) returns (GetAbsenceByIdResponse);
+  
+  rpc GetAbsenceNow (weizhu.EmptyRequest) returns (GetAbsenceNowResponse);
+  rpc CreateAbsence (CreateAbsenceRequest) returns (CreateAbsenceResponse);
+  rpc CancelAbsence (CancelAbsenceRequest) returns (CancelAbsenceResponse);
+  rpc GetAbsenceCli (GetAbsenceCliRequest) returns (GetAbsenceCliResponse);
+  
+  rpc GetAbsenceSer (GetAbsenceSerRequest) returns (GetAbsenceSerResponse);
+  rpc UpdateAbsence (UpdateAbsenceRequest) returns (UpdateAbsenceResponse);
+}

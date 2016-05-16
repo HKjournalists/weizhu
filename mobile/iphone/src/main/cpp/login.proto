@@ -1,0 +1,183 @@
+import "weizhu.proto";
+import "user.proto";
+
+package weizhu.login;
+
+option java_package = "com.weizhu.proto";
+option java_outer_classname = "LoginProtos";
+option optimize_for = LITE_RUNTIME;
+
+message SmsCode {
+  required string mobile_no   = 1;
+  required int32  sms_code    = 2;
+  required int32  create_time = 3;
+}
+
+message SendSmsCodeRequest {
+  required string company_key = 1; // 公司key
+  required string mobile_no   = 2; // 手机号
+}
+
+message SendSmsCodeResponse {
+  // 发送短信验证码到手机返回结果
+  enum Result {
+    SUCC                     = 0; // 调用成功
+    FAIL_MOBILE_NO_INVALID   = 1; // 手机号不正确
+    FAIL_USER_NOT_EXSIT      = 2; // 该手机号对应的用户不存在
+    FAIL_SEND_FAIL           = 3; // 后台发送短信失败
+    FAIL_SEND_LIMIT_EXCEEDED = 4; // 发送短信频率超过限制
+    // FAIL_USER_DISABLE        = 5; // 该用户被禁用, 不能登录
+    
+    FAIL_UNKNOWN             = 99;
+  }
+  
+  optional Result result     = 1 [default = FAIL_UNKNOWN]; // 返回结果
+  optional string fail_text  = 2; // 错误文本, 供客户端展示
+  optional int64  company_id = 3; // 对应的公司id，客户端不需要关注此字段
+}
+
+message LoginBySmsCodeRequest {
+  required string company_key = 1; // 公司key
+  required string mobile_no   = 2; // 手机号
+  required int32  sms_code    = 3; // 短信验证码
+}
+
+message LoginBySmsCodeResponse {
+  // 使用手机号+验证码登录返回结果
+  enum Result {
+    SUCC                   = 0; // 调用成功, 返回session_key 和 user_id
+    FAIL_MOBILE_NO_INVALID = 1; // 手机号不正确
+    FAIL_SMS_CODE_INVALID  = 2; // 短信验证码错误
+    FAIL_SMS_CODE_EXPIRED  = 3; // 短信验证码过期
+    // FAIL_USER_DISABLE      = 4; // 该用户被禁用, 不能登录
+    
+    FAIL_UNKNOWN           = 99;
+  }
+  
+  optional Result               result       = 1 [default = FAIL_UNKNOWN]; // 返回结果
+  optional string               fail_text    = 2; // 错误文本, 供客户端展示
+  optional bytes                session_key  = 3; // 会话key
+  optional weizhu.user.User     user         = 4; // 用户信息
+  repeated weizhu.user.Team     ref_team     = 5; // 引用团队信息
+  repeated weizhu.user.Position ref_position = 6; // 引用职位信息
+  repeated weizhu.user.Level    ref_level    = 7; // 引用职级信息
+  optional int64                company_id   = 8; // 对应的公司id，客户端不需要关注此字段
+}
+
+message LoginAutoRequest {
+  required string company_key = 1; // 公司key
+  required string mobile_no   = 2; // 手机号
+  optional int64  company_id  = 3;
+  optional int64  user_id     = 4;
+}
+
+message LoginAutoResponse {
+  enum Result {
+    SUCC                    = 0; // 调用成功, 返回session_key 和 user_id
+    FAIL_AUTO_LOGIN_DISABLE = 1;
+    FAIL_MOBILE_NO_INVALID  = 2; // 手机号不正确
+    FAIL_USER_NOT_FOUND     = 3;
+    FAIL_USER_DISABLE       = 4; // 该用户被禁用, 不能登录
+    
+    FAIL_UNKNOWN            = 99;
+  }
+  
+  optional Result               result       = 1 [default = FAIL_UNKNOWN]; // 返回结果
+  optional string               fail_text    = 2; // 错误文本, 供客户端展示
+  optional bytes                session_key  = 3; // 会话key
+  optional weizhu.user.User     user         = 4; // 用户信息
+  repeated weizhu.user.Team     ref_team     = 5; // 引用团队信息
+  repeated weizhu.user.Position ref_position = 6; // 引用职位信息
+  repeated weizhu.user.Level    ref_level    = 7; // 引用职级信息
+  optional int64                company_id   = 8; // 对应的公司id，客户端不需要关注此字段
+}
+
+message GetLoginSmsCodeRequest {
+  required int64 user_id = 1;
+}
+
+message GetLoginSmsCodeResponse {
+  repeated SmsCode sms_code = 1;
+}
+
+message SendRegisterSmsCodeRequest {
+  required string company_key = 1;
+  required string mobile_no   = 2;
+}
+
+message SendRegisterSmsCodeResponse {
+  enum Result {
+    SUCC                     = 0; // 调用成功
+    FAIL_MOBILE_NO_INVALID   = 1; // 手机号不正确
+    FAIL_SEND_FAIL           = 2; // 后台发送短信失败
+    FAIL_SEND_LIMIT_EXCEEDED = 3; // 发送短信频率超过限制
+    
+    FAIL_UNKNOWN             = 99;
+  }
+  
+  optional Result result     = 1 [default = FAIL_UNKNOWN]; // 返回结果
+  optional string fail_text  = 2; // 错误文本, 供客户端展示
+  optional int64  company_id = 3; // 对应的公司id，客户端不需要关注此字段
+}
+
+message RegisterBySmsCodeRequest {
+  required string                      company_key = 1; // 公司key
+  required string                      user_name   = 2; // 
+  optional weizhu.user.UserBase.Gender gender      = 3;
+  optional string                      email       = 4;
+  repeated string                      team        = 5;
+  optional string                      position    = 6;
+  required string                      mobile_no   = 7;
+  required int32                       sms_code    = 8; // 
+  repeated string                      exts_name   = 9;
+  repeated string                      exts_value  = 10;
+  optional string                      level       = 11;
+  optional string                      phone_no    = 12;
+}
+
+message RegisterBySmsCodeResponse {
+  // 使用手机号+验证码登录返回结果
+  enum Result {
+    SUCC                   = 0; // 调用成功, 返回session_key 和 user_id
+    FAIL_NAME_INVALID      = 1; // 手机号不正确
+    FAIL_EMAIL_INVALID     = 2;
+    FAIL_TEAM_INVALID      = 3;
+    FAIL_POSITION_INVALID  = 4;
+    FAIL_MOBILE_NO_INVALID = 5;
+    FAIL_SMS_CODE_INVALID  = 6; // 短信验证码错误
+    FAIL_SMS_CODE_EXPIRED  = 7; // 短信验证码过期
+    FAIL_LEVEL_INVALID     = 8;
+    
+    FAIL_UNKNOWN           = 99;
+  }
+  
+  optional Result result     = 1 [default = FAIL_UNKNOWN]; // 返回结果
+  optional string fail_text  = 2; // 错误文本, 供客户端展示
+  optional int64  company_id = 3; // 对应的公司id，客户端不需要关注此字段
+}
+
+
+// 登录服务
+service LoginService {
+  
+  // 发送短信验证码到手机
+  rpc SendSmsCode (SendSmsCodeRequest) returns (SendSmsCodeResponse);
+  
+  // 使用手机号+验证码登录
+  rpc LoginBySmsCode (LoginBySmsCodeRequest) returns (LoginBySmsCodeResponse);
+  
+  // 自动登录接口
+  rpc LoginAuto (LoginAutoRequest) returns (LoginAutoResponse);
+  
+  // 登出
+  rpc Logout (weizhu.EmptyRequest) returns (weizhu.EmptyResponse);
+  
+  // 获取用户登录的验证码，用于管理员查询
+  rpc GetLoginSmsCode (GetLoginSmsCodeRequest) returns (GetLoginSmsCodeResponse);
+  
+  // 发送注册短信验证码
+  rpc SendRegisterSmsCode (SendRegisterSmsCodeRequest) returns (SendRegisterSmsCodeResponse);
+  
+  // 使用短信验证码注册
+  rpc RegisterBySmsCode (RegisterBySmsCodeRequest) returns (RegisterBySmsCodeResponse);
+}

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>测试接口</title>
+</head>
+<body>
+
+<a href="../api/verify_session">第三方验证身份接口</a><br/>
+<!--qa test  -->
+<a href="../api/qa/get_category.json">获取分类列表</a><br/>
+<a href="../api/qa/get_question.json?size=100">获取问题列表</a><br/>
+<a href="../api/qa/add_question.json?question_content=mobile_question_content&category_id=1">添加问题</a><br/>
+<a href="../api/qa/delete_question.json?question_id=16">删除问题</a><br/>
+<a href="../api/qa/search_question.json?keyword=测试问题1">搜索问题</a><br/>
+<a href="../api/qa/search_more_question.json?size=100&keyword=测试&category_id=1">搜索更多问题</a><br/>
+<a href="../api/qa/get_answer.json?size=100&question_id=1">获取回答</a><br/>
+<a href="../api/qa/add_answer.json?question_id=1&answer_content=mobile_answer_content">添加回答</a><br/>
+<a href="../api/qa/delete_answer.json?answer_id=24">删除回答</a><br/>
+<a href="../api/qa/like_answer.json?answer_id=1&is_like=true">回答点赞</a><br/>
+<a href="../api/qa/like_answer.json?answer_id=1&is_like=false">取消回答点赞</a><br/>
+
+</body>
+</html>

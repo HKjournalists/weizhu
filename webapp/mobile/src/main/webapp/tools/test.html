@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>信息类工具test</title>
+</head>
+<body>
+
+<h3>获取信息类工具首页信息接口</h3>
+<form action="../api/tools/info/get_info_home.json" method="get">
+tool_id: <input type="text" name="tool_id" value="1" /> (工具Id)<br/>
+selected_tag_id: <input type="text" name="selected_tag_id" value="9" /> (已选择的tagId,可多选用‘,’分割)<br/>
+item_size: <input type="text" name="selected_tag_id" value="10" /> (获取条目数)<br/>
+offset_index: <input type="text" name="offset_index" value="" /> (翻页索引，根据上一次返回结果获得。不填为首页)<br/>
+<input type="submit" name="submit" value="提交" />
+</form>
+<br/>
+
+<h3>获取信息类工具条目内容接口</h3>
+<form action="../api/tools/info/get_info_item_content.json" method="get">
+tool_id: <input type="text" name="tool_id" value="1" /> (工具Id)<br/>
+item_id: <input type="text" name="item_id" value="3" /> (条目Id)<br/>
+<input type="submit" name="submit" value="提交" />
+</form>
+
+</body>
+</html>

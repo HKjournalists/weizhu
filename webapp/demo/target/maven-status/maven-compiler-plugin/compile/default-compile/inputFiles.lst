@@ -1,0 +1,7 @@
+/Users/york/git/weizhu_server3/webapp/demo/src/main/java/com/weizhu/webapp/demo/DemoServletModule.java
+/Users/york/git/weizhu_server3/webapp/demo/src/main/java/com/weizhu/webapp/demo/home/GetUserInfoServlet.java
+/Users/york/git/weizhu_server3/webapp/demo/src/main/java/com/weizhu/webapp/demo/home/CreateUserInfoServlet.java
+/Users/york/git/weizhu_server3/webapp/demo/src/main/java/com/weizhu/webapp/demo/GuiceConfigListener.java
+/Users/york/git/weizhu_server3/webapp/demo/src/main/java/com/weizhu/webapp/demo/home/DownloadUserInfoServlet.java
+/Users/york/git/weizhu_server3/webapp/demo/src/main/java/com/weizhu/webapp/demo/home/DeleteUserInfoServlet.java
+/Users/york/git/weizhu_server3/webapp/demo/src/main/java/com/weizhu/webapp/demo/home/UpdateUserInfoServlet.java

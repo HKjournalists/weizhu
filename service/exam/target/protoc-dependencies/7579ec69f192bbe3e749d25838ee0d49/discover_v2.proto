@@ -1,0 +1,678 @@
+import "weizhu.proto";
+
+package weizhu.discover_v2;
+
+option java_package = "com.weizhu.proto";
+option java_outer_classname = "DiscoverV2Protos";
+// option optimize_for = LITE_RUNTIME;
+
+// web页面url
+message WebUrl {
+  required string web_url   = 1; // web页面地址url
+  required bool   is_weizhu = 2; // 是否是微助自己的url。true: 微助的url，需要带上身份cookie。 false: 外部url，不要带上身份cookie
+}
+
+// 文档
+message Document {
+  required string document_url  = 1; // 文档访问地址，需要处理http redirect
+  required string document_type = 2; // pdf/doc/ppt
+  required int32  document_size = 3; // 文档大小 单位Byte
+  optional string check_md5     = 4; // 校验md5值。不存在则无需校验。如果有变更,说明内容有更新
+  required bool   is_download   = 5; // 是否可以离线下载。true: 可以离线下载。false: 不可以离线下载
+  required bool   is_auth_url   = 6; // url是否需要授权访问。true: 根据接口获取被授权的url，才能访问。false: 直接访问url即可. 注：url授权是有时间限制的，超过时限，url会失效
+}
+
+// 视频
+message Video {
+  required string video_url   = 1; // 视频访问地址，需要处理http redirect
+  required string video_type  = 2; // avi/flv
+  required int32  video_size  = 3; // 视频大小 单位Byte
+  required int32  video_time  = 4; // 视频时长 单位秒
+  optional string check_md5   = 5; // 校验md5值。不存在则无需校验。如果有变更,说明内容有更新
+  required bool   is_download = 6; // 是否可以离线下载。true: 可以离线下载。false: 不可以离线下载
+  required bool   is_auth_url = 7; // url是否需要授权访问。true: 根据接口获取被授权的url，才能访问。false: 直接访问url即可. 注：url授权是有时间限制的，超过时限，url会失效
+}
+
+// 音频
+message Audio {
+  required string audio_url   = 1; // 音频访问地址，需要处理http redirect
+  required string audio_type  = 2; // mp3
+  required int32  audio_size  = 3; // 音频大小 单位Byte
+  required int32  audio_time  = 4; // 音频时长 单位秒
+  optional string check_md5   = 5; // 校验md5值。不存在则无需校验。如果有变更,说明内容有更新
+  required bool   is_download = 6; // 是否可以离线下载。true: 可以离线下载。false: 不可以离线下载
+  required bool   is_auth_url = 7; // url是否需要授权访问。true: 根据接口获取被授权的url，才能访问。false: 直接访问url即可. 注：url授权是有时间限制的，超过时限，url会失效
+}
+
+// app内部跳转uri
+message AppUri {
+  required string app_uri = 1;
+}
+
+// 内容状态
+enum State {
+  NORMAL  = 0; // 用户 管理员 boss
+  DISABLE = 1; // 管理员 boss
+  DELETE  = 2; // boss
+}
+
+// 发现首页轮播图
+message Banner {
+  required int32  banner_id      = 1;
+  required string banner_name    = 2; // banner 显示名称或者title
+  required string image_name     = 3; // 轮播图name
+  optional int32  allow_model_id = 4;
+  
+  // 点击轮播图后的内容
+  oneof content {
+    int64  item_id = 5; // 条目id
+    WebUrl web_url = 6; // web地址 
+    AppUri app_uri = 7; // app内部跳转uri
+  }
+  
+  optional State  state           = 95 [default = NORMAL]; 
+  optional int64  create_admin_id = 96;
+  optional int32  create_time     = 97;
+  optional int64  update_admin_id = 98;
+  optional int32  update_time     = 99;
+}
+
+// 发现模块
+message Module {
+  // 模块下的分类
+  message Category {
+    required int32  category_id     = 1; // 分类id
+    required string category_name   = 2; // 分类名称,字数最多为6
+    required int32  module_id       = 3; // 模块id
+    optional int32  allow_model_id  = 4;
+    optional bool   prompt_dot      = 5; // 提示红点。true: 显示红点。 false或者没有设置：不显示
+    optional int32  prompt_cnt      = 6; // 提示计数。prompt_cnt>0: 提示具体数字。prompt_cnt<=0或者没有设置: 不显示
+    
+    optional State  state           = 95 [default = NORMAL]; 
+    optional int64  create_admin_id = 96;
+    optional int32  create_time     = 97;
+    optional int64  update_admin_id = 98;
+    optional int32  update_time     = 99;
+  }
+  // 模块下的分类列表
+  message CategoryList {
+    repeated Category category = 1; // 模块分类最多为6类不可重复
+  }
+
+  required int32  module_id      = 1; // 模块id
+  required string module_name    = 2; // 模块名称
+  required string image_name     = 3; // 模块图标名称
+  optional int32  allow_model_id = 4; // 访问权限模型id
+  optional bool   prompt_dot     = 5; // 提示红点。true: 显示红点。 false或者没有设置：不显示
+  optional int32  prompt_cnt     = 6; // 提示计数。prompt_cnt>0: 提示具体数字。prompt_cnt<=0或者没有设置: 不显示
+  
+  // 点击模块展示的内容
+  oneof content {
+    CategoryList  category_list  = 7; // 分类条目列表形式
+    WebUrl        web_url        = 8; // web地址
+    AppUri        app_uri        = 9; // app内部跳转地址
+  }
+  
+  optional State  state           = 95 [default = NORMAL]; 
+  optional int64  create_admin_id = 96;
+  optional int32  create_time     = 97;
+  optional int64  update_admin_id = 98;
+  optional int32  update_time     = 99;
+}
+
+// 发现课件条目
+message Item {
+
+  // 条目基础信息
+  message Base {
+    required int64  item_id               = 1; // 条目id
+    required string item_name             = 2; // 条目名称
+    required string item_desc             = 3; // 条目描述
+    required string image_name            = 4; // 条目icon name
+    optional int32  allow_model_id        = 5; // 可访问的权限模型id
+    required bool   enable_comment        = 6; // 是否开启评论功能
+    required bool   enable_score          = 7; // 是否开启打分功能
+    required bool   enable_remind         = 8; // 是否打开提醒用户评分评论功能
+    required bool   enable_like           = 9; // 是否开启点赞功能
+    required bool   enable_share          = 10; // 是否开启分享功能
+    optional bool   enable_external_share = 11; // 是否开启外部分享功能
+    
+    // 扩展新的标识位
+    
+    // 点击条目显示的内容
+    oneof content {
+      WebUrl   web_url  = 20; // web链接
+      Document document = 21; // 文档类型课件
+      Video    video    = 22; // 视频类型课件
+      Audio    audio    = 23; // 音频类型课件
+      AppUri   app_uri  = 24; // app内部跳转uri
+    }
+    
+    optional State  state            = 95 [default = NORMAL]; 
+    optional int64  create_admin_id  = 96;
+    optional int32  create_time      = 97;
+    optional int64  update_admin_id  = 98;
+    optional int32  update_time      = 99;
+  }
+  
+  // 条目计数信息
+  message Count {
+    required int32  learn_cnt        = 1; // 学习次数
+    required int32  learn_user_cnt   = 2; // 学习人数
+    required int32  comment_cnt      = 3; // 评论数
+    required int32  comment_user_cnt = 4; // 参与评论的人数
+    required int32  score_number     = 5; // 打分平均分。如果没有人打过分则为0。可以结合 score_user_cnt 字段 判断是否有人打过分
+    required int32  score_user_cnt   = 6; // 打分参与人数
+    required int32  like_cnt         = 7; // 点赞人数
+    required int32  share_cnt        = 8; // 分享数
+  }
+  
+  // 条目用户信息
+  message User {
+    required int64  user_id    = 1; // 用户id
+    optional bool   is_learn   = 2; // 该用户是否学习过
+    optional bool   is_comment = 3; // 该用户是否评论过
+    optional bool   is_score   = 4; // 该用户是否打过分
+    optional bool   is_like    = 5; // 该用户是否点过赞
+    optional bool   is_share   = 6; // 该用户是否分享过
+  }
+   
+  required Base  base  = 1; // 基础信息
+  required Count count = 2; // 计数信息
+  optional User  user  = 3; // 访问用户信息
+}
+
+// 发现条目学习
+message ItemLearn {
+  required int64  item_id        = 1; // 条目id
+  required int64  user_id        = 2; // 学习用户id
+  required int32  learn_time     = 3; // 最近学习时刻
+  required int32  learn_duration = 4; // 累计学习时长
+  required int32  learn_cnt      = 5; // 累计学习次数
+}
+
+// 发现条目评论
+message ItemComment {
+  required int64  comment_id   = 1; // 评论id
+  required int64  item_id      = 2; // 条目id
+  required int64  user_id      = 3; // 评论作者id
+  required int32  comment_time = 4; // 评论时间
+  required string comment_text = 5; // 评论内容
+  required bool   is_delete    = 6; // 是否被删除。后台使用，客户端无需关注该字段
+}
+
+// 发现条目打分
+message ItemScore {
+  required int64  item_id      = 1; // 条目id
+  required int64  user_id      = 2; // 打分用户id
+  required int32  score_time   = 3; // 打分时间
+  required int32  score_number = 4; // 打分分数
+}
+
+// 发现条目点赞
+message ItemLike {
+  required int64  item_id   = 1; // 条目id
+  required int64  user_id   = 2; // 打分用户id
+  required int32  like_time = 3; // 点赞时间
+}
+
+// 发现条目分享
+message ItemShare {
+  required int64  item_id      = 1; // 条目id
+  required int64  user_id      = 2; // 分享人
+  required int32  share_time   = 3; // 分享时间
+}
+
+// 获取发现页首页相关信息请求
+message GetDiscoverHomeRequest {
+  repeated bytes prompt_index = 1; // 请将客户端上保存的所有模块/模块分类 等提示索引传入
+}
+
+// 获取发现页首页相关信息响应
+message GetDiscoverHomeResponse {
+  repeated Banner banner   = 1; // 发现首页轮播图banner
+  repeated Module module   = 2; // 发现首页下方展示的方形模块
+  repeated Item   ref_item = 3; // 轮播图banner可能引用的课件条目
+}
+
+// 获取模块某个分类下的条目列表请求
+message GetModuleCategoryItemListRequest {
+  required int32 module_id    = 1; // 模块id
+  required int32 category_id  = 2; // 模块分类id
+  required int32 item_size    = 3; // 获取item数目，必须小于等于100
+  optional bytes offset_index = 4; // 获取数据偏移索引。初次获取，不设此字段。翻页时传入上次获取到的值
+}
+
+// 获取模块某个分类下的条目列表响应
+message GetModuleCategoryItemListResponse {
+  repeated Item  item         = 1; // 条目信息
+  required bool  has_more     = 2; // 是否还有更多
+  required bytes offset_index = 3; // 翻页偏移索引
+  optional bytes prompt_index = 4; // 模块下分类提示(红点或者数字)索引。当该字段有数据时客户端需保存好。建议保存为 module_id,category_id -> prompt_index 映射形式
+}
+
+// 获取模块红点提示索引请求
+message GetModulePromptIndexRequest {
+  required int32 module_id = 1;
+}
+
+// 获取模块红点提示索引响应
+message GetModulePromptIndexResponse {
+  optional bytes prompt_index = 1; // 模块提示(红点或者数字)索引。客户端需保存好。建议保存为 module_id -> prompt_index 映射形式
+}
+
+// 根据Id获取条目信息请求
+message GetItemByIdRequest {
+  repeated int64 item_id = 1; // 条目id，最多100个
+}
+
+// 根据Id获取条目信息响应
+message GetItemByIdResponse {
+  repeated Item item = 1; // 条目信息
+}
+
+// 获取某个条目下的学习列表请求
+message GetItemLearnListRequest {
+  required int64 item_id      = 1; // 条目id
+  required int32 size         = 2; // 获取数目
+  optional bytes offset_index = 3; // 获取数据偏移索引。初次获取，不设此字段。翻页时传入上次获取到的值
+}
+
+// 获取某个条目下的学习列表响应
+message GetItemLearnListResponse {
+  repeated ItemLearn item_learn          = 1; // 评论列表
+  required bool      has_more            = 2; // 是否还有更多
+  required bytes     offset_index        = 3; // 翻页偏移索引
+  optional int32     item_learn_cnt      = 4; // 课件学习总次数。无此课件时，该字段不填
+  optional int32     item_learn_user_cnt = 5; // 课件学习总人数。无此课件时，该字段不填
+  optional ItemLearn user_item_learn     = 6; // 访问用户学习状态。无此课件，或者用户没有学习过该课件时，该字段不填
+}
+
+// 获取用户学习列表请求
+message GetUserLearnListRequest {
+  required int64 user_id      = 1; // 用户id 
+  required int32 size         = 2; // 获取数目
+  optional bytes offset_index = 3; // 获取数据偏移索引。初次获取，不设此字段。翻页时传入上次获取到的值
+}
+
+// 获取用户学习列表响应
+message GetUserLearnListResponse {
+  repeated ItemLearn item_learn   = 1; // 评论列表
+  required bool      has_more     = 2; // 是否还有更多
+  required bytes     offset_index = 3; // 翻页偏移索引
+  repeated Item      ref_item     = 4; // 引用item信息
+}
+
+// 获取某个条目下的评论列表请求
+message GetItemCommentListRequest {
+  required int64 item_id      = 1; // 条目id
+  required int32 size         = 2; // 获取数目
+  optional bytes offset_index = 3; // 获取数据偏移索引。初次获取，不设此字段。翻页时传入上次获取到的值
+}
+
+// 获取某个条目下的评论列表响应
+message GetItemCommentListResponse {
+  repeated ItemComment item_comment          = 1; // 评论列表
+  required bool        has_more              = 2; // 是否还有更多
+  required bytes       offset_index          = 3; // 翻页偏移索引
+  optional int32       item_comment_cnt      = 4; // 课件评论总数。无此课件时，该字段不填
+  optional int32       item_comment_user_cnt = 5; // 课件评论总人数。无此课件时，该字段不填
+}
+
+// 获取用户评论列表请求
+message GetUserCommentListRequest {
+  required int64 user_id      = 1; // 用户id 
+  required int32 size         = 2; // 获取数目
+  optional bytes offset_index = 3; // 获取数据偏移索引。初次获取，不设此字段。翻页时传入上次获取到的值
+}
+
+// 获取用户评论列表响应
+message GetUserCommentListResponse {
+  repeated ItemComment item_comment = 1; // 评论列表
+  required bool        has_more     = 2; // 是否还有更多
+  required bytes       offset_index = 3; // 翻页偏移索引
+  repeated Item        ref_item     = 4; // 引用item信息
+}
+
+// 获取某个条目下的打分列表请求
+message GetItemScoreListRequest {
+  required int64 item_id      = 1; // 条目id
+  required int32 size         = 2; // 获取数目
+  optional bytes offset_index = 3; // 获取数据偏移索引。初次获取，不设此字段。翻页时传入上次获取到的值
+}
+
+// 获取某个条目下的打分列表响应
+message GetItemScoreListResponse {
+  repeated ItemScore item_score          = 1; // 评论列表
+  required bool      has_more            = 2; // 是否还有更多
+  required bytes     offset_index        = 3; // 翻页偏移索引
+  optional int32     item_score_number   = 4; // 课件打分平均分。无此课件时，该字段不填
+  optional int32     item_score_user_cnt = 5; // 课件打分人数。无此课件时，该字段不填
+  optional ItemScore user_item_score     = 6; // 访问用户打分状态。无此课件，或者用户没有对该课件打过分时，该字段不填
+}
+
+// 获取用户打分列表请求
+message GetUserScoreListRequest {
+  required int64 user_id      = 1; // 用户id 
+  required int32 size         = 2; // 获取数目
+  optional bytes offset_index = 3; // 获取数据偏移索引。初次获取，不设此字段。翻页时传入上次获取到的值
+}
+
+// 获取用户打分列表响应
+message GetUserScoreListResponse {
+  repeated ItemScore item_score   = 1; // 评分列表
+  required bool      has_more     = 2; // 是否还有更多
+  required bytes     offset_index = 3; // 翻页偏移索引
+  repeated Item      ref_item     = 4; // 引用item信息
+}
+
+// 获取某个条目下的点赞列表请求
+message GetItemLikeListRequest {
+  required int64 item_id      = 1; // 条目id
+  required int32 size         = 2; // 获取数目
+  optional bytes offset_index = 3; // 获取数据偏移索引。初次获取，不设此字段。翻页时传入上次获取到的值
+}
+
+// 获取某个条目下的学习列表响应
+message GetItemLikeListResponse {
+  repeated ItemLike item_like      = 1; // 点赞列表
+  required bool     has_more       = 2; // 是否还有更多
+  required bytes    offset_index   = 3; // 翻页偏移索引
+  optional int32    item_like_cnt  = 4; // 课件点赞总数。无此课件时，该字段不填
+  optional ItemLike user_item_like = 5; // 访问用户是否点过赞。无此课件，或者用户没有对该课件打过分时，该字段不填
+}
+
+
+// 获取用户点赞列表请求
+message GetUserLikeListRequest {
+  required int64 user_id      = 1; // 用户id 
+  required int32 size         = 2; // 获取数目
+  optional bytes offset_index = 3; // 获取数据偏移索引。初次获取，不设此字段。翻页时传入上次获取到的值
+}
+
+// 获取用户点赞列表响应
+message GetUserLikeListResponse {
+  repeated ItemLike item_like    = 1; // 点赞列表
+  required bool     has_more     = 2; // 是否还有更多
+  required bytes    offset_index = 3; // 翻页偏移索引
+  repeated Item     ref_item     = 4; // 引用item信息
+}
+
+// 获取某个条目下的分享列表请求
+message GetItemShareListRequest {
+  required int64 item_id      = 1; // 条目id
+  required int32 size         = 2; // 获取数目
+  optional bytes offset_index = 3; // 获取数据偏移索引。初次获取，不设此字段。翻页时传入上次获取到的值
+}
+
+// 获取某个条目下的分享列表响应
+message GetItemShareListResponse {
+  repeated ItemShare item_share      = 1; // 分享列表
+  required bool      has_more        = 2; // 是否还有更多
+  required bytes     offset_index    = 3; // 翻页偏移索引
+  optional int32     item_share_cnt  = 4; // 课件分享总数。无此课件时，该字段不填
+  optional ItemShare user_item_share = 5; // 访问用户是否分享过。无此课件，或者用户没有对该课件分享过时，该字段不填
+}
+
+// 获取用户点赞列表请求
+message GetUserShareListRequest {
+  required int64 user_id      = 1; // 用户id 
+  required int32 size         = 2; // 获取数目
+  optional bytes offset_index = 3; // 获取数据偏移索引。初次获取，不设此字段。翻页时传入上次获取到的值
+}
+
+// 获取用户点赞列表响应
+message GetUserShareListResponse {
+  repeated ItemShare item_share   = 1; // 分享列表
+  required bool      has_more     = 2; // 是否还有更多
+  required bytes     offset_index = 3; // 翻页偏移索引
+  repeated Item      ref_item     = 4; // 引用item信息
+}
+
+// 获取用户参与发现相关信息请求
+message GetUserDiscoverRequest {
+  required int64 user_id = 1;
+}
+
+// 获取用户参与发现相关信息响应
+message GetUserDiscoverResponse {
+  required int32 week_learn_cnt        = 1;
+  required int32 week_learn_duration   = 2;
+  required int32 week_learn_item_cnt   = 3;
+  required int32 week_comment_cnt      = 4;
+  required int32 week_comment_item_cnt = 5;
+  required int32 week_score_item_cnt   = 6;
+  required int32 week_like_item_cnt    = 7;
+  required int32 week_share_item_cnt   = 8;
+}
+
+// 根据关键字搜索条目
+message SearchItemRequest {
+  required string keyword = 1;
+}
+
+// 根据关键字搜索条目，最多返回20个条目信息
+message SearchItemResponse {
+  repeated Item item = 1; // 条目信息
+}
+
+// 分页获取所有item列表请求
+message GetItemListRequest {
+  required int32 item_size    = 1; // 获取item数目，必须小于等于100
+  optional bytes offset_index = 2; // 获取数据偏移索引。初次获取，不设此字段。翻页时传入上次获取到的值
+}
+
+// 分页获取所有item列表响应
+message GetItemListResponse {
+  repeated Item  item         = 1; // 条目信息
+  required bool  has_more     = 2; // 是否还有更多
+  required bytes offset_index = 3; // 翻页偏移索引
+}
+
+// 实时记录在线学习条目记录请求
+message LearnItemRequest {
+  required int64 item_id        = 1; // 条目id
+  required int32 learn_duration = 2; // 学习时长，单位秒 
+}
+
+// 实时记录在线学习条目记录响应
+message LearnItemResponse {
+  enum Result {
+    SUCC                     = 0; // 打分成功
+    FAIL_DURATION_INVALID    = 1; // 学习时长不正确
+    FAIL_ITEM_NOT_EXSIT      = 2; // 条目不存在
+    
+    FAIL_UNKNOWN             = 99;
+  }
+  optional Result result    = 1 [default = FAIL_UNKNOWN];
+  optional string fail_text = 2;
+}
+
+// 延迟上报离线学习条目记录请求
+message ReportLearnItemRequest {
+  repeated ItemLearn item_learn = 1;
+}
+
+// 评论某个条目请求
+message CommentItemRequest {
+  required int64  item_id      = 1; // 条目id
+  required string comment_text = 2; // 评论内容
+}
+
+// 评论某个条目响应
+message CommentItemResponse {
+  enum Result {
+    SUCC                 = 0; // 评论成功
+    FAIL_CONTENT_INVALID = 1; // 评论内容不正确
+    FAIL_ITEM_NOT_EXSIT  = 2; // 条目不存在
+    FAIL_ITEM_DISABLE    = 3; // 条目不允许评论
+    
+    FAIL_UNKNOWN         = 99;
+  }
+  optional Result result     = 1 [default = FAIL_UNKNOWN];
+  optional string fail_text  = 2;
+  optional int64  comment_id = 3; // 评论后产生的评论id
+}
+
+// 删除某个条目下的评论请求
+message DeleteCommentRequest {
+  required int64 item_id    = 1;
+  required int64 comment_id = 2;
+}
+
+// 删除某个条目下的评论响应
+message DeleteCommentResponse {
+  enum Result {
+    SUCC                   = 0; // 删除评论成功
+    FAIL_COMMENT_NOT_EXSIT = 1; // 评论不存在
+    FAIL_COMMENT_OTHER     = 2; // 评论不是该用户发表，无法删除
+    
+    FAIL_UNKNOWN           = 99;
+  }
+  optional Result result     = 1 [default = FAIL_UNKNOWN];
+  optional string fail_text  = 2;
+}
+
+// 给某个条目打分请求
+message ScoreItemRequest {
+  required int64 item_id = 1; // 条目id
+  required int32 score   = 2; // 分数，目前为百分制
+}
+
+// 给某个条目打分响应
+message ScoreItemResponse {
+  enum Result {
+    SUCC                     = 0; // 打分成功
+    FAIL_SCORE_INVALID       = 1; // 分数不正确
+    FAIL_ITEM_NOT_EXSIT      = 2; // 条目不存在
+    FAIL_ITEM_DISABLE        = 3; // 条目不允许打分
+    FAIL_ITEM_IS_SCORED      = 4; // 条目已被用户打过分了
+    
+    FAIL_UNKNOWN             = 99;
+  }
+  optional Result result    = 1 [default = FAIL_UNKNOWN];
+  optional string fail_text = 2;
+}
+
+message LikeItemRequest {
+  required int64 item_id = 1; // 条目id
+  required bool  is_like = 2; // true: 点赞, false: 取消赞
+}
+
+message LikeItemResponse {
+  enum Result {
+    SUCC                     = 0; // 打分成功
+    FAIL_ITEM_NOT_EXSIT      = 2; // 条目不存在
+    FAIL_ITEM_DISABLE        = 3; // 条目不允许点赞
+    
+    FAIL_UNKNOWN             = 99;
+  }
+  optional Result result    = 1 [default = FAIL_UNKNOWN];
+  optional string fail_text = 2;
+}
+
+message ShareItemRequest {
+  required int64 item_id        = 1; // 条目id
+}
+
+message ShareItemResponse {
+  enum Result {
+    SUCC                     = 0; // 打分成功
+    FAIL_PERMISSION_DENIED   = 1; // 无此操作权限
+    FAIL_ITEM_NOT_EXSIT      = 2; // 条目不存在
+    
+    FAIL_UNKNOWN             = 99;
+  }
+  
+  // 分享的内容
+  message ItemShareContent{
+  	required string item_name      = 1; // 条目名称
+  	required string item_desc      = 2; // 条目描述
+    required string image_name     = 3; // 条目icon name
+    required string web_url        = 4; // 分享的链接
+  }
+  
+  optional Result result                      = 1 [default = FAIL_UNKNOWN];
+  optional string fail_text                   = 2;
+  optional ItemShareContent itemShareContent  = 3; // 分享的内容
+  
+}
+
+// 发现服务
+service DiscoverV2Service {
+  
+  // 获取发现页首页相关信息
+  rpc GetDiscoverHome (GetDiscoverHomeRequest) returns (GetDiscoverHomeResponse);
+  
+  // 获取模块某个分类下的条目列表
+  rpc GetModuleCategoryItemList (GetModuleCategoryItemListRequest) returns (GetModuleCategoryItemListResponse);
+  
+  // 获取模块的提示索引
+  rpc GetModulePromptIndex (GetModulePromptIndexRequest) returns (GetModulePromptIndexResponse);
+  
+  // 根据Id获取条目信息
+  rpc GetItemById (GetItemByIdRequest) returns (GetItemByIdResponse);
+  
+  // 获取条目学习列表
+  rpc GetItemLearnList (GetItemLearnListRequest) returns (GetItemLearnListResponse);
+  
+  // 获取用户学习列表
+  rpc GetUserLearnList (GetUserLearnListRequest) returns (GetUserLearnListResponse);
+  
+  // 获取条目评论列表
+  rpc GetItemCommentList (GetItemCommentListRequest) returns (GetItemCommentListResponse);
+  
+  // 获取用户评论列表
+  rpc GetUserCommentList (GetUserCommentListRequest) returns (GetUserCommentListResponse);
+  
+  // 获取条目打分列表
+  rpc GetItemScoreList (GetItemScoreListRequest) returns (GetItemScoreListResponse);
+  
+  // 获取用户打分列表
+  rpc GetUserScoreList (GetUserScoreListRequest) returns (GetUserScoreListResponse);
+  
+  // 获取条目点赞列表
+  rpc GetItemLikeList (GetItemLikeListRequest) returns (GetItemLikeListResponse);
+  
+  // 获取用户点赞列表
+  rpc GetUserLikeList (GetUserLikeListRequest) returns (GetUserLikeListResponse);
+
+  // 获取条目分享列表
+  rpc GetItemShareList (GetItemShareListRequest) returns (GetItemShareListResponse);
+  
+  // 获取用户分享列表
+  rpc GetUserShareList (GetUserShareListRequest) returns (GetUserShareListResponse);
+   
+  // 获取用户参与发现相关信息
+  rpc GetUserDiscover (GetUserDiscoverRequest) returns (GetUserDiscoverResponse);
+  
+  // 搜索课件条目
+  rpc SearchItem (SearchItemRequest) returns (SearchItemResponse);
+  
+  // 分页获取所有课件
+  rpc GetItemList (GetItemListRequest) returns (GetItemListResponse);
+  
+  /* 以下为写操作 */
+  
+  // 实时记录在线学习条目记录
+  rpc LearnItem (LearnItemRequest) returns (LearnItemResponse);
+  
+  // 延迟上报离线学习条目记录
+  rpc ReportLearnItem (ReportLearnItemRequest) returns (weizhu.EmptyResponse);
+  
+  // 评论某个条目
+  rpc CommentItem (CommentItemRequest) returns (CommentItemResponse);
+  
+  // 删除某个评论
+  rpc DeleteComment (DeleteCommentRequest) returns (DeleteCommentResponse);
+  
+  // 给某个条目打分
+  rpc ScoreItem (ScoreItemRequest) returns (ScoreItemResponse);
+  
+  // 给某个条目点赞
+  rpc LikeItem (LikeItemRequest) returns (LikeItemResponse);
+  
+  // 给某个条目分享
+  rpc ShareItem (ShareItemRequest) returns (ShareItemResponse);
+ 
+}

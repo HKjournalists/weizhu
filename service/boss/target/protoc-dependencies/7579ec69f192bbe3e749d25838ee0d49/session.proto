@@ -1,0 +1,127 @@
+import "weizhu.proto";
+
+package weizhu.session;
+
+option java_package = "com.weizhu.proto";
+option java_outer_classname = "SessionProtos";
+
+message SessionData {
+  required weizhu.Session   session     = 1;
+  required int32            login_time  = 2; // 登录时间戳(单位:秒)
+  required int32            active_time = 3; // 最近访问服务器时间戳(单位:秒)
+  optional weizhu.Weizhu    weizhu      = 4;
+  optional weizhu.Android   android     = 5;
+  optional weizhu.Iphone    iphone      = 6;
+  optional weizhu.WebMobile web_mobile  = 7;
+  optional weizhu.WebLogin  web_login   = 8;
+}
+
+message CreateSessionKeyRequest {
+  required int64 company_id = 1; // 公司id
+  required int64 user_id    = 2; // 用户id
+}
+
+message CreateSessionKeyResponse {
+  required bytes          session_key = 1; // 会话Key
+  required weizhu.Session session     = 2; // 会话信息
+}
+
+message VerifySessionKeyRequest {
+  required bytes session_key = 1; // 会话Key
+}
+
+message VerifySessionKeyResponse {
+  // 验证会话Key返回结果
+  enum Result {
+    SUCC                    = 0; // 验证成功
+    FAIL_SESSION_DECRYPTION = 1; // 会话Key解码失败
+    FAIL_SESSION_EXPIRED    = 2; // 会话Key过期
+    FAIL_USER_NOT_EXSIT     = 3; // 该用户不存在或者已被删除
+    FAIL_USER_DISABLE       = 4; // 该用户被禁用, 不能访问服务器
+    
+    FAIL_UNKNOWN            = 99;
+  }
+  
+  optional Result         result    = 1 [default = FAIL_UNKNOWN]; // 调用结果 
+  optional string         fail_text = 2; // 失败文本
+  optional weizhu.Session session   = 3; // 会话信息
+}
+
+message GetSessionDataRequest {
+  repeated int64 user_id = 1;
+}
+
+message GetSessionDataResponse {
+  repeated SessionData session_data = 1;
+}
+
+message DeleteSessionDataRequest {
+  required int64 user_id    = 1;
+  repeated int64 session_id = 2;
+}
+
+message DeleteSessionDataResponse {
+  enum Result {
+    SUCC                   = 0;
+    FAIL_PERMISSION_DENIED = 1;
+    
+    FAIL_UNKNOWN           = 99;
+  }
+  optional Result result    = 1 [default = FAIL_UNKNOWN]; // 调用结果 
+  optional string fail_text = 2; // 失败文本
+}
+
+message CreateWebLoginSessionKeyResponse {
+  required string          web_login_session_key = 1; // web login会话Key
+  required weizhu.WebLogin web_login             = 2; // web login信息
+}
+
+message VerifyWebLoginSessionKeyRequest {
+  required string web_login_session_key = 1; // 会话Key
+}
+
+message VerifyWebLoginSessionKeyResponse {
+  // 验证会话Key返回结果
+  enum Result {
+    SUCC                    = 0; // 验证成功
+    FAIL_SESSION_DECRYPTION = 1; // 会话Key解码失败
+    FAIL_SESSION_EXPIRED    = 2; // 会话Key过期
+    FAIL_USER_NOT_EXSIT     = 3; // 该用户不存在或者已被删除
+    FAIL_USER_DISABLE       = 4; // 该用户被禁用, 不能访问服务器
+    
+    FAIL_UNKNOWN            = 99;
+  }
+  
+  optional Result          result    = 1 [default = FAIL_UNKNOWN]; // 调用结果 
+  optional string          fail_text = 2; // 失败文本
+  optional weizhu.Session  session   = 3; // 会话信息
+  optional weizhu.WebLogin web_login = 4;
+}
+
+// 会话服务
+service SessionService {
+  
+  // 创建会话Key
+  rpc CreateSessionKey (CreateSessionKeyRequest) returns (CreateSessionKeyResponse);
+  
+  // 删除会话Key
+  rpc DeleteSessionKey (weizhu.EmptyRequest) returns (weizhu.EmptyResponse);
+  
+  // 验证会话Key并返回会话信息
+  rpc VerifySessionKey (VerifySessionKeyRequest) returns (VerifySessionKeyResponse);
+  
+  // 获取会话数据
+  rpc GetSessionData (GetSessionDataRequest) returns (GetSessionDataResponse);
+  
+  // 删除会话数据(踢人下线)
+  rpc DeleteSessionData (DeleteSessionDataRequest) returns (DeleteSessionDataResponse);
+  
+  // 创建web登录会话key
+  rpc CreateWebLoginSessionKey (weizhu.EmptyRequest) returns (CreateWebLoginSessionKeyResponse); 
+  
+  // 删除web登录会话Key
+  rpc DeleteWebLoginSessionKey (weizhu.EmptyRequest) returns (weizhu.EmptyResponse);
+  
+  // 校验web登录会话key
+  rpc VerifyWebLoginSessionKey (VerifyWebLoginSessionKeyRequest) returns (VerifyWebLoginSessionKeyResponse); 
+}

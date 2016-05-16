@@ -1,0 +1,1 @@
+DROP TABLE IF EXISTS weizhu_push_seq;

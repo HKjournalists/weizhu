@@ -1,0 +1,47 @@
+import "weizhu.proto";
+
+package weizhu.profile;
+
+option java_package = "com.weizhu.proto";
+option java_outer_classname = "ProfileProtos";
+
+message Profile {
+  required string name    = 1; // 最大191个字符
+  required string value   = 2; // 最大65535个字符＝
+  optional string comment = 3; // 注释，只对当前公司有效
+}
+
+message GetProfileRequest {
+  repeated string name_prefix = 1; 
+}
+
+message GetProfileResponse {
+  repeated Profile profile = 1;
+}
+
+message SetProfileRequest {
+  repeated Profile profile = 1;
+}
+
+message SetProfileResponse {
+  enum Result {
+    SUCC                 = 0; // 标记成功
+    FAIL_NAME_INVALID    = 1;
+    FAIL_VALUE_INVALID   = 2;
+    FAIL_DESC_INVALID    = 3;
+    FAIL_COMMENT_INVALID = 4;
+    
+    FAIL_UNKNOWN       = 99;
+  }
+  optional Result result    = 1 [default = FAIL_UNKNOWN];
+  optional string fail_text = 2;
+}
+
+// 公司Profile服务
+service ProfileService {
+  
+  rpc GetProfile (GetProfileRequest) returns (GetProfileResponse);
+  
+  rpc SetProfile (SetProfileRequest) returns (SetProfileResponse);
+  
+}

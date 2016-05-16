@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>测试登录</title>
+</head>
+<body>
+
+<form action="../api/test_login.json" method="POST">
+	<table border="1">
+		<tr><td>CompanyKey : <br> <input type=text name="company_key"></td></tr>
+		<tr><td>MobileNo : <br> <input type=text name="mobile_no"></td></tr>
+		<tr><td>SmsCode : <br> <input type=text name="sms_code"></td></tr>
+		<tr><td>
+		    <input type="submit" name="action" value="SendSmsCode"></input> 
+			<input type="submit" name="action" value="Login"></input> 
+			<input type="reset" name="action" value="Clear" ></input>
+		</td></tr>
+	</table>
+</form>
+
+</body>
+</html>

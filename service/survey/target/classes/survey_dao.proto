@@ -1,0 +1,34 @@
+package weizhu.survey.dao;
+
+option java_package = "com.weizhu.service.survey";
+option java_outer_classname = "SurveyDAOProtos";
+
+message SurveyListIndex {
+  required int32 survey_id = 1;
+  required int32 time      = 2;
+}
+
+message SurveyResultListIndex {
+  required int64 user_id     = 1;
+  required int32 submit_time = 2;
+}
+
+message QuestionAnswerListIndex {
+  required int64 user_id     = 1;
+  required int32 answer_time = 2;
+}
+
+message SurveyCount {
+  required int32 survey_id    = 1;
+  required int32 survey_count = 2;
+}
+
+message QuestionCount {
+  message OptionCount {
+    required int32 option_id = 1;
+    required int32 option_count = 2;
+  }
+  required int32       question_id = 1;
+  required int32       question_count = 2;
+  repeated OptionCount option_count = 3;
+}

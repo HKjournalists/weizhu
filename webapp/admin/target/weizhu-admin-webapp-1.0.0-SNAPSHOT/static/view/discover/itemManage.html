@@ -1,0 +1,282 @@
+<div id="discover-item-wrap" data-options="region:'center',border:false" class="easyui-layout" style="width:100%;height:100%;">
+    <div data-options="region:'north',border:false" style="width: 100%;">
+        <div class="easyui-panel" data-options="border:false">
+            <div style="padding:10px 20px;">
+                <form id="discover-item-search-form" class="easyui-form form-layout-inline" method="get">
+                	<div class="form-item">
+                		<label>所属分类：</label>
+                		<input name="category_id"></input>
+                	</div>
+                	<div class="form-item">
+                		<label>标题：</label>
+                		<input class="easyui-textbox" type="text" name="item_name"></input>
+                	</div>
+                	<a href="javascript:void(0)" class="easyui-linkbutton reset-btn" iconCls="icon-reset">重置</a>
+                    <a href="javascript:void(0)" class="easyui-linkbutton search-btn" iconCls="icon-search"><%=lang.common.search_btn%></a>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div data-options="region:'center',border:false">
+    	<table id="discover-item-table" style="width:100%;height: 100%;"></table>
+    </div>
+    <div id="discover-item-edit-win" class="easyui-window" data-options="title:'新建课件',collapsible:false,maximizable:false,minimizable:false,closed: true,modal:true,width:700,height:500">
+        <div class="easyui-layout" style="width:100%;height:100%;">
+            <div region="center" border="false" style="padding:10px 12px;">
+                <form id="discover-item-edit-form" class="easyui-form form-layout-column" method="post" data-options="novalidate:true">
+                	<input type="hidden" name="item_id" />
+                	<div class="form-item">
+                        <label>封面图片：</label>
+                        <input name="image_name" />
+                    </div>
+                    <div class="form-item">
+                        <label>课件标题：</label>
+                        <input class="easyui-textbox form-item-box" type="text" name="item_name" data-options="required:true,width:430,prompt:'请输入课件名称，1~190个字符',validType:'length[1,190]'" />
+                    </div>
+                    <div class="form-item">
+                        <label>课件描述：</label>
+                        <input class="easyui-textbox form-item-box" type="text" name="item_desc" data-options="width:430,prompt:'请输入课件描述，0~190个字符',validType:'length[0,190]'" />
+                    </div>
+                    <div class="easyui-panel" style="width: 510px;height:200px;" data-options="title:'所属分类：'">
+                        <ul id="discover-item-category-tree"></ul>
+                    </div>
+                    <div class="form-item">
+                        <label>课件类型：</label>
+                        <input type="text" name="item_type" />
+                    </div>
+                    <div class="form-item">
+                        <label>课件内容：</label>
+                        <div class="discover-item-content">
+	                        <label>链接地址：</label><input class="easyui-textbox form-item-box" type="text" name="web_url" data-options="required:true,width:320,prompt:'请输入正确的url地址，1~200个字符',validType:['url','length[1,200]']" />
+	                        <span class="form-checkbox" style="margin-left:80px;">
+	                    		<input name="is_weizhu" type="checkbox" />是内部链接
+	                    	</span>                        
+                        </div>
+                        <div class="discover-item-content" style="display:none;">
+	                        <input type="text" name="audio" />                        
+                        </div>
+                        <div class="discover-item-content" style="display:none;">
+	                        <input type="text" name="video" />                        
+                        </div>
+                        <div class="discover-item-content" style="display:none;">
+	                        <input type="text" name="document" />                        
+                        </div>
+                    </div>
+                    <div class="form-item">
+                        <label>课件设置：</label>
+                        <span class="form-checkbox" style="display:none;">
+                    		<input name="is_download" type="checkbox" checked />允许下载
+                    	</span>
+                        <span class="form-checkbox">
+                    		<input name="enable_score" type="checkbox" checked />允许评分
+                    	</span>
+                        <span class="form-checkbox">
+                    		<input name="enable_comment" type="checkbox" checked />允许评论
+                    	</span>
+                        <span class="form-checkbox">
+                    		<input name="enable_like" type="checkbox" checked />允许点赞
+                    	</span>
+                        <span class="form-checkbox">
+                    		<input name="enable_share" type="checkbox" checked />允许内部分享
+                    	</span>
+                        <span class="form-checkbox">
+                    		<input name="enable_external_share" type="checkbox" checked />允许外部分享
+                    	</span>
+                    </div>
+                    <div class="form-item">
+                        <label>访问对象：</label>
+                        <input name="allow_model_id" />
+                    </div>
+                </form>
+            </div>
+            <div region="south" border="false" style="text-align:right;padding:10px 12px;">
+                <a href="javascript:void(0)" class="easyui-linkbutton edit-save" onclick='Wz.discover.itemManage.saveItem();' data-options="iconCls:'icon-ok'">保存</a>
+                <a href="javascript:void(0)" class="easyui-linkbutton edit-cancel" onclick="$(this).parents('.easyui-window').window('close');" data-options="iconCls:'icon-cancel'">取消</a>
+            </div>
+        </div>
+    </div>
+    <div id="discover-item-detail-win" class="easyui-window" data-options="title:'查看详情',collapsible:false,maximizable:false,minimizable:false,closed: true,modal:true,width:700,height:500">
+        <div class="easyui-layout" style="width:100%;height:100%;">
+            <div region="center" border="false">
+                <div class="easyui-accordion" data-options="multiple:true" style="width:665px;height:auto;">
+			        <div data-options="collapsed:false,collapsible:false" style="padding:10px;">
+			        	<table class="discover-item-stat">
+			        		<tr>
+			        			<td rowspan=2 width="25%">
+			        				<a href="javascript:void(0)" class="discover-item-like-count discover-item-count">
+						            	<span class="like-icon"></span>
+						            	<div class="discover-item-count-info">
+						            		<i>0</i>
+						            		<span>点赞总数</span>
+						            	</div>
+						            </a>
+			        			</td>
+			        			<td width="25%">
+			        				<a href="javascript:void(0)" class="discover-item-score-count discover-item-count discover-item-count-right">
+						            	<span class="l-icon score-icon"></span>
+						            	<div class="discover-item-count-info">
+						            		<i>0</i>
+						            		<span>平均分</span>
+						            	</div>
+						            </a>
+			        			</td>
+			        			<td width="25%">
+			        				<a href="javascript:void(0)" class="discover-item-study-count discover-item-count discover-item-count-right">
+						            	<span class="l-icon study-icon"></span>
+						            	<div class="discover-item-count-info">
+						            		<i>0</i>
+						            		<span>学习总次数</span>
+						            	</div>
+						            </a>
+			        			</td>
+			        			<td width="25%">
+			        				<a href="javascript:void(0)" class="discover-item-comment-count discover-item-count discover-item-count-right">
+						            	<span class="l-icon comment-icon"></span>
+						            	<div class="discover-item-count-info">
+						            		<i>0</i>
+						            		<span>评论总数</span>
+						            	</div>
+						            </a>
+			        			</td>
+			        		</tr>
+			        		<tr>
+			        			<td>
+			        				<a href="javascript:void(0)" class="discover-item-score-people discover-item-count discover-item-count-right">
+						            	<span class="l-icon people-icon"></span>
+						            	<div class="discover-item-count-info">
+						            		<i>0</i>
+						            		<span>评分总人数</span>
+						            	</div>
+						            </a>
+			        			</td>
+			        			<td>
+			        				<a href="javascript:void(0)" class="discover-item-study-people discover-item-count discover-item-count-right">
+						            	<span class="l-icon people-icon"></span>
+						            	<div class="discover-item-count-info">
+						            		<i>0</i>
+						            		<span>学习总人数</span>
+						            	</div>
+						            </a>
+			        			</td>
+			        			<td>
+			        				<a href="javascript:void(0)" class="discover-item-comment-people discover-item-count discover-item-count-right">
+						            	<span class="l-icon people-icon"></span>
+						            	<div class="discover-item-count-info">
+						            		<i>0</i>
+						            		<span>评论总人数</span>
+						            	</div>
+						            </a>
+			        			</td>
+			        		</tr>
+			        	</table>
+			        </div>
+			        <div title="课件所属分类" data-options="collapsed:false,collapsible:false" style="padding:10px;">
+			            <ul class="discover-item-category-list">
+			            	<li class="discover-item-category-item">
+			            		<div class="discover-item-category-icon">
+			            			<img src="" />
+			            		</div>
+			            		<div class="discover-item-category-info">
+			            			<span>所属板块</span>
+			            			<span>所属分类</span>
+			            		</div>
+			            	</li>
+			            	<li class="discover-item-category-item">
+			            		<div class="discover-item-category-icon">
+			            			<img src="" />
+			            		</div>
+			            		<div class="discover-item-category-info">
+			            			<span>所属板块</span>
+			            			<span>所属分类</span>
+			            		</div>
+			            	</li>
+			            	<li class="discover-item-category-item">
+			            		<div class="discover-item-category-icon">
+			            			<img src="" />
+			            		</div>
+			            		<div class="discover-item-category-info">
+			            			<span>所属板块</span>
+			            			<span>所属分类</span>
+			            		</div>
+			            	</li>
+			            </ul>
+			        </div>
+			        <div title="课件设置" data-options="collapsed:false,collapsible:false" style="padding:10px">
+			            <ul class="discover-item-setting-list">
+			            	<li class="discover-item-setting-item active">
+			            		<span class="discover-item-setting-icon icon-download"></span>
+			            		<span class="discover-item-setting-text">下载</span>
+			            	</li>
+			            	<li class="discover-item-setting-item">
+			            		<span class="discover-item-setting-icon icon-comment"></span>
+			            		<span class="discover-item-setting-text">评论</span>
+			            	</li>
+			            	<li class="discover-item-setting-item">
+			            		<span class="discover-item-setting-icon icon-score"></span>
+			            		<span class="discover-item-setting-text">评分</span>
+			            	</li>
+			            	<li class="discover-item-setting-item">
+			            		<span class="discover-item-setting-icon icon-like"></span>
+			            		<span class="discover-item-setting-text">点赞</span>
+			            	</li>
+			            	<li class="discover-item-setting-item">
+			            		<span class="discover-item-setting-icon icon-share"></span>
+			            		<span class="discover-item-setting-text">内部分享</span>
+			            	</li>
+			            	<li class="discover-item-setting-item">
+			            		<span class="discover-item-setting-icon icon-share2"></span>
+			            		<span class="discover-item-setting-text">外部分享</span>
+			            	</li>
+			            </ul>
+			        </div>
+			        <div title="课件详情" data-options="collapsed:false,collapsible:false" style="padding:10px">
+			            <div class="discover-item-info">
+			            	<div class="discover-item-info-item">
+			            		<label>简介：</label>
+			            		<p>随时随地发送地方阿斯顿发送地方</p>
+			            	</div>
+			            	<div class="discover-item-info-item">
+			            		<label>内容：</label>
+			            		<p>点击查看</p>
+			            	</div>
+			            	<div class="discover-item-info-item">
+			            		<label>文件类型：</label>
+			            		<p>PDF</p>
+			            	</div>
+			            	<div class="discover-item-info-item">
+			            		<label>文件大小：</label>
+			            		<p>XXXM</p>
+			            	</div>
+			            </div>
+			        </div>
+			    </div>
+            </div>
+            <div region="south" border="false" style="text-align:right;padding:10px 12px;">
+                <a href="javascript:void(0)" class="easyui-linkbutton edit-cancel" onclick="$(this).parents('.easyui-window').window('close');" data-options="iconCls:'icon-cancel'">关闭</a>
+            </div>
+        </div>
+    </div>
+    <div id="discover-item-stat-win" class="easyui-window" data-options="title:'统计信息',collapsible:false,maximizable:false,minimizable:false,closed: true,modal:true,width:700,height:600">
+        <div class="easyui-layout" style="width:100%;height:100%;">
+            <div region="center" border="false" style="padding:10px 12px;">
+                <div id="discover-item-stat-tabs" style="width:100%;height:100%;">
+	            	<div title="点赞信息" id="discover-item-stat-like">
+	            		<table id="discover-item-like-table" style="width:100%;height: 100%;"></table>
+	            	</div>
+	            	<div title="评分信息" id="discover-item-stat-score">
+	            		<table id="discover-item-score-table" style="width:100%;height: 100%;"></table>
+	            	</div>
+	            	<div title="学习信息" id="discover-item-stat-study">
+	            		<table id="discover-item-study-table" style="width:100%;height: 100%;"></table>
+	            	</div>
+	            	<div title="评论信息" id="discover-item-stat-comment">
+	            		<table id="discover-item-comment-table" style="width:100%;height: 100%;"></table>
+	            	</div>
+	            </div>
+            </div>
+            <div region="south" border="false" style="text-align:right;padding:10px 12px;">
+                <a href="javascript:void(0)" class="easyui-linkbutton edit-cancel" onclick="$(this).parents('.easyui-window').window('close');" data-options="iconCls:'icon-cancel'">关闭</a>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,250 @@
+import "qa.proto";
+import "weizhu.proto";
+package weizhu.admin.qa;
+
+option java_package = "com.weizhu.proto";
+option java_outer_classname = "AdminQAProtos";
+
+// 分类列表回复
+message GetCategoryResponse {
+  repeated weizhu.qa.Category   category              = 1; // 分类列表
+}
+// 添加分类列表请求
+message AddCategoryRequest {
+  required string   category_name           = 1; // 分类名
+}
+// 添加分类列表回复
+message AddCategoryResponse {
+  enum Result {
+    SUCC                                    = 0; // 添加成功
+    FAIL_PERMISSION_DENIED                  = 1; //无此操作权限
+    FAIL_CONTENT_INVALID                    = 2; //分类名错误
+    FAIL_CATEGORY_MAX_NUMBER_OUT            = 3; //分类个数超过最大限制
+  }
+  required Result   result                  = 1;
+  optional string   fail_text               = 2;
+  optional int32    category_id             = 3; // 分类id
+}
+// 修改分类列表请求
+message UpdateCategoryRequest {
+  required int32    category_id             = 1; // 分类id
+  required string   category_name           = 2; // 分类名
+}
+// 修改分类列表回复
+message UpdateCategoryResponse {
+  enum Result {
+    SUCC                                    = 0; // 修改成功
+    FAIL_PERMISSION_DENIED                  = 1; //无此操作权限
+    FAIL_CONTENT_INVALID                    = 2; //分类名错误
+    FAIL_CATEGORY_NOT_EXIST                 = 3; //分类id不存在
+  }
+  required Result   result                  = 1;
+  optional string   fail_text               = 2;
+}
+// 删除分类列表请求
+message DeleteCategoryRequest {
+  required int32    category_id             = 1; // 分类id
+}
+// 删除分类列表回复
+message DeleteCategoryResponse {
+  enum Result {
+    SUCC                                               = 0; // 删除成功
+    FAIL_PERMISSION_DENIED                             = 1; //无此操作权限    
+    FAIL_CATEGORY_NOT_EXIST                            = 2; //分类id不存在
+    FAIL_CATEGORY_HAS_QUESTION                         = 3; //分类下存在问题不能删除
+  }
+  required Result                result                = 1;
+  optional string                fail_text             = 2;
+}
+
+
+// 添加问题请求
+message AddQuestionRequest{
+  required string                question_content      = 1; // 问题内容
+  required int32                 category_id           = 2; // 分类id
+  optional string                answer_content        = 3; //回答内容
+  
+}
+
+//错误信息提示
+//添加问题回复
+message AddQuestionResponse {
+  enum Result {
+    SUCC                                               = 0; // 添加成功
+    FAIL_PERMISSION_DENIED                             = 1; //无此操作权限
+    FAIL_CONTENT_INVALID                               = 2; // 问题内容错误
+    FAIL_CATEGORY_NOT_EXIST                            = 3; //分类id不存在
+  }
+  required Result                result                = 1;
+  optional string                fail_text             = 2;
+  optional int32                 question_id           = 3;
+  optional int32                 answer_id             = 4;
+}
+// 导入问题请求
+message ImportQuestionRequest{
+  message QuestionAnswer{
+  	required string              question_content      = 1;
+  	optional string              answer_content        = 2;
+  }
+  repeated QuestionAnswer        question_answer       = 1; // 问题内容
+  required int32                 category_id           = 2; // 分类id
+}
+
+//错误信息提示
+//导入问题回复
+message ImportQuestionResponse {
+  enum Result {
+    SUCC                                               = 0; // 添加成功
+    FAIL_PERMISSION_DENIED                             = 1; //无此操作权限
+    FAIL_CONTENT_INVALID                               = 2; // 问题内容错误
+    FAIL_CATEGORY_NOT_EXIST                            = 3; //分类id不存在
+  }
+  required Result                result                = 1;
+  optional string                fail_text             = 2;
+  repeated int32                 question_id           = 3;//返回生成的问题id
+}
+// 分页查询问题列表请求
+message GetQuestionRequest{
+  optional int32                 start                 = 1; // 开始个数
+  required int32                 length                = 2; // 查询的条数
+  optional int32                 category_id           = 3; // 分类id
+  optional string                keyword               = 4; //关键字
+}
+
+// 分页查询问题列表回复
+message GetQuestionResponse {
+  repeated weizhu.qa.Question    question              = 1; // 问题列表
+  required int32                 total_size            = 2;
+  required int32                 filtered_size         = 3;
+  repeated weizhu.qa.Category    ref_category          = 4; // 分类列表
+}
+
+message ExportQuestionRequest {
+  optional int32   last_question_id      = 1;
+  required int32   size                  = 2;
+  optional int32   category_id           = 3; // 分类id
+  optional string  keyword               = 4; //关键字
+  
+}
+
+message ExportQuestionResponse {
+  repeated weizhu.qa.Question    question       = 1;
+  required bool                  has_more       = 2;
+  repeated weizhu.qa.Category    ref_category   = 3; // 分类列表
+}
+// 删除问题请求
+message DeleteQuestionRequest{
+  repeated int32                 question_id           = 1; // 问题id
+}
+// 删除问题回复
+message DeleteQuestionResponse {
+  enum Result {
+    SUCC                                               = 0; // 删除成功
+    FAIL_PERMISSION_DENIED                             = 1; //无此操作权限    
+    FAIL_QUESTION_NOT_EXIST                            = 2; //问题id不存在
+  }
+  required Result                result                = 1;
+  optional string                fail_text             = 2;
+}
+// 查询回答列表请求   （分页）
+message GetAnswerRequest{
+  optional int32                 start                 = 1; // 
+  required int32                 length                = 2; // 查询的条数
+  required int32                 question_id           = 3; // 问题id
+}
+
+// 查询回答列表回复
+message GetAnswerResponse {
+  repeated weizhu.qa.Answer      answer                = 1; // 回答列表
+  required int32                 total_size            = 2;
+  required int32                 filtered_size         = 3;  
+}
+
+// 添加回答请求
+message AddAnswerRequest{
+  required int32                 question_id           = 1; // 问题id
+  required string                answer_content        = 2; // 回答内容
+}
+//错误信息提示
+//添加回答回复
+message AddAnswerResponse {
+  enum Result {
+    SUCC                                               = 0; // 添加成功
+    FAIL_PERMISSION_DENIED                             = 1; //无此操作权限    
+    FAIL_CONTENT_INVALID                               = 2; // 回答内容错误
+    FAIL_QUESTION_NOT_EXIST                            = 3; //问题id不存在
+  }
+  required Result                result                = 1;
+  optional string                fail_text             = 2;
+  optional int32                 answer_id             = 3; // 返回回答id
+}
+// 删除回答请求
+message DeleteAnswerRequest{
+  repeated int32                 answer_id             = 1; // 回答id
+}
+// 删除回答回复
+message DeleteAnswerResponse {
+  enum Result {
+    SUCC                                               = 0; // 添加成功
+    FAIL_PERMISSION_DENIED                             = 1; //无此操作权限    
+    FAIL_ANSWER_NOT_EXIST                              = 2; //回答id不存在
+    FAIL_QUESTION_NOT_EXIST                            = 3; //问题id不存在
+  }
+  required Result                result                = 1;
+  optional string                fail_text             = 2;
+}
+
+message ChangeQuestionCategoryRequest{
+  repeated   int32      question_id        = 1;
+  required   int32      category_id        = 2;
+}
+//添加问题回复
+message ChangeQuestionCategoryResponse {
+  enum Result {
+    SUCC                                               = 0; // 添加成功
+    FAIL_PERMISSION_DENIED                             = 1; //无此操作权限
+    FAIL_CATEGORY_NOT_EXIST                            = 2; //分类id不存在
+    FAIL_QUESTION_NOT_EXIST                            = 3; //问题id不存在
+  }
+  required Result                result                = 1;
+  optional string                fail_text             = 2;
+}
+
+// 问答后台管理服务
+service AdminQAService {
+  // 获取分类列表
+  rpc GetCategory (weizhu.EmptyRequest) returns (GetCategoryResponse);
+  
+  // 添加分类列表
+  rpc AddCategory (AddCategoryRequest) returns (AddCategoryResponse);
+  
+  // 删除分类列表
+  rpc DeleteCategory (DeleteCategoryRequest) returns (DeleteCategoryResponse);
+  
+  // 获取问题列表
+  rpc GetQuestion (GetQuestionRequest) returns (GetQuestionResponse);
+
+  // 添加问题
+  rpc AddQuestion (AddQuestionRequest) returns (AddQuestionResponse);
+
+  // 导入问题
+  rpc ImportQuestion (ImportQuestionRequest) returns (ImportQuestionResponse);
+
+  // 导出问题列表
+  rpc ExportQuestion (ExportQuestionRequest) returns (ExportQuestionResponse);
+
+  // 删除问题
+  rpc DeleteQuestion (DeleteQuestionRequest) returns (DeleteQuestionResponse);
+
+  // 获取回答列表
+  rpc GetAnswer(GetAnswerRequest) returns (GetAnswerResponse);
+
+  // 添加回答
+  rpc AddAnswer(AddAnswerRequest) returns (AddAnswerResponse);
+  
+  // 删除回答
+  rpc DeleteAnswer (DeleteAnswerRequest) returns (DeleteAnswerResponse);
+  
+  //更新问题分类
+  rpc ChangeQuestionCategory (ChangeQuestionCategoryRequest) returns (ChangeQuestionCategoryResponse);
+}

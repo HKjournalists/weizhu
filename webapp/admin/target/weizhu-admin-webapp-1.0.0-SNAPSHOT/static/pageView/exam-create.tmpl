@@ -1,0 +1,700 @@
+<div class="page-wrapper-inner">
+	<div class="exam-page-wrap exam-create-page">
+	    <div class="row">
+	        <div class="col-xs-12">
+	            <h1 class="page-header tx_yh">创建考试</h1>
+	        </div>
+	    </div>
+	    <div class="row">
+	        <div class="col-xs-12">
+	            <div class="panel panel-default">
+	                <div class="panel-body">
+	                    <div class="p-form-item row">
+	                        <label class="col-xs-2">考试图片:</label>
+	                        <div class="item-group col-xs-10" style="width:auto;">
+	                        	<iframe style="display:none;" id="img_upload_iframe" name="img_upload_iframe"></iframe>
+                                <form id="img_upload_form" target="img_upload_iframe" action="../upload/api/admin/upload_image.json"  method="POST" enctype="multipart/form-data">
+		                        	<div class="upload-png" style="width:60px;">
+		                        		<img style="width:100%;height:100%;" src="" />
+		                        		<input type="file" class="file-input" name="upload_image" />
+		                        		<input type="hidden" name="image_name" />
+		                        		<input type="hidden" name="image_tag" value="考试" />
+		                        	</div>
+		                        	<div class="tip-info">
+		                        		<span>建议图片尺寸120x120(px)</span><br>
+		                        		<span>支持jpg、png格式，<i>大小1M以内</i></span>
+		                        	</div>
+		                        </form>
+	                        </div>
+	                    </div>
+	                    <div class="p-form-item row">
+	                        <label class="col-xs-2">考试名称<span class="brand-warning">*</span>:</label>
+	                        <div class="item-group col-xs-10">
+	                        	<input class="form-control w500" type="text" name="exam_name">
+	                        </div>
+	                    </div>
+	                    <div class="p-form-item row" id="exam-create-time">
+	                        <label class="col-xs-2">考试时间<span class="brand-warning">*</span>:</label>
+	                        <div class="item-gorup col-xs-10">
+	                        	<div class="input-append date" id="start_time" style="width:200px;display: inline-block;float: left;">
+	                                <input data-format="yyyy/MM/dd hh:mm" type="text" name="start_time" readonly />
+	                                <span class="add-on">
+	                                  <i data-date-icon="icon-calendar" data-time-icon="icon-time" class="icon-calendar">
+	                                  </i>
+	                                </span>
+	                            </div>
+								<span style="display: inline-block;float: left;height: 30px;line-height: 30px;margin: 0px 10px 0 20px;">至：</span>
+	                            <div class="input-append date" id="end_time" style="width:200px;display: inline-block;float: left;">
+	                                <input data-format="yyyy/MM/dd hh:mm" type="text" name="end_time" readonly />
+	                                <span class="add-on">
+	                                  <i data-date-icon="icon-calendar" data-time-icon="icon-time" class="icon-calendar">
+	                                  </i>
+	                                </span>
+	                            </div>
+	                            <span style="display: inline-block;float: left;height: 30px;line-height: 30px;margin: 0px 10px 0 20px;color: red;" class="err-tip"></span>
+	                        </div>
+	                    </div>
+	                    <div class="p-form-item row">
+	                        <label class="col-xs-2">出题方式<span class="brand-warning">*</span>:</label>
+	                        <div class="item-group col-xs-10">
+	                        	<div class="form-contral">
+			                        <div style="width:300px;" class="combobox" id="exam_type">
+			                            <input type="text" style="width: 280px;" readonly="true" />
+			                            <span class="caret"></span>
+			                            <div class="combobox-list">
+			
+			                            </div>
+			                        </div>
+			                    </div>
+	                        </div>
+	                    </div>
+	                    <div class="p-form-item row">
+	                        <label class="col-xs-2">考试总分:</label>
+	                        <div class="item-group col-xs-10">
+	                        	<span>100</span>分
+	                        </div>
+	                    </div>
+	                    <div class="p-form-item row">
+	                        <label class="col-xs-2">通过分数<span class="brand-warning">*</span>:</label>
+	                        <div class="item-group col-xs-10">
+	                        	<input class="form-control w150" value="60" maxlength="2" name="pass_mark" type="text">
+	                        </div>
+	                    </div>
+	                    <div class="p-form-item row">
+	                        <label class="col-xs-2">结果显示<span class="brand-warning">*</span>:</label>
+	                        <div class="item-group col-xs-10">
+	                        	<div class="form-contral">
+			                        <div style="width:300px;" class="combobox" id="show_result">
+			                            <input type="text" style="width: 280px;" readonly="true" />
+			                            <span class="caret"></span>
+			                            <div class="combobox-list">
+			
+			                            </div>
+			                        </div>
+			                    </div>
+	                        </div>
+	                    </div>
+	                    <div class="p-form-item row exam-join-person">
+	                        <label class="col-xs-2">访问模型<span class="brand-warning">*</span>:</label>
+	                        <div class="item-group col-xs-10" style="width:auto;">
+	                        	<div>
+	                        		<input class="form-control w150" id="model_name" type="text" style="width:180px;" readonly />
+			                        <input id="model_id" type="hidden" />
+			                        <button type="button" class="btn btn-default btn-edit-model">新建模型</button>
+			                        <button style="display:none;" type="button" class="btn btn-default btn-copy-model">复制考试模型</button>
+			                    </div>
+	                        </div>
+	                    </div>
+	                    <div class="p-form-item row edit-warning" style="display:none;">
+	                        <p class="col-xs-12" style="color:red;">*注意：考试对象修改之后会直接生效不需要重新发布考试。</p>
+	                    </div>
+	                    <div class="p-form-item btn-wrap row">
+	                        <button type="submit" class="btn btn-primary next-btn" disabled="disabled">下一步</button>
+	                    </div>
+	                </div>
+	            </div>
+	        </div>
+	    </div>
+	</div>
+	<div class="exam-page-wrap exam-addquestion-page" style="display:none;">
+		<div class="row">
+	        <div class="col-xs-12">
+	            <h1 class="page-header tx_yh">指定考题</h1>
+	        </div>
+	    </div>
+	    <div class="row form-inline">
+	        <div class="col-xs-6">
+	        	<div class="form-item">
+                    <label class="fl">抽取方式<span class="brand-warning">*</span></label>
+                    <div style="width:200px;" class="combobox" id="exam-createtype">
+                        <input type="text" style="width: 180px;" readonly="true" />
+                        <span class="caret"></span>
+                        <div class="combobox-list" style="width:200px;">
+
+                        </div>
+                    </div>
+                </div>
+	        </div>
+	        <div class="col-xs-6">
+	        	<div class="form-item">
+                    <label class="fl">单题分数<span class="brand-warning">*</span></label>
+                    <div style="width:200px;" class="combobox" id="exam-item-score">
+                        <input type="text" style="width: 180px;" readonly="true" />
+                        <span class="caret"></span>
+                        <div class="combobox-list" style="width:200px;">
+
+                        </div>
+                    </div>
+                </div>
+	        </div>
+	    </div>
+	    <div class="row">
+	        <div class="col-xs-4">
+	        	<div class="question-bank-wrap  table-block">
+	        		<table class="table table-striped table-bordered table-hover dataTable no-footer" id="question-bank-table">
+	                    <thead>
+		                    <tr role="row">
+		                    	<th></th>
+		                    	<th>题库名称</th>
+		                    </tr>
+	                    </thead>
+	                    <tbody>
+	                    </tbody>
+	                </table>
+	        	</div>
+	        </div>
+	        <div class="col-xs-8">
+	        	<div class="question-list-wrap  table-block">
+	        		<div id="dataTables-persons_filter" class="dataTables_filter"><label>考题题目：<input type="search" class="form-control input-sm" id="exam-quesiton-search-name"></label></div>
+	        		<table class="table table-striped table-bordered table-hover dataTable no-footer" id="questions-table" style="width: 100%;">
+	                    <thead>
+		                    <tr role="row">
+		                    	<th style="width: 10px;"></th>
+		                    	<th>题目</th>
+		                    	<th style="width: 80px;">类型</th>
+		                    </tr>
+	                    </thead>
+	                    <tbody>
+	                    </tbody>
+	                </table>
+                </div>
+	        </div>
+	    </div>
+	    <div class="row">
+	    	<div class="col-xs-3">
+		    	<h4 class="tx_yh">已选考题：</h4>	    	
+	    	</div>
+	    	<div class="col-xs-3">
+		   		<button type="button" class="btn btn-default" style="display:none;" id="get-exam-questions">抽取考题</button>
+	    	</div>
+	    	<div class="col-xs-12">
+	    		<div  class="qeustion-selected-wrap">
+		    		<table class="table table-striped table-bordered table-hover dataTable no-footer" id="question-selected-table" style="width: 100%;">
+	                    <thead>
+		                    <tr role="row">
+		                    	<th style="width: 10px;">序号</th>
+		                    	<th>题目</th>
+		                    	<th style="width: 80px;">分数</th>
+		                    	<th style="width: 80px;">排序</th>
+		                    	<th style="width: 40px;">操作</th>
+		                    </tr>
+	                    </thead>
+	                    <tbody>
+	                    </tbody>
+	                </table>		
+	    		</div>
+                <div class="exam-total-score">
+                	已选考题分数：
+                	<span class="total-score">0/100</span>
+                </div>   
+	    	</div>
+	    </div>
+	    <div class="row">
+	    	<div class="col-xs-12">
+	    		<button type="submit" class="btn btn-primary btn-prev-page">上一步</button>
+	    		<button type="submit" class="btn btn-primary next-btn" disabled="disabled">下一步</button>
+	    	</div>
+	    </div>
+	</div>
+	<div class="exam-page-wrap exam-setcategory-page" style="display:none;">
+		<div class="row">
+	        <div class="col-xs-12">
+	            <h1 class="page-header tx_yh">随机考题</h1>
+	        </div>
+	    </div>
+	    <div class="row form-inline">
+	        <div class="col-xs-6">
+	        	<div class="form-item">
+                    <label class="fl">考题数量<span class="brand-warning">*</span></label>
+                    <div style="width:200px;" class="combobox" id="exam-question-num">
+                        <input type="text" style="width: 180px;" readonly="true" />
+                        <span class="caret"></span>
+                        <div class="combobox-list" style="width:200px;">
+
+                        </div>
+                    </div>
+                </div>
+	        </div>
+	    </div>
+	    <div class="row">
+	        <div class="col-xs-12">
+	        	<div class="question-bank-wrap  table-block">
+	        		<table class="table table-striped table-bordered table-hover dataTable no-footer" id="question-category-table">
+	                    <thead>
+		                    <tr role="row">
+		                    	<th style="width:50px;"><input type="checkbox" class="table-item" /></th>
+		                    	<th>题库名称</th>
+		                    	<th style="width: 100px;">考题数</th>
+		                    </tr>
+	                    </thead>
+	                    <tbody>
+	                    </tbody>
+	                </table>
+	        	</div>
+	        </div>
+	    </div>
+	    <div class="row">
+	    	<div class="col-xs-12">
+	    		<span class="error question-total-tip" style="display:none;">所选题库内的考题总数少于试卷要求的题目数量，请增加题库</span>
+                <div class="question-total-num">
+                	已选考题数量：
+                	<span class="question-num">5/0</span>
+                </div>   
+	    	</div>
+	    </div>
+	    <div class="row">
+	    	<div class="col-xs-12">
+	    		<button type="submit" class="btn btn-primary btn-prev-page">上一步</button>
+	    		<button type="submit" class="btn btn-primary next-btn" disabled="disabled">下一步</button>
+	    	</div>
+	    </div>
+	</div>
+	<div class="exam-page-wrap exam-preview-page" style="display:none;">
+		<div class="row">
+	        <div class="col-xs-12">
+	            <h1 class="page-header tx_yh">考试预览</h1>
+	        </div>
+	    </div>
+	    <div class="row">
+	        <div class="col-xs-12">
+	        	<div class="exam-preview">
+	        		<div class="exam-base-info">
+	        			<h4 class="exam-name">考试名称</h4>
+	        			<div>
+	        				<span>出题方式：<em class="exam-type">指定考题</em></span>&nbsp;&nbsp;
+	        				<span>总分：<em class="total-score">100</em>分</span>&nbsp;&nbsp;
+	        				<span>通过分数：<em class="pass-mark">60</em>分</span>&nbsp;&nbsp;
+	        				<span>题目数：<em class="question-count">100</em></span>&nbsp;&nbsp;
+	        				<span>考试时间：<em class="start-time">2015-04-11 12:00</em> 至 <em class="end-time">2015-04-11 24:00</em></span>&nbsp;&nbsp;
+	        				<span style="display:none;">参考人数：<em class="person-count">10000</em></span>
+	        			</div>
+	        		</div>
+	        		<div class="exam-question-list-wrap">
+	        		</div>
+	        	</div>
+	        </div>
+	    </div>
+	    <div class="row" style="margin-top:20px;">
+	    	<div class="col-xs-12">
+	    		<button type="submit" class="btn btn-primary btn-prev-page">上一步</button>
+	    		<button type="submit" class="btn btn-primary" id="exam-submit">发布</button>
+	    	</div>
+	    </div>
+	</div>    
+    
+    <div class="modal fade" id="dialog-edit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="false" style="display: none;">
+        <div class="modal-dialog" style="width:700px;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title" id="myModalLabel">新建访问模型</h4>
+                </div>
+
+                <form role="form" class="form-title bv-form">
+                    <input type="hidden" name="model_id"/>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <div class="form-group">
+                                    <label>模型名称<span class="brand-warning">*</span></label>
+                                    <input type="text" name="model_name" class="form-control form-item" maxlength="20" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                        	<div class="col-xs-12">
+                                <div class="form-group has-feedback">
+                                    <label>创建方式</label>
+                                    <div style="height: 34px;">
+                                        <div style="width:200px;" class="combobox  form-item" id="modole_create_type">
+                                            <input type="text" style="width: 180px;" readonly="true" />
+                                            <span class="caret"></span>
+                                            <div class="combobox-list" style="display: none;">
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <div class="form-group">
+                                    <label>规则列表<span class="brand-warning">*</span></label>
+                                    <button type="button" class="btn btn-default btn-additem" stype="persons">添加人员规则</button>
+                                    <button type="button" class="btn btn-default btn-additem" stype="position">添加职务规则</button>
+                                    <button type="button" class="btn btn-default btn-additem" stype="team">添加部门规则</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12">
+								<table style="border:1px solid #ccc;width:100%;" class="table table-striped table-bordered table-hover" id="rule-list">
+	                                <thead style="display:none;">
+	                                <tr>
+	                                    <th>名称</th>
+	                                    <th></th>
+	                                    <th></th>
+	                                    <th></th>
+	                                    <th></th>
+	                                </tr>
+	                                </thead>
+	                                <tbody>
+	                                </tbody>
+	                            </table>
+                            </div>
+                        </div>
+                        <div class="row" style="display:none;">
+                            <div class="col-xs-12">
+								<label>员工手机号：</label>
+								<textarea name="mobile_no_list" class="form-control form-item" style="width:560px;resize:none;height:200px;margin-bottom:5px;"></textarea>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <div class="form-group has-feedback">
+                                    <label>默认动作<span class="brand-warning">*</span></label>
+                                    <div style="height: 34px;">
+                                        <div style="width:200px;" class="combobox  form-item" id="edit_model_action">
+                                            <input type="text" style="width: 180px;" readonly="true" />
+                                            <span class="caret"></span>
+                                            <div class="combobox-list" style="display: none;">
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-12">
+                            	<p style="color:red;">(注意：“默认动作”表示未匹配所有规则的人员执行该动作)</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                    	<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    	<button type="button" class="btn btn-primary" id="btn-save-modal">保存</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="dialog-edit-persons" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="false" style="display: none;">
+        <div class="modal-dialog" style="width:800px;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title" id="myModalLabel">编辑人员访问规则</h4>
+                </div>
+                <input type="hidden" name="level_id"/>
+                <div class="modal-body" style="max-height:500px;overflow:auto;">
+                    <input type="hidden" name="rule_id"/>
+                    <input type="hidden" name="rule_index"/>
+                	<div class="row">
+                        <div class="col-xs-12">
+                            <div class="form-group">
+                                <label>规则名称<span class="brand-warning">*</span></label>
+                                <input type="text" name="rule_name" class="form-control form-item" maxlength="20" />
+                            </div>
+                        </div>
+                    </div>
+                    <div style="border:1px solid #eee;background-color:#efefef;padding:10px 5px;margin-bottom:10px;">
+                	<div class="row">
+                		<div class="col-xs-4" style="padding:0px 10px;">
+                			<div class="form-group">
+								<label style="width:50px;">姓名：</label>
+								<input style="width:118px;" type="text" name="user_name" class="form-control form-item" maxlength="190">
+							</div>
+						</div>
+						<div class="col-xs-4" style="padding:0px 10px;">
+                			<div class="form-group">
+								<label style="width:50px;">职务：</label>
+								<div style="width:118px;background-color:#fff;" class="combobox" id="query_position">
+			                        <input type="text" style="width: 98px;" readonly="true" />
+			                        <span class="caret"></span>
+			                        <div class="combobox-list">
+			
+			                        </div>
+			                    </div>
+							</div>
+						</div>
+						<div class="col-xs-4" style="padding:0px 10px;">
+                			<div class="form-group">
+								<label style="width:50px;">电话：</label>
+								<input style="width:118px;" type="text" style="width:380px;" name="mobile_no" class="form-control form-item" maxlength="190">
+							</div>
+						</div>
+						<div class="col-xs-6" style="padding:0px 10px;">
+							<div class="form-group">
+				                <label style="width:80px;">部门名称：</label>
+				                <div style="width:200px;background-color:#fff;" class="combobox" id="data-select-department">
+				                    <input type="text" style="width: 180px;" readonly="true" />
+				                    <span class="caret"></span>
+				                    <div class="combobox-list" style="width:250px;">
+				
+				                    </div>
+				                </div>
+				             </div>
+			            </div>
+						<div class="col-xs-3" style="padding:0px 10px;">
+                			<button id="person_filter" type="button" class="btn btn-default btn-search">查找</button>
+						</div>
+					</div>
+                    <div class="row">
+                        <div class="col-xs-12">
+							<table style="width:100%;" class="table table-striped table-bordered table-hover" id="dataTables-person">
+                                <thead>
+                                <tr>
+                                    <th><input type="checkbox" name="table-item" /></th>
+                                    <th>姓名</th>
+                                    <th>部门</th>
+                                    <th>职务</th>
+                                    <th>手机号码</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="row selected-list">
+                        <div class="col-xs-12">
+							<table style="width:100%;" class="table table-striped table-bordered table-hover" id="person-selected">
+                                <thead>
+                                <tr>
+                                    <th>姓名</th>
+                                    <th>部门</th>
+                                    <th>职务</th>
+                                    <th>手机号码</th>
+                                    <th></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="form-group has-feedback">
+                                <label style="width:160px;">匹配规则后执行动作<span class="brand-warning">*</span></label>
+                                <div style="height: 34px;">
+                                    <div style="width:200px;" class="combobox  form-item" id="persons_rule_action">
+                                        <input type="text" style="width: 180px;" readonly="true" />
+                                        <span class="caret"></span>
+                                        <div class="combobox-list" style="display: none;">
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-12">
+                        	<p style="color:red;">(注意：“允许”表示参加，“禁止”表示不参加)</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                	<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                	<button type="button" class="btn btn-primary" id="btn-save-users">保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="dialog-edit-position" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="false" style="display: none;">
+        <div class="modal-dialog" style="width:800px;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title" id="myModalLabel">编辑职位访问规则</h4>
+                </div>
+                <input type="hidden" name="level_id"/>
+                <div class="modal-body" style="max-height:500px;overflow:auto;">
+                    <input type="hidden" name="rule_id"/>
+                    <input type="hidden" name="rule_index"/>
+                	<div class="row">
+                        <div class="col-xs-12">
+                            <div class="form-group">
+                                <label>规则名称<span class="brand-warning">*</span></label>
+                                <input type="text" name="rule_name" class="form-control form-item" maxlength="20" />
+                            </div>
+                        </div>
+                    </div>
+                    <div style="border:1px solid #eee;background-color:#efefef;padding:10px 5px;margin-bottom:10px;">
+                    <div class="row">
+                        <div class="col-xs-12">
+							<table class="table table-striped table-bordered table-hover" id="dataTables-job">
+                                <thead>
+                                    <tr>
+                                    	<th><input type="checkbox" name="table-item" /></th>
+                                        <th>职务名称</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="row selected-list">
+                        <div class="col-xs-12">
+							<table style="width:100%;" class="table table-striped table-bordered table-hover" id="position-selected">
+                                <thead>
+                                <tr>
+                                    <th>职务名称</th>
+                                    <th></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="form-group has-feedback">
+                                <label style="width:160px;">匹配规则后执行动作<span class="brand-warning">*</span></label>
+                                <div style="height: 34px;">
+                                    <div style="width:200px;" class="combobox  form-item" id="position_rule_action">
+                                        <input type="text" style="width: 180px;" readonly="true" />
+                                        <span class="caret"></span>
+                                        <div class="combobox-list" style="display: none;">
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-12">
+                        	<p style="color:red;">(注意：“允许”表示参加，“禁止”表示不参加)</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                	<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                	<button type="button" class="btn btn-primary" id="btn-save-positions">保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="dialog-edit-team" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="false" style="display: none;">
+        <div class="modal-dialog" style="width:800px;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title" id="myModalLabel">编辑部门访问规则</h4>
+                </div>
+                <input type="hidden" name="level_id"/>
+                <div class="modal-body" style="max-height:500px;overflow:auto;">
+                    <input type="hidden" name="rule_id"/>
+                    <input type="hidden" name="rule_index"/>
+                	<div class="row">
+                        <div class="col-xs-12">
+                            <div class="form-group">
+                                <label>规则名称<span class="brand-warning">*</span></label>
+                                <input type="text" name="rule_name" class="form-control form-item" maxlength="20" />
+                            </div>
+                        </div>
+                    </div>
+                    <div style="border:1px solid #eee;background-color:#efefef;padding:10px 5px;margin-bottom:10px;">
+                    <div class="row">
+                        <div class="col-xs-12">
+							<div id="team_tree" class="team_tree" style="border:1px solid #ccc;height:200px;overflow:auto;"></div>
+                        </div>
+                    </div>
+                    <div class="row selected-list">
+                        <div class="col-xs-12">
+							<table style="width:100%;" class="table table-striped table-bordered table-hover" id="team-selected">
+                                <thead>
+                                <tr>
+                                    <th>部门名称</th>
+                                    <th></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="form-group has-feedback">
+                                <label style="width:160px;">匹配规则后执行动作<span class="brand-warning">*</span></label>
+                                <div style="height: 34px;">
+                                    <div style="width:200px;" class="combobox  form-item" id="team_rule_action">
+                                        <input type="text" style="width: 180px;" readonly="true" />
+                                        <span class="caret"></span>
+                                        <div class="combobox-list" style="display: none;">
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-12">
+                        	<p style="color:red;">(注意：“允许”表示参加，“禁止”表示不参加)</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                	<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                	<button type="button" class="btn btn-primary" id="btn-save-teams">保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="dialog-copy-model" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="false" style="display: none;">
+        <div class="modal-dialog" style="width:800px;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title" id="myModalLabel">复制考试访问模型</h4>
+                </div>
+                <div class="modal-body" style="max-height:500px;overflow:auto;">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="table-responsive">
+                                <table class="table table-striped table-bordered table-hover" id="dataTables-exam">
+                                    <thead>
+                                        <tr>
+                                       		<th></th>
+	                                        <th>考试名称</th>
+	                                        <th>考试时间</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                	<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                	<button type="button" class="btn btn-primary" id="copy-model">保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,57 @@
+<!DOCtype html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>上传测试</title>
+</head>
+<body>
+
+<form action="../api/admin/upload_image.json?company_id=1" enctype="multipart/form-data" method="POST">
+	<input type=hidden name="getform" value="POST">
+	<table border="1">
+		<tr><td>上传图片: <br> <input type=file name="upload_file"></td></tr>
+		<tr><td>图片标签: <br> <input type=text name="image_tag" value="发现,图标"/></td></tr>
+		<tr><td>
+			<input type="submit" name="Send" value="Send"></input> 
+			<input type="reset" name="Clear" value="Clear" ></input>
+		</td></tr>
+	</table>
+</form>
+
+<form action="../api/admin/upload_video.json?company_id=1" enctype="multipart/form-data" method="POST">
+	<input type=hidden name="getform" value="POST">
+	<table border="1">
+		<tr><td>上传视频: <br> <input type=file name="upload_file"></td></tr>
+		<tr><td>图片标签: <br> <input type=text name="image_tag" value="测试"/></td></tr>
+		<tr><td>
+			<input type="submit" name="Send" value="Send"></input> 
+			<input type="reset" name="Clear" value="Clear" ></input>
+		</td></tr>
+	</table>
+</form>
+
+<br/>
+上传请求参数：<br/> 
+upload_file : 上传文件 <br/>
+image_tag : 图片标签。多个标签用半角逗号分割(",")<br/>
+<br/>
+返回JSON结果：<br/>
+<br/>
+上传成功：<br/>
+<pre>
+{
+"result":"SUCC",
+"image_name":"679b23adb555e65735e589b05d8e8620.gif",
+"image_type":"gif",
+"image_size":24008,
+"image_md5":"679b23adb555e65735e589b05d8e8620",
+"image_width":64,"image_hight":29,
+"image_tag":["发现","图标","管理员上传"]
+}
+</pre>
+<br/>
+上传失败：<br/>
+{"result": "FAIL_UNKNOWN", "fail_text": "失败原因，请提示给用户"}<br/>
+
+</body>
+</html>

@@ -1,0 +1,523 @@
+import "weizhu.proto";
+
+package weizhu.survey;
+
+option java_package         = "com.weizhu.proto";
+option java_outer_classname = "SurveyProtos";
+
+enum State {
+  NORMAL  = 0; // 用户，管理员，超级管理员 可见
+  DISABLE = 1; // 管理员，超级管理员 可见
+  DELETE  = 2; // 超级管理员 可见
+}
+
+enum ShowResultType {
+  NONE                = 0; // 客户端不展示调研结果
+  AFTER_SUBMIT_COUNT  = 1; // 提交之后显示统计结果
+  AFTER_SUBMIT_DETAIL = 2; // 提交之后显示详细信息
+  ALWAYS_COUNT        = 3; // 总是显示统计结果
+  ALWAYS_DETAIL       = 4; // 总是显示详细信息
+}
+
+message Survey {
+  required int32          survey_id        = 1; // 调研编号
+  required string         survey_name      = 2; // 调研名称
+  required string         survey_desc      = 3; // 调研描述
+  optional string         image_name       = 4; // 调研图标名称
+  required int32          start_time       = 5; // 开始时间
+  required int32          end_time         = 6; // 结束时间
+  required ShowResultType show_result_type = 7; // 客户端结果展示类型
+  optional int32          allow_model_id   = 8; // 访问模型
+  
+  optional int32          survey_user_cnt  = 21; // 参加调研人数
+  optional int32          submit_time      = 22; // 调研提交时间
+  
+  optional State          state            = 95 [default = NORMAL]; 
+  optional int32          create_time      = 96; // 创建时间
+  optional int64          create_admin_id  = 97; // 创建管理员id
+  optional int32          update_time      = 98; // 更新时间
+  optional int64          update_admin_id  = 99; // 更新管理员id
+}
+
+message Question {
+  required int32         question_id     = 1; // 问题id
+  required string        question_name   = 2; // 问题名称
+  optional string        image_name      = 3; // 问题图片
+  required bool          is_optional     = 4; // 是否选做
+  
+  oneof type {
+    Vote.Question        vote            = 5; // 投票（单选，多选）
+    InputText.Question   input_text      = 6; // 输入框（文本）
+    InputSelect.Question input_select    = 7; // 下拉框
+  }
+  
+  optional State         state           = 95 [default = NORMAL]; 
+  optional int32         create_time     = 96; // 创建时间
+  optional int64         create_admin_id = 97; // 管理员创建编号
+  optional int32         update_time     = 98; // 更新时间
+  optional int64         update_admin_id = 99; // 更新管理员id
+}
+
+message Answer {
+  required int32       question_id  = 1; // 问题id
+  optional int64       user_id      = 2; // 用户id
+  optional int32       answer_time  = 3; // 回答时间
+  
+  oneof type {
+    Vote.Answer        vote         = 4; // 投票（单选，多选）
+    InputText.Answer   input_text   = 5; // 输入框（文本）
+    InputSelect.Answer input_select = 6; // 下拉框
+  }
+}
+
+message SurveyResult {
+  required int32   survey_id   = 1; // 调研编号
+  required int64   user_id     = 2; // 用户id
+  required int32   submit_time = 3; // 提交时间
+  repeated Answer  answer      = 4; 
+}
+
+message Vote {
+  message Option {
+    required int32  option_id   = 1; // 选项id
+    required string option_name = 2; // 选项名称
+    optional string image_name  = 3; // 选项图片
+    
+    optional int32  option_cnt  = 11; // 此选项参与人数
+  }
+
+  message Question {
+    repeated Option option    = 1;
+    required int32  check_num = 2; // 最多可选数目
+    
+    optional int32  total_cnt = 11; // 此题参与人数
+  }
+  message Answer {
+    repeated int32 option_id = 1; 
+  }
+}
+
+message InputText {
+  message Question {
+    required string input_prompt = 1; // 输入提示信息
+  }
+  message Answer {
+    required string result_text = 1;
+  }
+}
+
+message InputSelect {
+  message Option {
+    required int32  option_id   = 1; // 选项id
+    required string option_name = 2; // 选项名称
+  }
+  
+  message Question {
+    repeated Option option = 1;
+  }
+  message Answer {
+    required int32 option_id = 1;
+  }
+}
+
+message GetOpenSurveyRequest {
+  optional bytes offset_index = 1; // 翻页偏移索引,首次不传
+  required int32 size         = 2; // 请求数量
+}
+
+message GetOpenSurveyResponse {
+  repeated Survey survey       = 1; 
+  required bool   has_more     = 2; // 是否还有
+  required bytes  offset_index = 3; // 翻页偏移索引
+}
+
+message GetOpenSurveyCountResponse {
+  required int32 open_survey_count = 1;
+}
+
+message GetClosedSurveyRequest {
+  optional bytes offset_index = 1; // 翻页偏移索引
+  required int32 size         = 2; // 请求数量
+}
+
+message GetClosedSurveyResponse {
+  repeated Survey survey       = 1;
+  required bool   has_more     = 2;
+  required bytes  offset_index = 3; // 翻页偏移索引
+}
+
+message SubmitSurveyRequest {
+  required int32  survey_id = 1;
+  repeated Answer answer    = 2;
+}
+
+message SubmitSurveyResponse {
+  enum Result {
+    SUCC                  = 0;
+    FAIL_SURVEY_NOT_EXSIT = 1;
+    FAIL_SURVEY_CLOSE     = 2;
+    FAIL_SURVEY_NOT_JOIN  = 3;
+    FAIL_ANSWER_INVALID   = 4;
+    
+    FAIL_UNKNOWN          = 99;
+  }
+  optional Result result    = 1 [default = FAIL_UNKNOWN];
+  optional string fail_text = 2;
+}
+
+message GetSurveyByIdRequest {
+  required int32 survey_id = 1;
+}
+
+message GetSurveyByIdResponse {
+  enum Result {
+    SUCC = 0;
+    FAIL_SURVEY_NOT_EXSIT = 1;
+    FAIL_SURVEY_NOT_START = 2;
+    FAIL_SURVEY_NOT_JOIN  = 3;
+    
+    FAIL_UNKNOWN          = 99;
+  }
+  optional Result       result        = 1 [default = FAIL_UNKNOWN];
+  optional string       fail_text     = 2;
+  optional Survey       survey        = 3;
+  repeated Question     question      = 4;
+  optional SurveyResult survey_result = 5;
+}
+
+message GetSurveyResultRequest {
+  required int32 survey_id    = 1;
+  optional bytes offset_index = 2; // 用户回答信息偏移索引
+  required int32 size         = 3;
+}
+
+message GetSurveyResultResponse {
+  repeated SurveyResult survey_result = 1;
+  required bool         has_more      = 2;
+  optional bytes        offset_index  = 3; 
+}
+
+message GetQuestionAnswerRequest {
+  required int32 question_id  = 1; // 问题编号
+  optional bytes offset_index = 2; // 用户回答问题结果偏移索引
+  required int32 size         = 3;
+}
+
+message GetQuestionAnswerResponse {
+  repeated Answer answer       = 1;
+  required bool   has_more     = 2;
+  optional bytes  offset_index = 3; 
+}
+
+message CreateSurveyRequest {	
+  required string         survey_name      = 1; // 调研名称
+  required string         survey_desc      = 2; // 调研描述
+  optional string         image_name       = 3; // 调研图标名称
+  required int32          start_time       = 4; // 开始时间
+  required int32          end_time         = 5; // 结束时间
+  required ShowResultType show_result_type = 6; // 客户端结果展示类型
+  optional int32          allow_model_id   = 7; // 访问模型 （不填的话是任何人都能参与）
+  repeated Question       question         = 8; // 新增的时候question_id = 0
+}
+
+message CreateSurveyResponse {
+  enum Result {
+    SUCC                      = 0;
+    FAIL_SURVEY_NAME_INVALID  = 1;
+    FAIL_SURVEY_IMAGE_INVALID = 2;
+    FAIL_SURVEY_DESC_INVALID  = 3;
+    FAIL_TIME_INVALID         = 4;
+    FAIL_QUESTION_INVALID     = 5;
+    
+    FAIL_UNKNOWN              = 99;
+  }
+  optional Result result    = 1 [default = FAIL_UNKNOWN];
+  optional string fail_text = 2;
+  optional int32  survey_id = 3;
+}
+
+message UpdateSurveyRequest {
+  required int32          survey_id          = 1; // 调研编号
+  required string         survey_name        = 2; // 调研名称
+  required string         survey_desc        = 3; // 调研描述
+  optional string         image_name         = 4; // 调研图标名称
+  required int32          start_time         = 5; // 开始时间
+  required int32          end_time           = 6; // 结束时间
+  required ShowResultType show_result_type   = 7; // 客户端结果展示类型
+  optional int32          allow_model_id     = 8; // 访问模型 （不填的话是任何人都能参与）
+}
+
+message UpdateSurveyResponse {
+  enum Result {
+    SUCC                      = 0;
+    FAIL_SURVEY_INVALID       = 1;
+    FAIL_SURVEY_NAME_INVALID  = 2;
+    FAIL_SURVEY_DESC_INVALID  = 3;
+    FAIL_SUVERY_IMAGE_INVALID = 4;
+    FAIL_TIME_INVALID         = 5;
+    
+    FAIL_UNKNOWN              = 99;
+  }
+  optional Result result    = 1 [default = FAIL_UNKNOWN];
+  optional string fail_text = 2;
+}
+
+message CreateQuestionRequest {
+  required int32  survey_id           = 1; // 调研编号
+
+  required string question_name       = 2; // 问题名称
+  optional string image_name          = 3; // 问题图片
+  required bool   is_optional         = 4; // 是否选做
+  
+  oneof type {
+    Vote.Question        vote         = 5; // 投票（单选，多选）
+    InputText.Question   input_text   = 6; // 输入框（文本）
+    InputSelect.Question input_select = 7; // 下拉框
+  }
+}
+
+message CreateQuestionResponse {
+  enum Result {
+    SUCC                       = 0;
+    FAIL_SURVEY_INVALID        = 1;
+    FAIL_QUESTION_NAME_INVALID = 2;
+    FAIL_IMAGE_NAME_INVALID    = 3;
+    FAIL_OPTION_INVALID        = 4;
+    
+    FAIL_UNKNOWN               = 99;
+  }
+  optional Result result      = 1 [default = FAIL_UNKNOWN];
+  optional string fail_text   = 2;
+  optional int32  question_id = 3;
+}
+
+message UpdateQuestionRequest {
+  required int32  question_id            = 1; // 问题id
+  required string question_name          = 2; // 问题名称
+  optional string image_name             = 3; // 问题图片
+  required bool   is_optional            = 4; // 是否选做
+  
+  oneof type {
+    Vote.Question        vote            = 5; // 投票（单选，多选）
+    InputText.Question   input_text      = 6; // 输入框（文本）
+    InputSelect.Question input_select    = 7; // 下拉框
+  }
+}
+
+message UpdateQuestionResponse {
+  enum Result {
+    SUCC                       = 0;
+    FAIL_QUESTION_NOT_EXSIT    = 1;
+    FAIL_QUESTION_NAME_INVALID = 2;
+    FAIL_IMAGE_NAME_INVALID    = 3;
+    FAIL_QUESTION_TYPE_INVALID = 4;
+    FAIL_OPTION_INVALID        = 5;
+    
+    FAIL_UNKNOWN               = 99;
+  }
+  optional Result result      = 1 [default = FAIL_UNKNOWN];
+  optional string fail_text   = 2;
+}
+
+message DeleteQuestionRequest {
+  required int32 survey_id   = 1;
+  repeated int32 question_id = 2; // 问题id
+}
+
+message DeleteQuestionResponse {
+  enum Result {
+    SUCC                 = 0;
+    FAIL_PERMISSION_DENY = 1;
+    
+    FAIL_UNKNOWN         = 99;
+  }
+  optional Result result      = 1 [default = FAIL_UNKNOWN];
+  optional string fail_text   = 2;
+}
+
+message DisableSurveyRequest {
+  repeated int32 survey_id = 1;
+}
+
+message DisableSurveyResponse {
+  enum Result {
+    SUCC                 = 0;
+    FAIL_PERMISSION_DENY = 1;
+    
+    FAIL_UNKNOWN         = 99;
+  }
+  optional Result result    = 1 [default = FAIL_UNKNOWN];
+  optional string fail_text = 2;
+}
+
+message EnableSurveyRequest {
+  repeated int32 survey_id = 1;
+}
+
+message EnableSurveyResponse {
+  enum Result {
+    SUCC                 = 0;
+    FAIL_PERMISSION_DENY = 1;
+    
+    FAIL_UNKNOWN         = 99;
+  }
+  optional Result result      = 1 [default = FAIL_UNKNOWN];
+  optional string fail_text   = 2;
+}
+
+message DeleteSurveyRequest {
+  repeated int32 survey_id = 1;
+}
+
+message DeleteSurveyResponse {
+  enum Result {
+    SUCC                 = 0;
+    FAIL_PERMISSION_DENY = 1;
+    
+    FAIL_UNKNOWN         = 99;
+  }
+  optional Result result    = 1 [default = FAIL_UNKNOWN];
+  optional string fail_text = 2;
+}
+
+message GetSurveyListRequest {
+  required int32  start       = 1;
+  required int32  length      = 2;
+  optional string survey_name = 3;
+}
+
+message GetSurveyListResponse {
+  repeated Survey survey        = 1;
+  required int32  total         = 2;
+  required int32  filtered_size = 3;
+}
+
+message GetSurveyResultListRequest {
+  required int32 start     = 1;
+  required int32 length    = 2;
+  required int32 survey_id = 3;
+}
+
+message GetSurveyResultListResponse {
+  repeated SurveyResult survey_result = 1;
+  required int32        total         = 2;
+  required int32        filtered_size = 3;
+}
+
+message QuestionSortRequest {
+  required int32 survey_id   = 1;
+  repeated int32 question_id = 2;
+}
+
+message QuestionSortResponse {
+  enum Result {
+    SUCC                = 0;
+    FAIL_SURVEY_INVALID = 1;
+    
+    FAIL_UNKNOWN        = 99;
+  }
+  optional Result result    = 1 [default = FAIL_UNKNOWN];
+  optional string fail_text = 2;
+}
+
+message ImportQuestionRequest {
+  required int32    survey_id = 1;
+  repeated Question question = 2;
+}
+
+message ImportQuestionResponse {
+  enum Result {
+    SUCC                   = 0;
+    FAIL_QUESTION_INVALID  = 1;
+    FAIL_SURVEY_INVALID    = 2;
+    
+    FAIL_UNKNOWN           = 99;
+  }
+  message InvalidQuestion {
+    required string question_name = 1;
+    required string fail_text     = 2;
+  }
+  optional Result          result           = 1 [default = FAIL_UNKNOWN];
+  optional string          fail_text        = 2;
+  repeated InvalidQuestion invalid_question = 3;
+}
+
+message CopySurveyRequest {
+  required int32  survey_id      = 1;
+  required string survey_name    = 2;
+  required int32  start_time     = 3;
+  required int32  end_time       = 4;
+  optional int32  allow_model_id = 5;
+}
+
+message CopySurveyResponse {
+  enum Result {
+    SUCC = 0;
+    FAIL_SURVEY_INVALID      = 1;
+    FAIL_SURVEY_NAME_INVALID = 2;
+    FAIL_SURVEY_TIME_INVALID = 3;
+    
+    FAIL_UNKNOWN        = 99;
+  }
+  optional Result result    = 1 [default = FAIL_UNKNOWN];
+  optional string fail_text = 2;
+  optional int32  survey_id = 3;
+}
+
+service SurveyService {
+
+  // 获取未开始的调研
+  rpc GetOpenSurvey (GetOpenSurveyRequest) returns (GetOpenSurveyResponse);
+  
+  // 获取未开始的调研数目
+  rpc GetOpenSurveyCount (weizhu.EmptyRequest) returns (GetOpenSurveyCountResponse);
+  
+  // 获取已经结束的调研
+  rpc GetClosedSurvey (GetClosedSurveyRequest) returns (GetClosedSurveyResponse);
+
+  // 提交调研
+  rpc SubmitSurvey (SubmitSurveyRequest) returns (SubmitSurveyResponse);
+
+  // 获取调研信息（如果参加过，返回包含结果和统计数据）
+  rpc GetSurveyById (GetSurveyByIdRequest) returns (GetSurveyByIdResponse);
+  
+  // 获取所有用户回答的详细信息（使用场景；仅在已经获取到调研信息之后）
+  rpc GetSurveyResult (GetSurveyResultRequest) returns (GetSurveyResultResponse);
+  
+  // 获取用户回答问题的详细信息
+  rpc GetQuestionAnswer (GetQuestionAnswerRequest) returns (GetQuestionAnswerResponse);
+  
+  
+  // 创建调研（投票）
+  rpc CreateSurvey (CreateSurveyRequest) returns (CreateSurveyResponse);
+  
+  // 更新调研(包括包括名称，描述，顺序)
+  rpc UpdateSurvey (UpdateSurveyRequest) returns (UpdateSurveyResponse);
+  
+  // 更新调研（投票）时增加题目（投票）
+  rpc CreateQuestion (CreateQuestionRequest) returns (CreateQuestionResponse);
+  
+  // 更新调研（投票）的题目（投票）
+  rpc UpdateQuestion (UpdateQuestionRequest) returns (UpdateQuestionResponse);
+  
+  // 删除调研（投票）的题目（投票）
+  rpc DeleteQuestion (DeleteQuestionRequest) returns (DeleteQuestionResponse);
+  
+  // 作废调研
+  rpc DisableSurvey (DisableSurveyRequest) returns (DisableSurveyResponse);
+  
+  // 启用调研
+  rpc EnableSurvey (EnableSurveyRequest) returns (EnableSurveyResponse);
+  
+  // 删除调研
+  rpc DeleteSurvey (DeleteSurveyRequest) returns (DeleteSurveyResponse);
+  
+  // 获取调研列表
+  rpc GetSurveyList (GetSurveyListRequest) returns (GetSurveyListResponse);
+  
+  // 获取调研结果列表
+  rpc GetSurveyResultList (GetSurveyResultListRequest) returns (GetSurveyResultListResponse);
+  
+  // 修改调研题目顺序
+  rpc QuestionSort (QuestionSortRequest) returns (QuestionSortResponse);
+}

@@ -1,0 +1,11 @@
+
+import "session.proto";
+
+package weizhu.session.dao;
+
+option java_package = "com.weizhu.service.session";
+option java_outer_classname = "SessionDAOProtos";
+
+message SessionDataList {
+  repeated weizhu.session.SessionData session_data = 1;
+}

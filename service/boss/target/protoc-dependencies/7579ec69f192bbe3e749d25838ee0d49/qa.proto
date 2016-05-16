@@ -1,0 +1,213 @@
+import "weizhu.proto";
+package weizhu.qa;
+
+option java_package = "com.weizhu.proto";
+option java_outer_classname = "QAProtos";
+
+//分类
+message Category{
+  required int32      category_id           = 1; // 分类id
+  required string     category_name         = 2; // 分类名
+  optional int64      user_id               = 3; // 用户id  
+  optional int32      question_num          = 4; // 问题个数
+  required int32      create_time           = 5; // 添加日期
+  optional int64      admin_id              = 6; // 管理员id 
+
+}
+// 问题
+message Question{
+  required int32      question_id           = 1; // 问题id
+  required string     question_content      = 2; // 问题内容
+  optional int64      user_id               = 3; // 用户id  
+  optional int32      answer_num            = 4; // 回复个数
+  required int32      category_id           = 5; // 分类id
+  required int32      create_time           = 6; // 添加日期
+  optional int64      admin_id              = 7; // 管理员id
+  
+  optional int32      best_answer_id        = 8; // 最优答案
+  optional bool       can_delete            = 9; //当前用户可以删除
+}
+
+// 回答
+message Answer{
+  required int32      answer_id             = 1; // 回答id
+  required int32      question_id           = 2; // 问题id
+  optional int64      user_id               = 3; // 用户id
+  required string     answer_content        = 4; // 回答内容
+  optional int32      like_num              = 5; // 点赞个数
+  required int32      create_time           = 6; // 添加日期  
+  optional int64      admin_id              = 7; // 管理员id
+  
+  optional bool       is_like               = 8; // 是否点过赞
+  optional bool       can_delete            = 9; //当前用户可以删除
+}
+
+// 分类列表回复
+message GetCategoryResponse {
+  repeated Category   category              = 1; // 分类列表
+}
+// 分页查询问题列表请求
+message GetQuestionRequest{
+  optional int32      last_question_id      = 1; // 上次查询最后一条问题的id
+  required int32      size                  = 2; // 查询的条数
+  optional int32      category_id           = 3; // 分类id
+}
+
+// 分页查询问题列表回复
+message GetQuestionResponse {
+  repeated Question   question              = 1; // 问题列表
+  required bool       has_more              = 2; //是否还有记录
+  repeated Answer     ref_answer            = 3;
+}
+
+// 添加问题请求
+message AddQuestionRequest {
+  required string     question_content      = 1; // 问题内容
+  required int32      category_id           = 2; // 分类id
+}
+
+//错误信息提示
+//添加问题回复
+message AddQuestionResponse {
+  enum Result {
+    SUCC                                   = 0; // 添加成功
+    FAIL_CONTENT_INVALID                   = 1; // 问题内容错误
+    FAIL_CATEGORY_NOT_EXIST                 = 2; //分类id不存在
+  }
+  required Result    result                = 1;
+  optional string    fail_text             = 2;
+  optional int32     question_id           = 3; // 返回问题id
+}
+// 删除问题请求
+message DeleteQuestionRequest{
+  required int32                 question_id           = 1; // 问题id
+}
+// 删除问题回复
+message DeleteQuestionResponse {
+  enum Result {
+    SUCC                                               = 0; // 删除成功
+    FAIL_QUESTION_HAS_ANSWER                           = 1; //问题下有回答不能删除
+    FAIL_QUESTION_OTHER                                = 2; //其他人提出的问题，不能删除
+  }
+  required Result                result                = 1;
+  optional string                fail_text             = 2;
+}
+// 查询回答列表请求   （分页）
+message GetAnswerRequest{
+  optional int32     last_answer_id        = 1; // 上次查询最后一条问题的id
+  required int32     size                  = 2; // 查询的条数
+  required int32     question_id           = 3; // 问题id
+}
+
+// 查询回答列表回复
+message GetAnswerResponse {
+  repeated Answer    answer                = 1; // 回答列表
+  required bool      has_more              = 2; //是否还有记录
+}
+
+// 添加回答请求
+message AddAnswerRequest{
+  required int32    question_id           = 1; // 问题id
+  required string   answer_content        = 2; // 回答内容,maxlength=1024
+}
+
+//错误信息提示
+//添加回答回复
+message AddAnswerResponse {
+  enum Result {
+    SUCC                                   = 0; // 添加成功
+    FAIL_CONTENT_INVALID                   = 1; // 回答内容错误
+    FAIL_QUESTION_NOT_EXIST                = 2; //问题id不存在
+  }
+  required Result    result                = 1;
+  optional string    fail_text             = 2;
+  optional int32     answer_id             = 3; //  返回回答id
+}
+// 删除回答请求
+message DeleteAnswerRequest{
+  required int32                 answer_id             = 1; // 回答id
+}
+// 删除回答回复
+message DeleteAnswerResponse {
+  enum Result {
+    SUCC                                               = 0; // 添加成功
+    FAIL_ANSWER_NOT_EXIST                              = 1; //回答id不存在
+    FAIL_QUESTION_NOT_EXIST                            = 2; //问题id不存在
+    FAIL_ANSWER_OTHER                                  = 3; //其他人给出的回答，不能删除
+  }
+  required Result                result                = 1;
+  optional string                fail_text             = 2;
+}
+
+//点赞或取消点赞请求
+message LikeAnswerRequest{
+  required int32 answer_id             = 1; // 回答ID
+  required bool  is_like               = 2; // 是否是点赞操作
+}
+//点赞或取消点赞回复
+message LikeAnswerResponse {
+  enum Result {
+    SUCC                                   = 0; //操作成功
+    FAIL_ANSWER_NOT_EXIST                  = 1; //回答id不存在
+  }
+  required Result    result                = 1;
+  optional string    fail_text             = 2;
+}
+
+//搜索问题请求
+message SearchQuestionRequest{
+  required  string      keyword               = 1; //关键字
+}
+//搜索问题回复
+message SearchQuestionResponse{
+  repeated Category              ref_category              = 1; // 分类列表
+  repeated Question              question                  = 2; //依赖的问题
+  repeated Answer                ref_answer                = 3; //问题的最优答案
+}
+//搜索问题请求
+message SearchMoreQuestionRequest{
+  optional  int32      last_question_id      = 1; // 上次查询最后一条问题的id
+  required  int32      size                  = 2; // 查询的条数
+  required  string     keyword               = 3; //关键字
+  optional  int32      category_id           = 4; //分类id
+}
+//搜索问题回复
+message SearchMoreQuestionResponse{
+  repeated weizhu.qa.Question    question              = 1; // 问题列表
+  required bool                  has_more              = 2; //是否还有记录
+  repeated Answer                ref_answer            = 3; //问题的最优答案
+}
+// 问答管理服务
+service QAService {
+  // 获取分类列表
+  rpc GetCategory (weizhu.EmptyRequest) returns (GetCategoryResponse);
+  // 搜索问题列表
+  rpc SearchQuestion (SearchQuestionRequest) returns (SearchQuestionResponse);
+ 
+  // 搜索问题列表
+  rpc SearchMoreQuestion (SearchMoreQuestionRequest) returns (SearchMoreQuestionResponse);
+
+  // 获取问题列表
+  rpc GetQuestion (GetQuestionRequest) returns (GetQuestionResponse);
+
+  // 添加问题
+  rpc AddQuestion (AddQuestionRequest) returns (AddQuestionResponse);
+ 
+  // 删除问题
+  rpc DeleteQuestion (DeleteQuestionRequest) returns (DeleteQuestionResponse);
+
+  // 获取回答列表
+  rpc GetAnswer(GetAnswerRequest) returns (GetAnswerResponse);
+
+  // 添加回答
+  rpc AddAnswer(AddAnswerRequest) returns (AddAnswerResponse);
+ 
+   // 删除回答
+  rpc DeleteAnswer (DeleteAnswerRequest) returns (DeleteAnswerResponse);
+   
+  // 点赞或取消点赞
+  rpc LikeAnswer (LikeAnswerRequest) returns (LikeAnswerResponse);
+
+
+  
+}

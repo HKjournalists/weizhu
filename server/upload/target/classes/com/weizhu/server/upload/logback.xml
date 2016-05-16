@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    
+    <appender name="other" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${server.logs}/other.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${server.logs}/other.%d{yyyy-MM-dd}.log.gz</fileNamePattern>
+		</rollingPolicy>
+		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+			<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %logger{36} %msg%n</pattern>
+		</encoder>
+	</appender>
+	
+	<appender name="weizhu_server" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${server.logs}/weizhu_server.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${server.logs}/weizhu_server.%d{yyyy-MM-dd}.log.gz</fileNamePattern>
+		</rollingPolicy>
+		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+			<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %logger{24} %msg%n</pattern>
+		</encoder>
+	</appender>
+	
+	<appender name="weizhu_service" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${server.logs}/weizhu_service.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${server.logs}/weizhu_service.%d{yyyy-MM-dd}.log.gz</fileNamePattern>
+		</rollingPolicy>
+		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+			<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %logger{24} %msg%n</pattern>
+		</encoder>
+	</appender>
+	
+	<appender name="weizhu_common" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${server.logs}/weizhu_common.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${server.logs}/weizhu_common.%d{yyyy-MM-dd}.log.gz</fileNamePattern>
+		</rollingPolicy>
+		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+			<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %logger{24} %msg%n</pattern>
+		</encoder>
+	</appender>
+	
+	<appender name="weizhu_service_invoke_read" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${server.logs}/weizhu_service_invoke_read.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${server.logs}/weizhu_service_invoke_read.%d{yyyy-MM-dd}.log.gz</fileNamePattern>
+		</rollingPolicy>
+		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+			<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %msg%n</pattern>
+		</encoder>
+	</appender>
+	<appender name="weizhu_service_invoke_write" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${server.logs}/weizhu_service_invoke_write.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${server.logs}/weizhu_service_invoke_write.%d{yyyy-MM-dd}.log.gz</fileNamePattern>
+		</rollingPolicy>
+		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+			<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %msg%n</pattern>
+		</encoder>
+	</appender>
+		
+	<!-- 
+	<root level="NONE">
+		<appender-ref ref="other" />
+	</root>
+	 -->
+	
+	<logger name="com.google.common" level="INFO">
+	    <appender-ref ref="other" />
+	</logger>
+	
+	<logger name="io.netty" level="INFO">
+	    <appender-ref ref="other" />
+	</logger>
+	
+	<logger name="redis.clients" level="INFO">
+	    <appender-ref ref="other" />
+	</logger>
+	
+	<logger name="com.zaxxer.hikari" level="INFO">
+	    <appender-ref ref="other" />
+	</logger>
+	 
+	<logger name="com.weizhu.server" level="INFO">
+	    <appender-ref ref="weizhu_server" />
+	</logger>
+	
+	<logger name="com.weizhu.service" level="INFO">
+	    <appender-ref ref="weizhu_service" />
+	</logger>
+	
+	<logger name="com.weizhu.common" level="INFO">
+	    <appender-ref ref="weizhu_common" />
+	</logger>
+	
+	<logger name="weizhu_service_invoke_read" level="ERROR">
+	    <appender-ref ref="weizhu_service_invoke_read" />
+	</logger>
+	<logger name="weizhu_service_invoke_write" level="INFO">
+	    <appender-ref ref="weizhu_service_invoke_write" />
+	</logger>
+</configuration>

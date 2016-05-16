@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<projectDescription>
+  <name>weizhu-discover-service</name>
+  <comment>NO_M2ECLIPSE_SUPPORT: Project files created with the maven-eclipse-plugin are not supported in M2Eclipse.</comment>
+  <projects>
+    <project>weizhu-exam-service</project>
+    <project>weizhu-proto</project>
+    <project>weizhu-common</project>
+    <project>weizhu-survey-service</project>
+    <project>weizhu-offline-training-service</project>
+    <project>weizhu-user-service</project>
+    <project>weizhu-allow-service</project>
+    <project>weizhu-official-service</project>
+  </projects>
+  <buildSpec>
+    <buildCommand>
+      <name>org.eclipse.jdt.core.javabuilder</name>
+    </buildCommand>
+  </buildSpec>
+  <natures>
+    <nature>org.eclipse.jdt.core.javanature</nature>
+  </natures>
+</projectDescription>

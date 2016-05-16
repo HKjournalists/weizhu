@@ -1,0 +1,65 @@
+<div id="system-account-wrap" data-options="region:'center',border:false" class="easyui-layout" style="width:100%;height:100%;">
+    <div data-options="region:'north',border:false" style="width: 100%;">
+        <div class="easyui-panel" data-options="border:false">
+            <div style="padding:10px 20px;">
+                <form id="system-account-search-form" method="get">
+                   	用户名:<input class="easyui-textbox" type="text" name="name_keyword"></input>
+                   	状态:<input class="easyui-combobox form-item-box" type="text" name="enable" data-options="valueField:'value',textField:'name',data:[{name:'全部',value:''},{name:'禁用',value:'false'},{name:'启用',value:'true'}],editable:false,panelHeight:'auto'" />
+                    <a href="javascript:void(0)" class="easyui-linkbutton search-btn" iconCls="icon-search"><%=lang.common.search_btn%></a>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div data-options="region:'center',border:false">
+        <table id="system-account-table" style="width:100%;height: 100%;"></table>
+    </div>
+    <div id="system-account-edit" class="easyui-window" data-options="title:'新建账号',collapsible:false,maximizable:false,minimizable:false,closed: true,modal:true,width:500,height:350">
+        <div class="easyui-layout" style="width:100%;height:100%;">
+            <div region="center" border="false" style="padding:10px 12px;">
+                <form id="system-account-edit-form" class="easyui-form form-layout-column" method="post" data-options="novalidate:true">
+                	<input type="hidden" name="admin_id" />
+                    <div class="form-item">
+                        <label>用户名：</label>
+                        <input class="easyui-textbox form-item-box" type="text" name="admin_name" data-options="required:true,width:'79.5%',validType:'length[0,20]'" />
+                    </div>
+                    <div class="form-item">
+                        <label>邮箱：</label>
+                        <input class="easyui-textbox form-item-box" type="text" name="admin_email" data-options="required:true,width:'79.5%',validType:['email','length[0,191]']" />
+                    </div>
+                    <div class="form-item">
+                        <label>密码：</label>
+                        <input id="edit-password" class="easyui-textbox form-item-box" type="password" name="admin_password" data-options="required:true,width:'79.5%',validType:['length[6,22]','charNum']" />
+                    </div>
+                    <div class="form-item">
+                        <label>确认密码：</label>
+                        <input class="easyui-textbox form-item-box" type="password" name="admin_rpassword" data-options="required:true,width:'79.5%',validType:'same[\'edit-password\']'" />
+                    </div>
+                    <div class="form-item">
+                    	<label></label>
+                        <span class="form-checkbox">
+                    		<input name="enable_team_permit" type="checkbox" />开启部门权限
+                    	</span>
+                    </div>
+                    <div class="form-item" style="display:none;">
+                        <label></label>
+                        <span class="form-checkbox">
+                    		<input name="force_reset_password" type="checkbox" />强制更新密码
+                    	</span>
+                    </div>
+                    <div class="form-item">
+                        <label>角色：</label>
+                        <input class="form-item-box" type="text" name="role_id" style="width:79.5%;" />
+                    </div>
+                    <div class="form-item" style="display:none;">
+                        <label>管理部门：</label>
+                        <input class="form-item-box" type="text" name="permit_team_id" style="width:79.5%;" />
+                    </div>
+                </form>
+            </div>
+            <div region="south" border="false" style="text-align:right;padding:10px 12px;">
+                <a href="javascript:void(0)" class="easyui-linkbutton edit-save" onclick='Wz.system.accountManage.saveEdit();' data-options="iconCls:'icon-ok'">保存</a>
+                <a href="javascript:void(0)" class="easyui-linkbutton edit-cancel" onclick="$(this).parents('.easyui-window').window('close');" data-options="iconCls:'icon-cancel'">取消</a>
+            </div>
+        </div>
+    </div>
+</div>

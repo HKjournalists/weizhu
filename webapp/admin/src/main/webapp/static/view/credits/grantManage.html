@@ -1,0 +1,77 @@
+<div id="credits-grant-wrap" data-options="region:'center',border:false" class="easyui-layout" style="width:100%;height:100%;">
+    <div data-options="region:'north',border:false" style="width: 100%;">
+        <div class="easyui-panel" data-options="border:false">
+            <div class="credits-grant-info-wrap" style="padding:10px 20px;">
+                <h2>现有积分：<em>0</em>(这部分是现有可用积分)</h2>
+            </div>
+        </div>
+    </div>
+    <div data-options="region:'center',border:false">
+        <table id="credits-grant-table" style="width:100%;height: 100%;"></table>
+    </div>
+    <div id="credits-grant-detail-win" class="easyui-window" data-options="title:'积分详情',collapsible:false,maximizable:false,minimizable:false,closed: true,modal:true,width:750,height:460">
+        <div class="easyui-layout" style="width:100%;height:100%;">
+            <div region="center" border="false" style="padding:10px 12px;">
+                <table id="credits-grant-detail-table" style="width:100%;height: 100%;"></table>
+            </div>
+            <div region="south" border="false" style="text-align:right;padding:10px 12px;">
+                <a href="javascript:void(0)" class="easyui-linkbutton edit-cancel" onclick="$(this).parents('.easyui-window').window('close');" data-options="iconCls:'icon-cancel'">关闭</a>
+            </div>
+        </div>
+    </div>
+    <div id="credits-grant-edit-win" class="easyui-window" data-options="title:'积分发放',collapsible:false,maximizable:false,minimizable:false,closed: true,modal:true,width:600,height:480">
+        <div class="easyui-layout" style="width:100%;height:100%;">
+            <div region="center" border="false" style="padding:10px 12px;">
+                <form id="credits-grant-edit-form" class="easyui-form form-layout-column" method="post" data-options="novalidate:true">
+                	<input type="hidden" name="user_id"/>
+                    <div class="form-item">
+                        <label>现有积分：</label>
+                        <input class="easyui-numberbox form-item-box" type="text" name="credits_total" data-options="editable:false,width:350" />
+                    </div>
+					<div class="form-item">
+                        <label>发放事由：</label>
+                        <input class="easyui-textbox form-item-box" type="text" name="desc" data-options="required:true,width:350,height:80,multiline:true,prompt:'您可以在这里输入备注信息，1~190个字符',validType:'length[1,190]'" />
+                    </div>
+                    <div class="form-item">
+                        <label>统一分值：</label>
+                        <input class="easyui-numberbox form-item-box" type="text" name="credits_delta" data-options="required:true,value:1,width:350,prompt:'请输入积分数，只能输入数字1-9999',min:1,max:9999" />
+                    </div>
+                    <div class="form-item" style="height:200px;">
+                        <table id="credits-grant-user-table" style="width:100%;height: 100%;"></table>
+                    </div>
+                </form>
+            </div>
+            <div region="south" border="false" style="text-align:right;padding:10px 12px;">
+                <a href="javascript:void(0)" class="easyui-linkbutton edit-save" onclick='Wz.credits.grantManage.saveEdit();' data-options="iconCls:'icon-ok'">保存</a>
+                <a href="javascript:void(0)" class="easyui-linkbutton edit-cancel" onclick="$(this).parents('.easyui-window').window('close');" data-options="iconCls:'icon-cancel'">取消</a>
+            </div>
+        </div>
+    </div>
+    <div id="credits-grant-select-user-win" class="easyui-window" data-options="title:'选择积分发放人员',collapsible:false,maximizable:false,minimizable:false,closed: true,modal:true,width:700,height:600">
+        <div class="easyui-layout" style="width:100%;height:100%;">
+            <div region="center" border="false" style="padding:10px 12px;">
+                <form id="credits-grant-select-user-form" class="easyui-form form-layout-column" method="post" data-options="novalidate:true">
+                    <div class="form-item">
+                    	<div style="width: 650px;height:230px;">
+	                        <table id="credits-grant-userall-table"></table>
+	                        <div id="credits-grant-userall-tb" style="padding:2px 5px;">
+					        	姓名: <input class="easyui-textbox" type="text" name="keyword" data-options="width:110" />
+					        	职务: <input name="position_id" style="width:110px">
+				        		电话: <input class="easyui-textbox" type="text" name="mobile_no" data-options="width:110" />
+				        		部门: <input name="team_id" style="width:110px">
+						        <a href="javascript:void(0)" class="easyui-linkbutton search-btn" iconCls="icon-search">搜索</a>
+						    </div>                    	
+                    	</div>
+                    	<div style="width: 650px;height:240px;">
+                       		<table id="credits-grant-userselected-table"></table>
+                    	</div>
+                    </div>
+                </form>
+            </div>
+            <div region="south" border="false" style="text-align:right;padding:10px 12px;">
+                <a href="javascript:void(0)" class="easyui-linkbutton edit-save" data-options="iconCls:'icon-ok'">保存</a>
+                <a href="javascript:void(0)" class="easyui-linkbutton edit-cancel" onclick="$(this).parents('.easyui-window').window('close');" data-options="iconCls:'icon-cancel'">取消</a>
+            </div>
+        </div>
+    </div>
+</div>

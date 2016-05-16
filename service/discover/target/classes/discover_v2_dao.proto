@@ -1,0 +1,61 @@
+import "discover_v2.proto";
+
+package weizhu.discover_v2.dao;
+
+option java_package = "com.weizhu.service.discover_v2";
+option java_outer_classname = "DiscoverV2DAOProtos";
+
+// 发现首页结构
+message DiscoverHome {
+  repeated weizhu.discover_v2.Banner banner            = 1;
+  repeated weizhu.discover_v2.Module module            = 2;
+  repeated ModulePromptDot           module_prompt_dot = 3;
+}
+
+message ModulePromptIndex {
+  oneof type {
+    ModulePromptDot    prompt_dot    = 1;
+    ModuleCategoryItem category_item = 2;
+  }
+}
+
+// 模块红点提示
+message ModulePromptDot {
+  required int32 module_id            = 1;
+  required int64 prompt_dot_timestamp = 2; // 当原有prompt_dot_timestamp小于当前值时，红点提示有更新
+}
+
+// 分类－条目 关联关系结构
+message ModuleCategoryItem {
+  required int32 category_id         = 1;
+  required int64 item_id             = 2;
+  optional int32 item_allow_model_id = 3;
+  optional State item_state          = 4 [default = NORMAL]; 
+  optional int32 item_create_time    = 5;
+  optional int64 create_admin_id     = 6;
+  optional int32 create_time         = 7;
+}
+
+message ModuleCategoryItemList {
+  repeated ModuleCategoryItem module_category_item = 1;
+}
+
+message ItemLearnList {
+  repeated weizhu.discover_v2.ItemLearn item_learn = 1;
+}
+
+message ItemCommentList {
+  repeated weizhu.discover_v2.ItemComment item_comment = 1;
+}
+
+message ItemScoreList {
+  repeated weizhu.discover_v2.ItemScore item_score = 1;
+}
+
+message ItemLikeList {
+  repeated weizhu.discover_v2.ItemLike item_like = 1;
+}
+
+message ItemShareList {
+  repeated weizhu.discover_v2.ItemShare item_share = 1;
+}

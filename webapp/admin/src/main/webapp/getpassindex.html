@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>微助管理后台-找回密码</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="./static/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- bootstrapValidator CSS -->
+    <link href="./static/bootstrap/dist/css/bootstrapValidator.min.css" rel="stylesheet">
+
+    <!-- Custom Fonts -->
+    <link href="./static/bootstrap/font-awesome-4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    
+    <style>
+        .navbar-inner{width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            height: 50px;}
+        .navbar-brand {
+            width: 160px;
+            padding: 10px 0 0 15px;
+            overflow: hidden;
+        }
+        .navbar-brand img {
+            width: 131px;
+            height: 30px;
+        }
+        .info-right{
+            height: 50px;
+            line-height: 50px;
+            float: right;
+        }
+        .panel-body label{width:100px;}
+        .ml50{margin-left:50px;}
+        .fr{float:right;}
+        .clear{clear:both;}
+    </style>
+</head>
+
+<body>
+
+<div id="wrapper">
+    <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
+        <div class="navbar-inner">
+            <div class="navbar-header">
+                <a class="navbar-brand tx_yh" title="微助后台"><img alt="微助后台" src="./static/bootstrap/assets/images/logo_admin.png" /></a>
+            </div>
+            <div class="info-right">
+                <span>已有账号，</span>
+                <a href="./login.html">马上登陆</a>
+            </div>
+        </div>
+    </nav>
+        <div style="width: 1200px;margin: auto;margin-top: 20px;"><div class="panel panel-default">
+            <div class="panel-heading">密码找回</div>
+            <div class="panel-body">
+                <div class="mail-form" style="width: 500px;margin: auto;display:block;">
+                    <form>
+                        <div class="row" style="position: relative; height: 34px;line-height: 34px;">
+                            <label>邮箱：</label>
+                            <input type="email" name="admin_email" class="form-control" style="width: 400px;display: inline-block;">
+                        </div>
+                        <div style="display:none;width: 400px;margin-left: 90px;margin-top: 5px;" id="submit_error" class="alert alert-warning well-sm">邮箱不能为空！</div>
+                        <div class="row" style="margin-top: 40px;">
+                            <button type="submit" class="btn btn-primary" id="send-email" style="margin-left: 100px;">下一步 安全验证</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="mail-result" style="display:none;width:600px;margin: auto;">
+                    <div style="border: 1px solid #ccc;border-radius: 5px;padding: 75px 5px;">
+                        <div class="col-xs-3">
+                            <img style="margin-top:-45px;" src="./static/bootstrap/dist/img/mail-succ.png">
+                        </div>
+                        <div class="col-xs-9">
+                        	我们已经向您的注册邮箱
+                        	<i class="email-label"></i>
+                        	发送了一封密码找回邮件，请您注意
+                        	<a class="goto_mail" href="" target="_blank">接收邮件</a>
+                        </div>
+                        <div class="col-xs-9 fr">
+                        	<form role="form" class="form-modifypwd bv-form" action="" novalidate="novalidate">
+                        	   <input type="hidden" id="change-email"/>
+		                       <div class="row">
+		                           <div class="col-xs-10">
+		                               <div class="form-group has-feedback">
+		                                   <label>邮箱验证码<span class="brand-warning">*</span></label>
+		                                   <input type="text" name="forgot_token" class="form-control form-item" maxlength="8" data-bv-stringlength="true" data-bv-stringlength-max="8" data-bv-stringlength-min="8" data-bv-field="forgot_token" />
+		                               </div>
+		                           </div>
+		                       </div>
+		                       <div class="row">
+		                           <div class="col-xs-10">
+		                               <div class="form-group has-feedback">
+		                                   <label>新密码<span class="brand-warning">*</span></label>
+		                                   <input type="password" name="new_password" class="form-control  form-item" maxlength="22" data-bv-stringlength="true" data-bv-stringlength-max="22" data-bv-stringlength-min="6" data-bv-field="new_password" />
+		                               </div>
+		                           </div>
+		                       </div>
+		                       <div class="row">
+		                           <div class="col-xs-10">
+		                               <div class="form-group has-feedback">
+		                                   <label>确认密码<span class="brand-warning">*</span></label>
+		                                   <input type="password" name="rep_password" class="form-control  form-item" maxlength="22" data-bv-stringlength="true" data-bv-stringlength-max="22" data-bv-stringlength-min="6" data-bv-field="rep_password" />
+		                               </div>
+		                           </div>
+		                       </div>
+		                       <div class="row">
+		                           <div class="col-xs-10">
+		                               <div class="form-group has-feedback">
+		                                   <button type="submit" class="btn btn-primary" disabeld="true" id="btn-save-modify">保存</button>
+		                               </div>
+		                           </div>
+		                       </div>
+		                   </form>
+                        </div>
+                        
+                        <div class="clear"></div>
+                    </div>
+                    <div style="margin-top:5px;font-size:12px;">请注意查收邮件，并按照邮件中的提示操作，完成安全验证。没有收到邮件？<a href="javascript:void(0)" class="resend">重新发送</a></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="./static/bootstrap/dist/js/jquery-1.11.0.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="./static/bootstrap/dist/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="./static/js/base.js"></script>
+<!-- bootstrapValidator JavaScript -->
+<script src="./static/bootstrap/dist/js/bootstrapValidator.min.js"></script>
+<script type="text/javascript">
+    $(function(){
+        $("#send-email").click(function(e){
+            e.preventDefault();
+            var mail = $("input[name=admin_email]").val();
+            if(mail == ""){
+                $("#submit_error").text("邮箱不能为空！").show();
+                return false;
+            }else{
+                if(!/^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/.test(mail)){
+                    $("#submit_error").text("请填写正确的邮箱格式！").show();
+                }else{
+                    $.ajax({
+                       type: 'get',
+                        url: './api/admin_forgot_password.json',
+                        data: {
+                            admin_email: mail
+                        },
+                        dataType: 'json',
+                        success: function(data){
+                            if(data.result == 'SUCC'){
+                                $(".mail-form").hide();
+                                var mailserver = 'http://mail.' + mail.split('@')[1];
+                                $(".goto_mail").attr("href",mailserver);
+                                $(".email-label").text(mail);
+                                $("#change-email").val(mail);
+                                $(".mail-result").show();
+                            }else{
+                                $("#submit_error").text(data.fail_text).show();
+                            }
+                        }
+                    });
+                }
+            }
+        });
+
+        $(".resend").click(function(){
+            $(".btn-primary").trigger("click");
+        });
+        
+        $('.form-modifypwd').bootstrapValidator({
+            feedbackIcons: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            submitButtons: $("#btn-save-modify"),
+            fields: {
+            	forgot_token: {
+                    validators: {
+                        notEmpty: {
+                            message : '<span class="brand-warning">请输入验证码</span>'
+                        },
+                        stringLength: {
+                            message : '验证码长度为8位'
+                        }
+                    }
+                },
+                new_password: {
+                    validators: {
+                        notEmpty: {
+                            message : '<span class="brand-warning">请输入新密码</span>'
+                        },
+                        stringLength: {
+                            message : '密码长度在6~22位之间'
+                        },
+                        identical: {
+                            field: 'rep_password',
+                            message: '密码不一致'
+                        }
+                    }
+                },
+                rep_password: {
+                    validators: {
+                        notEmpty: {
+                            message : '<span class="brand-warning">请重复新密码</span>'
+                        },
+                        stringLength: {
+                            message : '密码长度在6~22位之间'
+                        },
+                        identical: {
+                            field: 'new_password',
+                            message: '密码不一致'
+                        }
+                    }
+                }
+            },
+            submitHandler: function(validator, form, submitButton){
+            	var admin_email = $("#change-email").val(),
+            		forgot_token = form[0].forgot_token.value,
+            		new_password = form[0].new_password.value;
+            	Wz.util.ajax({
+            		type: 'post',
+            		url: './api/admin_forgot_password_reset.json',
+            		data: {
+            			admin_email: admin_email,
+            			forgot_token: forgot_token,
+            			new_password: new_password
+            		},
+            		dataType: 'json',
+            		success: function(data){
+            			if(data.result == 'SUCC'){
+            				location.href = "./login.html";
+            			}else{
+            				Wz.util.showMsg({msg:data.fail_text});
+            			}
+            		}
+            	});
+            }
+        });
+    });
+</script>
+</body>
+</html>

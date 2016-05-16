@@ -1,0 +1,123 @@
+import "weizhu.proto";
+import "component.proto";
+
+package weizhu.admin.component;
+
+option java_package         = "com.weizhu.proto";
+option java_outer_classname = "AdminComponentProtos";
+
+// 根据Id获取打分信息请求
+message GetScoreByIdRequest {
+  repeated int32 score_id = 1; // 打分id，最多100个
+}
+
+// 根据Id获取打分信息响应
+message GetScoreByIdResponse {
+  repeated weizhu.component.Score      score           = 1; // 打分信息
+  repeated weizhu.component.ScoreCount ref_score_count = 2; // 统计信息
+}
+
+// 获取打分列表请求
+message GetScoreListRequest {
+  required int32                  start  = 1; // 获取的开始位置
+  required int32                  length = 2; // 获取数目
+  optional weizhu.component.State state  = 3; // 状态
+}
+
+// 获取打分列表响应
+message GetScoreListResponse {
+  repeated weizhu.component.Score      score           = 1; // 打分列表
+  required int32                       total_size      = 2; // 总数量
+  required int32                       filtered_size   = 3; // 过滤后的总数量
+  repeated weizhu.component.ScoreCount ref_score_count = 4; // 获取打分统计信息
+}
+
+// 创建打分请求
+message CreateScoreRequest {
+  required string                            score_name     = 1; // 打分名称
+  optional string                            image_name     = 2; // 图片名称
+  required weizhu.component.Score.Type       type           = 3; // 打分类型
+  required weizhu.component.Score.ResultView result_view    = 4; // 打分结果可见性
+  optional int32                             start_time     = 5; // 打分活动开始时间 若不赋值则表示当前时间之前的任何时间都可以进行打分
+  optional int32                             end_time       = 6; // 打分活动结束时间 若不赋值则表示没有结束时间
+  optional int32                             allow_model_id = 7; // 访问权限模型id
+}
+
+// 创建打分响应
+message CreateScoreResponse {
+  enum Result {
+    SUCC                    = 0;
+    FAIL_NAME_INVALID       = 1; // 打分名称错误
+    FAIL_IMAGE_NAME_INVALID = 2; // 图片名称错误
+         
+    FAIL_UNKNOWN            = 99;
+  }
+  
+  optional Result result    = 1 [default = FAIL_UNKNOWN]; // 返回结果
+  optional string fail_text = 2; // 错误文本
+  optional int64  score_id  = 3; // 打分id
+}
+
+// 更新打分请求
+message UpdateScoreRequest {
+  required int32                             score_id       = 1; // 打分id
+  required string                            score_name     = 2; // 打分名称
+  optional string                            image_name     = 3; // 图片名称
+  optional weizhu.component.Score.ResultView result_view    = 4; // 打分情况可见性
+  optional int32                             start_time     = 5; // 打分活动开始时间 若不赋值则表示当前时间之前的任何时间都可以进行打分
+  optional int32                             end_time       = 6; // 打分活动结束时间 若不赋值则表示没有结束时间
+  optional int32                             allow_model_id = 7; // 访问权限模型id
+}
+
+// 更新打分响应
+message UpdateScoreResponse {
+  enum Result {
+    SUCC                    = 0; 
+    FAIL_SCORE_NOT_EXIST    = 1; // 打分ID不存在 
+    FAIL_NAME_INVALID       = 2; // 打分名称错误
+    FAIL_IMAGE_NAME_INVALID = 3; // 图片名称错误
+     
+    FAIL_UNKNOWN             = 99;
+  }
+  
+  optional Result result    = 1 [default = FAIL_UNKNOWN]; // 返回结果
+  optional string fail_text = 2; // 错误文本
+}
+
+// 更新打分状态（包括：正常，作废和删除）请求
+message UpdateScoreStateRequest {
+  repeated int32                  score_id = 1; // 打分id
+  required weizhu.component.State state    = 2; // 状态
+}
+
+// 更新打分状态（包括：正常，作废和删除）响应
+message UpdateScoreStateResponse {
+  enum Result {
+    SUCC                 = 0;
+    FAIL_SCORE_NOT_EXIST = 1; // 打分ID不存在 
+    
+    FAIL_UNKNOWN         = 99;
+  }
+  
+  optional Result result    = 1 [default = FAIL_UNKNOWN]; // 返回结果
+  optional string fail_text = 2; // 错误文本
+}
+
+// 管理后台服务
+service AdminComponentService {
+  
+  //根据ID获取打分的情况
+  rpc GetScoreById (GetScoreByIdRequest) returns (GetScoreByIdResponse);
+  
+  // 获取某个打分下的打分列表
+  rpc GetScoreList (GetScoreListRequest) returns (GetScoreListResponse);
+  
+  // 创建打分
+  rpc CreateScore (CreateScoreRequest) returns (CreateScoreResponse);
+  
+  // 更新打分
+  rpc UpdateScore (UpdateScoreRequest) returns (UpdateScoreResponse);
+  
+  // 更新打分状态（包括：正常，作废和删除）
+  rpc UpdateScoreState (UpdateScoreStateRequest) returns (UpdateScoreStateResponse);
+}

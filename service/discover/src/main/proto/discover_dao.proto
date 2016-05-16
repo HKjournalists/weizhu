@@ -1,0 +1,35 @@
+
+// import "weizhu.proto";
+import "discover.proto";
+
+package weizhu.discover.dao;
+
+option java_package = "com.weizhu.service.discover";
+option java_outer_classname = "DiscoverDAOProtos";
+
+message DiscoverHome {
+  repeated weizhu.discover.Banner          banner           = 1;
+  repeated weizhu.discover.RecommendModule recommend_module = 2;
+  repeated weizhu.discover.Module          module           = 3;
+}
+
+// order by create time
+message ModuleItemDefault {
+  required int64 item_id     = 1;
+  required int32 create_time = 2;
+}
+
+message ModuleItemDefaultList {
+  repeated ModuleItemDefault module_item_default = 1;
+  required bool              has_more            = 2;
+}
+
+message ItemScore {
+  required int32 total_score = 1; // 所有用户打分综合
+  required int32 total_user  = 2; // 打过分的用户数
+}
+
+message ModuleExamListIndex {
+  required int32 exam_id = 1;
+  required int32 time    = 2;
+}

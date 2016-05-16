@@ -1,0 +1,491 @@
+import "weizhu.proto";
+
+package weizhu.user;
+
+option java_package = "com.weizhu.proto";
+option java_outer_classname = "UserProtos";
+// option optimize_for = LITE_RUNTIME;
+
+// 数据状态
+enum State {
+  NORMAL  = 0; // 正常
+  DISABLE = 1; // 停用
+  DELETE  = 2; // 已删除
+}
+
+// 团队基本信息
+message Team {
+  required int32  team_id         = 1; // 团队id,创建后不可更改
+  required string team_name       = 2; // 团队名称
+  optional int32  parent_team_id  = 3; // 父团队id,如果是根团队则为空
+  
+  optional State  state           = 95 [ default = NORMAL]; // 状态。此字段如果没有值视为 NORMAL
+  optional int64  create_admin_id = 96;
+  optional int32  create_time     = 97;
+  optional int64  update_admin_id = 98;
+  optional int32  update_time     = 99;
+}
+
+// 职位信息
+message Position {
+  required int32  position_id     = 1; // 职位id
+  required string position_name   = 2; // 职位名称
+  required string position_desc   = 3; // 职位描述
+    
+  optional State  state           = 95 [ default = NORMAL]; // 状态。此字段如果没有值视为 NORMAL
+  optional int64  create_admin_id = 96;
+  optional int32  create_time     = 97;
+  optional int64  update_admin_id = 98;
+  optional int32  update_time     = 99;
+}
+
+// 职级信息
+message Level {
+  required int32  level_id        = 1; // 职级id
+  required string level_name      = 2; // 职级名称
+  
+  optional State  state           = 95 [ default = NORMAL]; // 状态。此字段如果没有值视为 NORMAL
+  optional int64  create_admin_id = 96;
+  optional int32  create_time     = 97;
+  optional int64  update_admin_id = 98;
+  optional int32  update_time     = 99;
+}
+
+// 用户基本信息
+message UserBase {
+  // 性别
+  enum Gender {
+    MALE   = 0;
+    FEMALE = 1;
+  }
+  
+  // 用户状态
+  enum State {
+    NORMAL  = 0; // 正常
+    DISABLE = 1; // 停用
+    DELETE  = 2; // 已删除
+    APPROVE = 3; // 待审核
+  }
+  
+  required int64  user_id         = 1;  // 用户id,创建后不可更改
+  required string raw_id          = 2;  // 原始人员id
+  required string user_name       = 3;  // 用户姓名 长度为8字,非空
+  optional Gender gender          = 4;  // 性别,一共两种,可空
+  optional string avatar          = 5;  // 头像图片
+  repeated string mobile_no       = 6;  // 手机号 11位数字非空
+  repeated string phone_no        = 7;  // 座机号
+  optional string email           = 8;  // 电子邮箱
+  optional string signature       = 9;  // 个性签名 70字,超过折行,可空
+  optional string interest        = 10; // 兴趣爱好 70字,超过折行,可空
+  optional bool   is_expert       = 11; // 是否为专家
+  optional int32  level_id        = 12; // 职级id 
+  optional State  state           = 13 [ default = NORMAL]; // 用户状态。此字段如果没有值视为 NORMAL
+  optional int64  create_admin_id = 14;
+  optional int32  create_time     = 15;
+  optional int64  update_admin_id = 16;
+  optional int32  update_time     = 17;
+}
+
+// 用户被标注信息
+message UserMark {
+  required int64  user_id      = 1; // 标记用户id
+  required bool   is_star      = 2; // 是否为星标用户
+  optional int32  star_time    = 3; // 标星时间戳(单位:秒)
+  optional string mark_name    = 4; // 标记名称，可为空
+}
+
+// 用户-组织 关系信息
+message UserTeam {
+  required int64 user_id     = 1; // 用户id
+  required int32 team_id     = 2; // 所属团队id
+  optional int32 position_id = 3; // 职位id
+}
+
+// 企业自定义用户扩展信息
+message UserExtends {
+  required int64  user_id = 1; // 用户id
+  required string name    = 2; // 扩展名
+  required string value   = 3; // 用户值
+}
+
+// 项目经验 最多20条，单条最长20字
+message UserExperience {
+  required int32  experience_id      = 1; // 项目经验id
+  required string experience_content = 2; // 项目经验内容, 单条最长20字
+}
+
+// 用户能力标签
+message UserAbilityTag {
+  required int64  user_id        = 1; // 被打标签用户id
+  required string tag_name       = 2; // 标签名称，最多10个字
+  required int32  tag_time       = 3; // 最后被打标签时间
+  required int32  tag_count      = 4; // 标签数
+  optional int64  create_user_id = 5; // 创建标签的用户id 
+  optional int32  create_time    = 6; // 创建标签的时间
+  optional bool   is_tag         = 7; // 是否被访问用户打标签过
+}
+
+// 用户完整信息
+message User {
+  required UserBase    base = 1; // 用户基本信息
+  optional UserMark    mark = 2; // 用户被标记信息
+  repeated UserTeam    team = 3; // 用户隶属团队信息
+  repeated UserExtends ext  = 4; // 企业自定义扩展信息
+}
+
+message GetUserBaseByIdRequest {
+  repeated int64 user_id = 1;
+}
+
+message GetUserBaseByIdResponse {
+  repeated UserBase user_base = 1; // 用户信息
+}
+
+message GetUserByIdRequest {
+  repeated int64 user_id = 1;
+}
+
+message GetUserByMobileNoRequest {
+  required string mobile_no = 1;
+}
+
+message GetUserResponse {
+  repeated User     user         = 1; // 用户信息
+  repeated Team     ref_team     = 2; // 引用团队信息
+  repeated Position ref_position = 3; // 引用职位信息
+  repeated Level    ref_level    = 4; // 引用职级信息
+}
+
+message GetTeamRequest {
+  optional int32 team_id = 1; // 团队id, 不设该字段视为拉取 root team 信息
+}
+
+message GetTeamResponse {
+  optional Team     team          = 1; // 当前团队信息, 为空表示为root team 信息
+  repeated UserTeam sub_user_team = 2; // 子用户团队关系列表
+  repeated int32    sub_team_id   = 3; // 子团队id列表
+  repeated User     ref_user      = 4; // 引用用户信息
+  repeated Team     ref_team      = 5; // 引用团队信息
+  repeated Position ref_position  = 6; // 引用职位信息
+  repeated Level    ref_level     = 7; // 引用职级信息
+}
+
+message UpdateUserAvatarRequest {
+  required string avatar = 1;
+}
+
+message UpdateUserAvatarResponse {
+  enum Result {
+    SUCC = 0;
+    FAIL_AVATAR_INVALID = 1;
+    
+    FAIL_UNKNOWN        = 99;
+  }  
+  optional Result result    = 1 [default = FAIL_UNKNOWN];
+  optional string fail_text = 2;
+}
+
+message UpdateUserSignatureRequest {
+  required string signature = 1;
+}
+
+message UpdateUserSignatureResponse {
+  enum Result {
+    SUCC = 0;
+    FAIL_SIGNATURE_INVALID = 1;
+    
+    FAIL_UNKNOWN           = 99;
+  }  
+  optional Result result    = 1 [default = FAIL_UNKNOWN];
+  optional string fail_text = 2;
+}
+
+message UpdateUserInterestRequest {
+  required string interest = 1;
+}
+
+message UpdateUserInterestResponse {
+  enum Result {
+    SUCC = 0;
+    FAIL_INTEREST_INVALID = 1;
+    
+    FAIL_UNKNOWN          = 99;
+  }  
+  optional Result result    = 1 [default = FAIL_UNKNOWN];
+  optional string fail_text = 2;
+}
+
+message GetUserExperienceRequest {
+  required int64 user_id = 1;
+}
+
+message GetUserExperienceResponse {
+  repeated UserExperience experience = 1;
+}
+
+message CreateUserExperienceRequest {
+  required UserExperience experience = 1;
+}
+
+message CreateUserExperienceResponse {
+  enum Result {
+    SUCC = 0;
+    FAIL_EXPERIENCE_CONTENT_INVALID = 1;
+    FAIL_EXPERIENCE_NUM_LIMIT       = 2;
+    
+    FAIL_UNKNOWN                    = 99;
+  }
+  optional Result         result     = 1 [default = FAIL_UNKNOWN];
+  optional string         fail_text  = 2;
+  optional UserExperience experience = 3;
+}
+
+message UpdateUserExperienceRequest {
+  required UserExperience experience = 1;
+}
+
+message UpdateUserExperienceResponse {
+  enum Result {
+    SUCC = 0;
+    FAIL_EXPERIENCE_ID_INVALID      = 1;
+    FAIL_EXPERIENCE_CONTENT_INVALID = 2;
+    
+    FAIL_UNKNOWN                    = 99;
+  }
+  optional Result         result     = 1 [default = FAIL_UNKNOWN];
+  optional string         fail_text  = 2;
+  optional UserExperience experience = 3;
+}
+
+message DeleteUserExperienceRequest {
+  required int32 experience_id = 1;
+}
+
+message DeleteUserExperienceResponse {
+  enum Result {
+    SUCC = 0;
+    FAIL_EXPERIENCE_ID_INVALID = 1;
+    
+    FAIL_UNKNOWN               = 99;
+  }
+  optional Result result    = 1 [default = FAIL_UNKNOWN];
+  optional string fail_text = 2;
+}
+
+message MarkUserNameRequest {
+  required int64  user_id   = 1; // 标记用户id
+  optional string mark_name = 2; // 标记名称,不设置该字段视为删除标记名称
+}
+
+message MarkUserNameResponse {
+  enum Result {
+    SUCC = 0;                   // 标记成功
+    FAIL_USER_NOT_EXSIT    = 1; // 用户不存在
+    FAIL_MARK_SELF         = 2; // 不能标记自己
+    FAIL_MARK_NAME_INVALID = 3; // 标记名称错误
+    
+    FAIL_UNKNOWN           = 99;
+  }
+  optional Result result    = 1 [default = FAIL_UNKNOWN];
+  optional string fail_text = 2;
+}
+
+message MarkUserStarRequest {
+  required int64 user_id = 1; // 标记用户id
+  required bool  is_star = 2; // 标记星标,true为设置星标，false为取消星标
+}
+
+message MarkUserStarResponse {
+  enum Result {
+    SUCC = 0;                     // 标记成功
+    FAIL_USER_NOT_EXSIT      = 1; // 用户不存在
+    FAIL_MARK_SELF           = 2; // 不能标记自己
+    FAIL_MARK_STAR_NUM_LIMIT = 3; // 超过标记星标数目上限
+    
+    FAIL_UNKNOWN             = 99;
+  }
+  optional Result result    = 1 [default = FAIL_UNKNOWN];
+  optional string fail_text = 2;
+}
+
+message GetMarkStarUserRequest {
+}
+
+message GetMarkStarUserResponse {
+  repeated User     user         = 1; // 用户信息列表
+  repeated Team     ref_team     = 2; // 引用团队信息
+  repeated Position ref_position = 3; // 引用职位信息
+  repeated Level    ref_level    = 4; // 引用职级信息
+}
+
+message GetUserAbilityTagRequest {
+  required int64 user_id = 1;
+}
+
+message GetUserAbilityTagResponse {
+  repeated UserAbilityTag ability_tag = 1;
+}
+
+message TagUserAbilityRequest {
+  required int64  user_id  = 1; // 用户id
+  required string tag_name = 2; // 标签名称，最多10个字
+  required bool   is_tag   = 3; // true: 打标签, false: 取消打标签
+}
+
+message TagUserAbilityResponse {
+  enum Result {
+    SUCC = 0;                // 标记成功
+    FAIL_USER_NOT_EXSIT = 1; // 用户不存在
+    FAIL_TAG_SELF       = 2; // 不能操作自己
+    FAIL_TAG_NOT_EXIST  = 3; // 标签不存在
+    
+    FAIL_UNKNOWN        = 99;
+  }
+  optional Result result    = 1 [default = FAIL_UNKNOWN];
+  optional string fail_text = 2;
+}
+
+message CreateAbilityTagRequest {
+  required int64  user_id  = 1; // 用户id
+  required string tag_name = 2; // 标签名称，最多10个字
+}
+
+message CreateAbilityTagResponse {
+  enum Result {
+    SUCC = 0;                  // 标记成功
+    FAIL_USER_NOT_EXSIT   = 1; // 用户不存在
+    FAIL_TAG_NAME_INVALID = 2; // 标签名称错误
+    FAIL_TAG_NUM_LIMIT    = 3; // 超过单人标签最大数目 (上限50)
+    FAIL_TAG_EXIST        = 4; // 标签已存在
+    
+    FAIL_UNKNOWN          = 99;
+  }
+  optional Result result    = 1 [default = FAIL_UNKNOWN];
+  optional string fail_text = 2;
+}
+
+message DeleteAbilityTagRequest {
+  repeated string tag_name = 1; // 标签名称
+}
+
+message GetRandomAbilityTagUserRequest {
+  repeated string tag_name  = 1;
+  optional bool   is_expert = 2;
+  required int32  size      = 3;
+}
+
+message GetRandomAbilityTagUserResponse {
+  repeated User           user            = 1; // 用户信息列表
+  repeated Team           ref_team        = 2; // 引用团队信息
+  repeated Position       ref_position    = 3; // 引用职位信息
+  repeated Level          ref_level       = 4; // 引用职级信息
+  repeated UserAbilityTag ref_ability_tag = 5; 
+}
+
+message GetAbilityTagUserIdRequest {
+  repeated string tag_name  = 1;
+  optional bool   is_expert = 2;
+}
+
+message GetAbilityTagUserIdResponse {
+  repeated int64 user_id = 1;
+}
+
+message GetAllPositionRequest {
+}
+
+message GetAllPositionResponse {
+  repeated Position position = 1;
+}
+
+message GetAllLevelRequest {
+}
+
+message GetAllLevelResponse {
+  repeated Level level = 1;
+}
+
+message SearchUserRequest {
+  required string keyword = 1;
+}
+
+// 根据关键字搜索用户，最多返回20个用户信息
+message SearchUserResponse {
+  repeated User     user         = 1; // 用户信息
+  repeated Team     ref_team     = 2; // 引用团队信息
+  repeated Position ref_position = 3; // 引用职位信息
+  repeated Level    ref_level    = 4; // 引用职级信息
+}
+
+// 用户信息服务
+service UserService {
+
+  // 根据用户id获取用户基本信息
+  rpc GetUserBaseById (GetUserBaseByIdRequest) returns (GetUserBaseByIdResponse);
+  
+  // 根据用户id获取用户信息
+  rpc GetUserById (GetUserByIdRequest) returns (GetUserResponse);
+  
+  // 根据用户手机号获取用户信息
+  rpc GetUserByMobileNo (GetUserByMobileNoRequest) returns (GetUserResponse);
+  
+  // 获取团队信息
+  rpc GetTeam (GetTeamRequest) returns (GetTeamResponse);
+  
+  // 更新用户头像
+  rpc UpdateUserAvatar (UpdateUserAvatarRequest) returns (UpdateUserAvatarResponse);
+  
+  // 更新用户个性签名
+  rpc UpdateUserSignature (UpdateUserSignatureRequest) returns (UpdateUserSignatureResponse);
+  
+  // 更新用户兴趣爱好
+  rpc UpdateUserInterest (UpdateUserInterestRequest) returns (UpdateUserInterestResponse);
+  
+  // 获取用户项目经验
+  rpc GetUserExperience (GetUserExperienceRequest) returns (GetUserExperienceResponse);
+  
+  // 创建用户项目经验
+  rpc CreateUserExperience (CreateUserExperienceRequest) returns (CreateUserExperienceResponse);
+  
+  // 更新用户项目经验
+  rpc UpdateUserExperience (UpdateUserExperienceRequest) returns (UpdateUserExperienceResponse);
+  
+  // 删除用户项目经验
+  rpc DeleteUserExperience (DeleteUserExperienceRequest) returns (DeleteUserExperienceResponse);
+  
+  // 标记用户备注名称
+  rpc MarkUserName (MarkUserNameRequest) returns (MarkUserNameResponse);
+  
+  // 标记用户星标
+  rpc MarkUserStar (MarkUserStarRequest) returns (MarkUserStarResponse);
+  
+  // 获取标星用户
+  rpc GetMarkStarUser (GetMarkStarUserRequest) returns (GetMarkStarUserResponse);
+
+  // 获取用户能力标签
+  rpc GetUserAbilityTag (GetUserAbilityTagRequest) returns (GetUserAbilityTagResponse);
+
+  // 对用户打能力标签or取消打能力标签
+  rpc TagUserAbility (TagUserAbilityRequest) returns (TagUserAbilityResponse);
+  
+  // 创建标签
+  rpc CreateAbilityTag (CreateAbilityTagRequest) returns (CreateAbilityTagResponse);
+  
+  // 删除自己的标签
+  rpc DeleteAbilityTag (DeleteAbilityTagRequest) returns (weizhu.EmptyResponse); 
+  
+  // 随机获取能力标签用户
+  rpc GetRandomAbilityTagUser (GetRandomAbilityTagUserRequest) returns (GetRandomAbilityTagUserResponse);
+  
+  // 获取能力标签用户id
+  rpc GetAbilityTagUserId (GetAbilityTagUserIdRequest) returns (GetAbilityTagUserIdResponse);
+
+  // 获取所有职位信息
+  rpc GetAllPosition (GetAllPositionRequest) returns (GetAllPositionResponse);
+  
+  // 获取所有职级信息
+  rpc GetAllLevel (GetAllLevelRequest) returns (GetAllLevelResponse);
+  
+  // 根据关键字搜索用户
+  rpc SearchUser (SearchUserRequest) returns (SearchUserResponse);
+}

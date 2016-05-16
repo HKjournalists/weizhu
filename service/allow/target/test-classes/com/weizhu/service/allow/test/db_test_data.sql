@@ -1,0 +1,1 @@
+INSERT INTO weizhu_allow_model (company_id, model_id, model_name, rule_order_str, default_action, create_admin_id, create_time) VALUES (0, 1, '权限', '1,2,3,4', 'ALLOW', 1, 1437550753);

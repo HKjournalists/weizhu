@@ -1,0 +1,15 @@
+import "weizhu.proto";
+
+package weizhu.stats;
+
+option java_package = "com.weizhu.proto";
+option java_outer_classname = "StatsProtos";
+
+service StatsService {
+
+   rpc LoadDimDate (weizhu.EmptyRequest) returns (weizhu.EmptyResponse);
+
+   rpc LoadDimUser (weizhu.EmptyRequest) returns (weizhu.EmptyResponse);
+   
+   rpc LoadDimDiscover (weizhu.EmptyRequest) returns (weizhu.EmptyResponse);
+}

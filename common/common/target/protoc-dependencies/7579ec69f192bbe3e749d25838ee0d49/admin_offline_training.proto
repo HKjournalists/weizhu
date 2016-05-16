@@ -1,0 +1,643 @@
+import "offline_training.proto";
+
+package weizhu.admin.offline_training;
+
+option java_package = "com.weizhu.proto";
+option java_outer_classname = "AdminOfflineTrainingProtos";
+
+message GetTrainByIdRequest {
+  repeated int32 train_id = 1;
+}
+
+message GetTrainByIdResponse {
+  repeated weizhu.offline_training.Train      train           = 1;
+  repeated weizhu.offline_training.TrainCount ref_train_count = 2;
+}
+
+message GetTrainListRequest {
+  required int32                         start           = 1;
+  required int32                         length          = 2;
+  optional int32                         start_time      = 3;
+  optional int32                         end_time        = 4;
+  optional int64                         create_admin_id = 5;
+  optional weizhu.offline_training.State state           = 6;
+  optional string                        train_name      = 7;
+}
+
+message GetTrainListResponse {
+  repeated weizhu.offline_training.Train      train           = 1;
+  required int32                              total_size      = 2;
+  required int32                              filtered_size   = 3;
+  repeated weizhu.offline_training.TrainCount ref_train_count = 4;  
+}
+
+message CreateTrainRequest {
+  required string                        train_name          = 1;
+  optional string                        image_name          = 2;
+  required int32                         start_time          = 3;
+  required int32                         end_time            = 4;
+  required bool                          apply_enable        = 5;
+  optional int32                         apply_start_time    = 6;
+  optional int32                         apply_end_time      = 7;
+  optional int32                         apply_user_count    = 8;
+  required string                        train_address       = 9;
+  optional string                        lecturer_name       = 10;
+  repeated int64                         lecturer_user_id    = 11;
+  required int32                         check_in_start_time = 12;
+  required int32                         check_in_end_time   = 13;
+  required string                        arrangement_text    = 14;
+  optional string                        describe_text       = 15;
+  optional int32                         allow_model_id      = 16;
+  optional weizhu.offline_training.State state               = 17;
+}
+
+message CreateTrainResponse {
+  enum Result {
+    SUCC                  = 0;
+    FAIL_NAME_INVALID     = 1;
+    FAIL_IMAGE_INVALID    = 2;
+    FAIL_TIME_INVLID      = 3;
+    FAIL_APPLY_INVALD     = 4;
+    FAIL_ADDRESS_INVALID  = 5;
+    FAIL_LECTURER_INVALID = 6;
+    FAIL_CHECK_IN_INVALID = 7;
+    
+    FAIL_UNKNOWN          = 99;
+  }
+  
+  optional Result result    = 1 [default = FAIL_UNKNOWN]; // 返回结果
+  optional string fail_text = 2; // 错误文本
+  optional int32  train_id  = 3;
+}
+
+message UpdateTrainRequest {
+  required int32                         train_id            = 1;
+  required string                        train_name          = 2;
+  optional string                        image_name          = 3;
+  required int32                         start_time          = 4;
+  required int32                         end_time            = 5;
+  required bool                          apply_enable        = 6;
+  optional int32                         apply_start_time    = 7;
+  optional int32                         apply_end_time      = 8;
+  optional int32                         apply_user_count    = 9;
+  required string                        train_address       = 10;
+  optional string                        lecturer_name       = 11;
+  repeated int64                         lecturer_user_id    = 12;
+  required int32                         check_in_start_time = 13;
+  required int32                         check_in_end_time   = 14;
+  required string                        arrangement_text    = 15;
+  optional string                        describe_text       = 16;
+  optional int32                         allow_model_id      = 17;
+  optional weizhu.offline_training.State state               = 18;
+  required bool                          enable_notify_user  = 19;   
+}
+
+message UpdateTrainResponse {
+  enum Result {
+    SUCC                  = 0;
+    FAIL_NAME_INVALID     = 1;
+    FAIL_IMAGE_INVALID    = 2;
+    FAIL_TIME_INVLID      = 3;
+    FAIL_APPLY_INVALD     = 4;
+    FAIL_ADDRESS_INVALID  = 5;
+    FAIL_LECTURER_INVALID = 6;
+    FAIL_CHECK_IN_INVALID = 7;
+    
+    FAIL_UNKNOWN          = 99;
+  }
+  
+  optional Result result    = 1 [default = FAIL_UNKNOWN]; // 返回结果
+  optional string fail_text = 2; // 错误文本
+}
+
+message UpdateTrainStateRequest {
+  repeated int32                         train_id = 1;
+  required weizhu.offline_training.State state    = 2;
+}
+
+message UpdateTrainStateResponse {
+  enum Result {
+    SUCC                  = 0;
+    
+    FAIL_UNKNOWN          = 99;
+  }
+  
+  optional Result result    = 1 [default = FAIL_UNKNOWN]; // 返回结果
+  optional string fail_text = 2; // 错误文本
+}
+
+message UpdateTrainDiscoverItemRequest {
+  required int32 train_id         = 1;
+  repeated int64 discover_item_id = 2;
+}
+
+message UpdateTrainDiscoverItemResponse {
+  enum Result {
+    SUCC                  = 0;
+    
+    FAIL_UNKNOWN          = 99;
+  }
+  
+  optional Result result    = 1 [default = FAIL_UNKNOWN]; // 返回结果
+  optional string fail_text = 2; // 错误文本
+}
+
+message GetTrainUserListRequest {
+  required int32 train_id    = 1;
+  required int32 start       = 2;
+  required int32 length      = 3;
+  optional bool  is_check_in = 4;
+  optional bool  is_leave    = 5;
+}
+
+message GetTrainUserListResponse {
+  repeated weizhu.offline_training.TrainUser train_user    = 1;
+  required int32                             total_size    = 2;
+  required int32                             filtered_size = 3;
+}
+
+message GetCourseByIdRequest {
+  repeated int32 course_id = 1;
+}
+
+message GetCourseByIdResponse {
+  repeated weizhu.offline_training.Course      course           = 1;
+  repeated weizhu.offline_training.CourseCount ref_course_count = 2;
+}
+
+message GetCourseListRequest {
+  required int32  start       = 1;
+  required int32  length      = 2;
+  optional string course_name = 3;
+}
+
+message GetCourseListResponse {
+  repeated weizhu.offline_training.Course      course           = 1;
+  required int32                               total_size       = 2;
+  required int32                               filtered_size    = 3;
+  repeated weizhu.offline_training.CourseCount ref_course_count = 4;
+}
+
+message CreateCourseRequest {
+  required string course_name      = 1;
+  optional string image_name       = 2;
+  optional string describe_text    = 3;
+  repeated int64  discover_item_id = 4;
+}
+
+message CreateCourseResponse {
+  enum Result {
+    SUCC                  = 0;
+    FAIL_NAME_INVALID     = 1;
+    FAIL_IMAGE_INVALID    = 2;
+    FAIL_DESCRIBE_INVLID  = 3;
+    
+    FAIL_UNKNOWN          = 99;
+  }
+  
+  optional Result result    = 1 [default = FAIL_UNKNOWN]; // 返回结果
+  optional string fail_text = 2; // 错误文本
+  optional int32  course_id = 3;
+}
+
+message UpdateCourseRequest {
+  required int32  course_id        = 1;
+  required string course_name      = 2;
+  optional string image_name       = 3;
+  optional string describe_text    = 4;
+  repeated int64  discover_item_id = 5;
+}
+
+message UpdateCourseResponse {
+  enum Result {
+    SUCC                  = 0;
+    FAIL_NAME_INVALID     = 1;
+    FAIL_IMAGE_INVALID    = 2;
+    FAIL_DESCRIBE_INVLID  = 3;
+    
+    FAIL_UNKNOWN          = 99;
+  }
+  
+  optional Result result    = 1 [default = FAIL_UNKNOWN]; // 返回结果
+  optional string fail_text = 2; // 错误文本
+}
+
+message UpdateCourseStateRequest {
+  repeated int32                         course_id = 1;
+  required weizhu.offline_training.State state     = 2;
+}
+
+message UpdateCourseStateResponse {
+  enum Result {
+    SUCC                  = 0;
+    
+    FAIL_UNKNOWN          = 99;
+  }
+  
+  optional Result result    = 1 [default = FAIL_UNKNOWN]; // 返回结果
+  optional string fail_text = 2; // 错误文本
+}
+
+message UpdateCourseDiscoverItemRequest {
+  required int32 course_id        = 1;
+  repeated int64 discover_item_id = 2;
+}
+
+message UpdateCourseDiscoverItemResponse {
+  enum Result {
+    SUCC                  = 0;
+    
+    FAIL_UNKNOWN          = 99;
+  }
+  
+  optional Result result    = 1 [default = FAIL_UNKNOWN]; // 返回结果
+  optional string fail_text = 2; // 错误文本
+}
+
+message GetCourseLecturerListRequest {
+  required int32 course_id = 1;
+  required int32 start     = 2;
+  required int32 length    = 3;
+}
+
+message GetCourseLecturerListResponse {
+  repeated int64                                 lecturer_user_id   = 1; 
+  required int32                                 total_size         = 2;
+  required int32                                 filtered_size      = 3;
+  repeated weizhu.offline_training.LecturerCount ref_lecturer_count = 4;
+}
+
+message CreateCourseLecturerRequest {
+  required int32 course_id         = 1;
+  repeated int64 lecuturer_user_id = 2;
+}
+
+message CreateCourseLecturerResponse {
+  enum Result {
+    SUCC                  = 0;
+    
+    FAIL_UNKNOWN          = 99;
+  }
+  
+  optional Result result    = 1 [default = FAIL_UNKNOWN]; // 返回结果
+  optional string fail_text = 2; // 错误文本
+}
+
+message DeleteCourseLecturerRequest {
+  required int32 course_id         = 1;
+  repeated int64 lecuturer_user_id = 2;
+}
+
+message DeleteCourseLecturerResponse {
+  enum Result {
+    SUCC                  = 0;
+    
+    FAIL_UNKNOWN          = 99;
+  }
+  
+  optional Result result    = 1 [default = FAIL_UNKNOWN]; // 返回结果
+  optional string fail_text = 2; // 错误文本
+}
+
+message GetLecturerByIdRequest {
+  repeated int64 lecturer_user_id = 1;
+}
+
+message GetLecturerByIdResponse {
+  repeated weizhu.offline_training.LecturerCount lecturer_count = 4;
+}
+
+message GetLecturerListRequest {
+  required int32  start  = 1;
+  required int32  length = 2;
+}
+
+message GetLecturerListResponse {
+  repeated int64                                 lecturer_user_id   = 1;
+  required int32                                 total_size         = 2;
+  required int32                                 filtered_size      = 3;
+  repeated weizhu.offline_training.LecturerCount ref_lecturer_count = 4;
+}
+
+message GetLecturerCourseListRequest {
+  required int64 lecturer_user_id = 1;
+  required int32 start            = 2;
+  required int32 length           = 3;
+}
+
+message GetLecturerCourseListResponse {
+  repeated weizhu.offline_training.Course      course           = 1;
+  required int32                               total_size       = 2;
+  required int32                               filtered_size    = 3;
+  repeated weizhu.offline_training.CourseCount ref_course_count = 4;
+}
+
+message GetCourseLecturerPermitByIdRequest {
+  repeated int32 permit_id = 1;
+}
+
+message GetCourseLecturerPermitByIdResponse {
+  repeated weizhu.offline_training.CourseLecturerPermit      course_lecturer_permit           = 1;
+  repeated weizhu.offline_training.CourseLecturerPermitCount ref_course_lecturer_permit_count = 2;
+  repeated weizhu.offline_training.Course                    ref_course                       = 3;
+  repeated weizhu.offline_training.CourseCount               ref_course_count                 = 4;
+}
+
+message GetCourseLecturerPermitListRequest {
+  required int32  start       = 1;
+  required int32  length      = 2;
+  optional string permit_name = 3;
+}
+
+message GetCourseLecturerPermitListResponse {
+  repeated weizhu.offline_training.CourseLecturerPermit      course_lecturer_permit           = 1;
+  required int32                                             total_size                       = 2;
+  required int32                                             filtered_size                    = 3;
+  repeated weizhu.offline_training.CourseLecturerPermitCount ref_course_lecturer_permit_count = 4;
+  repeated weizhu.offline_training.Course                    ref_course                       = 5;
+  repeated weizhu.offline_training.CourseCount               ref_course_count                 = 6;
+}
+
+message CreateCourseLecturerPermitRequest {
+  required string permit_name      = 1;
+  required int32  course_id        = 2;
+  optional string image_name       = 3;
+  required int32  apply_start_time = 4;
+  required int32  apply_end_time   = 5;
+  optional string describe_text    = 6;
+  optional int32  allow_model_id   = 7;
+}
+
+message CreateCourseLecturerPermitResponse {
+  enum Result {
+    SUCC                  = 0;
+    FAIL_NAME_INVALID     = 1;
+    FAIL_COURSE_INVALID   = 2;
+    FAIL_IMAGE_INVALID    = 3;
+    FAIL_APPLY_INVALID    = 4;
+    FAIL_DESCRIBE_INVALID = 5;
+    
+    FAIL_UNKNOWN          = 99;
+  }
+  
+  optional Result result    = 1 [default = FAIL_UNKNOWN]; // 返回结果
+  optional string fail_text = 2; // 错误文本
+  optional int32  permit_id = 3;
+}
+
+message UpdateCourseLecturerPermitRequest {
+  required int32  permit_id        = 1;
+  required string permit_name      = 2;
+  required int32  course_id        = 3;
+  optional string image_name       = 4;
+  required int32  apply_start_time = 5;
+  required int32  apply_end_time   = 6;
+  optional string describe_text    = 7;
+  optional int32  allow_model_id   = 8;
+}
+
+message UpdateCourseLecturerPermitResponse {
+  enum Result {
+    SUCC                  = 0;
+    FAIL_NAME_INVALID     = 1;
+    FAIL_COURSE_INVALID   = 2;
+    FAIL_IMAGE_INVALID    = 3;
+    FAIL_APPLY_INVALID    = 4;
+    FAIL_DESCRIBE_INVALID = 5;
+    
+    FAIL_UNKNOWN          = 99;
+  }
+  
+  optional Result result    = 1 [default = FAIL_UNKNOWN]; // 返回结果
+  optional string fail_text = 2; // 错误文本
+}
+
+message UpdateCourseLecturerPermitStateRequest {
+  repeated int32                         permit_id = 1;
+  required weizhu.offline_training.State state     = 2;
+}
+
+message UpdateCourseLecturerPermitStateResponse {
+  enum Result {
+    SUCC                  = 0;
+    
+    FAIL_UNKNOWN          = 99;
+  }
+  
+  optional Result result    = 1 [default = FAIL_UNKNOWN]; // 返回结果
+  optional string fail_text = 2; // 错误文本
+}
+
+message UpdateCourseLecturerPermitFinishRequest {
+  repeated int32 permit_id = 1;
+}
+
+message UpdateCourseLecturerPermitFinishResponse {
+  enum Result {
+    SUCC                  = 0;
+    
+    FAIL_UNKNOWN          = 99;
+  }
+  
+  optional Result result    = 1 [default = FAIL_UNKNOWN]; // 返回结果
+  optional string fail_text = 2; // 错误文本
+}
+
+message GetCourseLecturerPermitUserListRequest {
+  required int32  permit_id   = 1;
+  required int32  start       = 2;
+  required int32  length      = 3;
+  optional bool   is_handle   = 4;
+  optional bool   is_permit   = 5;
+}
+
+message GetCourseLecturerPermitUserListResponse {
+  repeated weizhu.offline_training.CourseLecturerPermitUser  course_lecturer_permit_user = 1;
+  required int32                                             total_size                  = 2;
+  required int32                                             filtered_size               = 3;
+}
+
+message UpdateCourseLecturerPermitUserRequest {
+  required int32 permit_id = 1;
+  repeated int32 user_id   = 2;
+  required bool  is_permit = 3;
+}
+
+message UpdateCourseLecturerPermitUserResponse {
+  enum Result {
+    SUCC                  = 0;
+    
+    FAIL_UNKNOWN          = 99;
+  }
+  
+  optional Result result    = 1 [default = FAIL_UNKNOWN]; // 返回结果
+  optional string fail_text = 2; // 错误文本
+}
+
+message GetCourseScheduleByIdRequest {
+  repeated int32 schedule_id = 1;
+}
+
+message GetCourseScheduleByIdResponse {
+  repeated weizhu.offline_training.CourseSchedule      course_schedule           = 1;
+  repeated weizhu.offline_training.CourseScheduleCount ref_course_schedule_count = 2;
+  repeated weizhu.offline_training.Course              ref_course                = 3;
+  repeated weizhu.offline_training.CourseCount         ref_course_count          = 4;
+}
+
+message GetCourseScheduleListRequest {
+  required int32  start             = 1;
+  required int32  length            = 2;
+  required int32  course_start_time = 3;
+  required int32  course_end_time   = 4; 
+}
+
+message GetCourseScheduleListResponse {
+  repeated weizhu.offline_training.CourseSchedule      course_schedule           = 1;
+  required int32                                       total_size                = 2;
+  required int32                                       filtered_size             = 3;
+  repeated weizhu.offline_training.CourseScheduleCount ref_course_schedule_count = 4;
+  repeated weizhu.offline_training.Course              ref_course                = 5;
+  repeated weizhu.offline_training.CourseCount         ref_course_count          = 6;
+}
+
+message CreateCourseScheduleRequest {
+  required int32  course_id              = 1;
+  required int32  course_start_time      = 2;
+  required int32  course_end_time        = 3;
+  required string course_address         = 4;
+  required int32  apply_start_time       = 5;
+  required int32  apply_end_time         = 6;
+  repeated int64  allow_lecturer_user_id = 7;
+}
+
+message CreateCourseScheduleResponse {
+  enum Result {
+    SUCC                     = 0;
+    FAIL_COURSE_INVALID      = 2;
+    FAIL_COURSE_TIME_INVALID = 3;
+    FAIL_APPLY_TIME_INVALID  = 4;
+    
+    FAIL_UNKNOWN             = 99;
+  }
+  
+  optional Result result      = 1 [default = FAIL_UNKNOWN]; // 返回结果
+  optional string fail_text   = 2; // 错误文本
+  optional int32  schedule_id = 3;
+}
+
+message UpdateCourseScheduleRequest {
+  required int32  schedule_id            = 1;
+  required int32  course_id              = 2;
+  required int32  course_start_time      = 3;
+  required int32  course_end_time        = 4;
+  required string course_address         = 5;
+  required int32  apply_start_time       = 6;
+  required int32  apply_end_time         = 7;
+  repeated int64  allow_lecturer_user_id = 8;
+}
+
+message UpdateCourseScheduleResponse {
+  enum Result {
+    SUCC                     = 0;
+    FAIL_COURSE_INVALID      = 2;
+    FAIL_COURSE_TIME_INVALID = 3;
+    FAIL_APPLY_TIME_INVALID  = 4;
+    
+    FAIL_UNKNOWN             = 99;
+  }
+  
+  optional Result result      = 1 [default = FAIL_UNKNOWN]; // 返回结果
+  optional string fail_text   = 2; // 错误文本
+}
+
+message UpdateCourseScheduleStateRequest {
+  repeated int32                         schedule_id = 1;
+  required weizhu.offline_training.State state       = 2;
+}
+
+message UpdateCourseScheduleStateResponse {
+  enum Result {
+    SUCC         = 0;
+    
+    FAIL_UNKNOWN = 99;
+  }
+  
+  optional Result result    = 1 [default = FAIL_UNKNOWN]; // 返回结果
+  optional string fail_text = 2; // 错误文本
+}
+
+message UpdateCourseScheduleLecturerRequest {
+  required int32 schedule_id      = 1;
+  required int32 lecturer_user_id = 2;
+}
+
+message UpdateCourseScheduleLecturerResponse {
+  enum Result {
+    SUCC         = 0;
+    
+    FAIL_UNKNOWN = 99;
+  }
+  
+  optional Result result    = 1 [default = FAIL_UNKNOWN]; // 返回结果
+  optional string fail_text = 2; // 错误文本
+}
+
+message GetCourseScheduleLecturerListRequest {
+  required int32 schedule_id = 1;
+  required int32 start       = 2;
+  required int32 length      = 3;
+}
+
+message GetCourseScheduleLecturerListResponse {
+  repeated weizhu.offline_training.CourseScheduleLecturer course_schedule_lecturer = 1;
+  required int32                                          total_size               = 2;
+  required int32                                          filtered_size            = 3;
+  repeated weizhu.offline_training.LecturerCount          ref_lecturer_count       = 4;
+}
+
+service AdminOfflineTrainingService {
+
+  rpc GetTrainById (GetTrainByIdRequest) returns (GetTrainByIdResponse);
+  rpc GetTrainList (GetTrainListRequest) returns (GetTrainListResponse);
+  rpc CreateTrain (CreateTrainRequest) returns (CreateTrainResponse);
+  rpc UpdateTrain (UpdateTrainRequest) returns (UpdateTrainResponse);
+  rpc UpdateTrainState (UpdateTrainStateRequest) returns (UpdateTrainStateResponse);
+  rpc UpdateTrainDiscoverItem (UpdateTrainDiscoverItemRequest) returns (UpdateTrainDiscoverItemResponse);
+  
+  rpc GetTrainUserList (GetTrainUserListRequest) returns (GetTrainUserListResponse);
+  
+  rpc GetCourseById (GetCourseByIdRequest) returns (GetCourseByIdResponse);
+  rpc GetCourseList (GetCourseListRequest) returns (GetCourseListResponse);
+  rpc CreateCourse (CreateCourseRequest) returns (CreateCourseResponse);
+  rpc UpdateCourse (UpdateCourseRequest) returns (UpdateCourseResponse);
+  rpc UpdateCourseState (UpdateCourseStateRequest) returns (UpdateCourseStateResponse);
+  rpc UpdateCourseDiscoverItem (UpdateCourseDiscoverItemRequest) returns (UpdateCourseDiscoverItemResponse);
+  
+  rpc GetCourseLecturerList (GetCourseLecturerListRequest) returns (GetCourseLecturerListResponse);
+  rpc CreateCourseLecturer (CreateCourseLecturerRequest) returns (CreateCourseLecturerResponse);
+  rpc DeleteCourseLecturer (DeleteCourseLecturerRequest) returns (DeleteCourseLecturerResponse);
+  
+  rpc GetLecturerById (GetLecturerByIdRequest) returns (GetLecturerByIdResponse);
+  rpc GetLecturerList (GetLecturerListRequest) returns (GetLecturerListResponse);
+  rpc GetLecturerCourseList (GetLecturerCourseListRequest) returns (GetLecturerCourseListResponse);
+  
+  rpc GetCourseLecturerPermitById (GetCourseLecturerPermitByIdRequest) returns (GetCourseLecturerPermitByIdResponse);
+  rpc GetCourseLecturerPermitList (GetCourseLecturerPermitListRequest) returns (GetCourseLecturerPermitListResponse);
+  rpc CreateCourseLecturerPermit (CreateCourseLecturerPermitRequest) returns (CreateCourseLecturerPermitResponse);
+  rpc UpdateCourseLecturerPermit (UpdateCourseLecturerPermitRequest) returns (UpdateCourseLecturerPermitResponse);
+  rpc UpdateCourseLecturerPermitState (UpdateCourseLecturerPermitStateRequest) returns (UpdateCourseLecturerPermitStateResponse);
+  rpc UpdateCourseLecturerPermitFinish (UpdateCourseLecturerPermitFinishRequest) returns (UpdateCourseLecturerPermitFinishResponse);
+  
+  rpc GetCourseLecturerPermitUserList (GetCourseLecturerPermitUserListRequest) returns (GetCourseLecturerPermitUserListResponse);
+  rpc UpdateCourseLecturerPermitUser (UpdateCourseLecturerPermitUserRequest) returns (UpdateCourseLecturerPermitUserResponse);
+  
+  rpc GetCourseScheduleById (GetCourseScheduleByIdRequest) returns (GetCourseScheduleByIdResponse);
+  rpc GetCourseScheduleList (GetCourseScheduleListRequest) returns (GetCourseScheduleListResponse);
+  rpc CreateCourseSchedule (CreateCourseScheduleRequest) returns (CreateCourseScheduleResponse);
+  rpc UpdateCourseSchedule (UpdateCourseScheduleRequest) returns (UpdateCourseScheduleResponse);
+  rpc UpdateCourseScheduleState (UpdateCourseScheduleStateRequest) returns (UpdateCourseScheduleStateResponse);
+  rpc UpdateCourseScheduleLecturer (UpdateCourseScheduleLecturerRequest) returns (UpdateCourseScheduleLecturerResponse);
+
+  rpc GetCourseScheduleLecturerList (GetCourseScheduleLecturerListRequest) returns (GetCourseScheduleLecturerListResponse);
+}

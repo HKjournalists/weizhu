@@ -1,0 +1,23 @@
+import "weizhu.proto";
+
+package weizhu.push;
+
+option java_package = "com.weizhu.proto";
+option java_outer_classname = "PushPollingProtos";
+// option optimize_for = LITE_RUNTIME;
+
+message GetPushMsgRequest {
+  required int64 push_seq = 1; // 终端上的 push seq
+  required int32 msg_size = 2;
+}
+
+message GetPushMsgResponse {
+  repeated weizhu.PushMessage push_msg = 1; // 离线push msg
+  required bool               has_more = 2; // 是否还有消息
+}
+
+service PushPollingService {
+
+  rpc GetPushMsg (GetPushMsgRequest) returns (GetPushMsgResponse);
+  
+}

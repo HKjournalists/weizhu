@@ -1,0 +1,441 @@
+package weizhu.allow;
+
+option java_package         = "com.weizhu.proto";
+option java_outer_classname = "AllowProtos";
+
+// 匹配规则后的动作
+enum Action {
+  ALLOW = 0; // 允许
+  DENY  = 1; // 拒绝
+}
+
+// 资源访问模型
+message Model {
+  required int32  model_id        = 1; // 模型id 
+  required string model_name      = 2; // 模型名
+  required Action default_action  = 3; // 默认动作(所有规则都不匹配，执行该动作)
+  required int64  create_admin_id = 4; // 创建管理员id
+  required int32  create_time     = 5; // 创建时间
+}
+
+// 资源访问规则
+message Rule {
+  required int32  rule_id         = 1; // 规则id
+  required string rule_name       = 2; // 规则名称
+  required Action action          = 3; // 匹配规则后的动作
+  
+  oneof rule_type {
+    UserRule      user_rule       = 4;
+    TeamRule      team_rule       = 5;
+    PositionRule  position_rule   = 6;
+    LevelRule     level_rule      = 7;
+    // to extend
+  }
+}
+
+// 用户规则
+message UserRule {
+  repeated int64 user_id = 1; // 最多100
+}
+
+// 部门规则
+message TeamRule {
+  repeated int32 team_id = 1; // 最多100
+}
+
+// 职位规则
+message PositionRule {
+  repeated int32 position_id = 1; // 最多100
+}
+
+// 职级规则
+message LevelRule {
+  repeated int32 level_id = 1; // 最多100
+}
+
+// 用户批量规则(待定)
+// message UserBatchRule {
+//   repeated int64 user_id = 1; // 最少100 最多50w，管理后台对该规则只能整体添加/删除
+// }
+
+message CheckAllowRequest {
+  repeated int32 model_id = 1;
+  repeated int64 user_id  = 2;
+}
+
+message CheckAllowResponse {
+  message CheckResult {
+    required int32 model_id      = 1;
+    repeated int64 allow_user_id = 2; 
+  }
+  
+  repeated CheckResult check_result = 1;
+}
+
+message GetModelListRequest {
+  required int32  start   = 1;
+  required int32  length  = 2;
+  optional string keyword = 3; // 过滤关键词
+}
+
+message GetModelListResponse {
+  repeated Model  model         = 1;
+  required int32  total_size    = 2;
+  required int32  filtered_size = 3;
+}
+
+message GetModelByIdRequest {
+  repeated int32 model_id = 1;
+}
+
+message GetModelByIdResponse {
+  repeated Model model = 1;
+}
+
+message GetModelRuleListRequest {
+  required int32 model_id = 1;
+}
+
+message GetModelRuleListResponse {
+  repeated Rule rule = 1;
+}
+
+message CreateModelRequest {
+  required string model_name     = 1;
+  repeated Rule   rule           = 2;
+  required Action default_action = 3;
+}
+
+message CreateModelResponse {
+  enum Result {
+    SUCC                    = 0;
+    FAIL_MODEL_NAME_INVALID = 1;
+    FAIL_RULE_INVALID       = 2;
+    
+    FAIL_UNKNOWN            = 99;
+  }
+  optional Result result    = 1 [default = FAIL_UNKNOWN];
+  optional string fail_text = 2;
+  optional int32  model_id  = 3;
+}
+
+message CreateUserRuleRequest {
+  required int32  model_id    = 1;
+  required string rule_name   = 2;
+  required Action rule_action = 3;
+  repeated int64  user_id     = 4;
+}
+
+message CreateUserRuleResponse {
+  enum Result {
+    SUCC                   = 0;
+    FAIL_MODEL_INVALID     = 1;
+    FAIL_RULE_NAME_INVALID = 2;
+    FAIL_USER_INVALID      = 3;
+    
+    FAIL_UNKNOWN           = 99;
+  }
+  optional Result result    = 1 [default = FAIL_UNKNOWN];
+  optional string fail_text = 2;
+  optional int32  rule_id   = 3;
+}
+
+message CreateTeamRuleRequest {
+  required int32  model_id    = 1;
+  required string rule_name   = 2;
+  required Action rule_action = 3;
+  repeated int32  team_id     = 4;
+}
+
+message CreateTeamRuleResponse {
+  enum Result {
+    SUCC                   = 0;
+    FAIL_MODEL_INVALID     = 1;
+    FAIL_RULE_NAME_INVALID = 2;
+    FAIL_TEAM_INVALID      = 3;
+    
+    FAIL_UNKNOWN           = 99;
+  }
+  optional Result result    = 1 [default = FAIL_UNKNOWN];
+  optional string fail_text = 2;
+  optional int32  rule_id   = 3;
+}
+
+message CreatePositionRuleRequest {
+  required int32  model_id    = 1;
+  required string rule_name   = 2;
+  required Action rule_action = 3;
+  repeated int32  position_id = 4;
+}
+
+message CreatePositionRuleResponse {
+  enum Result {
+    SUCC                   = 0;
+    FAIL_MODEL_INVALID     = 1;
+    FAIL_RULE_NAME_INVALID = 2;
+    FAIL_POSITION_INVALID  = 3;
+    
+    FAIL_UNKNOWN           = 99;
+  }
+  optional Result result    = 1 [default = FAIL_UNKNOWN];
+  optional string fail_text = 2;
+  optional int32  rule_id   = 3;
+}
+
+message CreateLevelRuleRequest {
+  required int32  model_id    = 1;
+  required string rule_name   = 2;
+  required Action rule_action = 3;
+  repeated int32  level_id    = 4;
+}
+
+message CreateLevelRuleResponse {
+  enum Result {
+    SUCC                   = 0;
+    FAIL_MODEL_INVALID     = 1;
+    FAIL_RULE_NAME_INVALID = 2;
+    FAIL_LEVEL_INVALID     = 3;
+    
+    FAIL_UNKNOWN = 99;
+  }
+  optional Result result    = 1 [default = FAIL_UNKNOWN];
+  optional string fail_text = 2;
+  optional int32  rule_id   = 3;
+}
+
+message DeleteModelRequest {
+  repeated int32 model_id = 1;
+}
+
+message DeleteModelResponse {
+  enum Result {
+    SUCC                   = 0;
+    FAIL_PERMISSION_DENIED = 1;// 没有操作权限
+    FAIL_MODEL_INVALID     = 2;
+    
+    FAIL_UNKNOWN           = 99;
+  }
+  optional Result result    = 1 [default = FAIL_UNKNOWN];
+  optional string fail_text = 2;
+}
+
+message DeleteRuleRequest {
+  required int32 model_id = 1;
+  repeated int32 rule_id  = 2;
+}
+
+message DeleteRuleResponse {
+  enum Result {
+    SUCC                   = 0;
+    FAIL_PERMISSION_DENIED = 1;// 没有操作权限
+    FAIL_MODEL_INVALID     = 2;
+    FAIL_RULE_INVALID      = 3;
+    
+    FAIL_UNKNOWN           = 99;
+  }
+  optional Result result    = 1 [default = FAIL_UNKNOWN];
+  optional string fail_text = 2;
+}
+
+message UpdateModelRequest {
+  required int32  model_id       = 1;
+  required string model_name     = 2;
+  required Action default_action = 3; // 默认动作(所有规则都不匹配，执行该动作)
+}
+
+message UpdateModelResponse {
+  enum Result {
+    SUCC                    = 0;
+    FAIL_PERMISSION_DENIED  = 1;// 没有操作权限
+    FAIL_MODEL_NOT_EXIST    = 2;
+    FAIL_MODEL_NAME_INVALID = 3;
+    
+    FAIL_UNKNOWN            = 99;
+  }
+  optional Result result    = 1 [default = FAIL_UNKNOWN];
+  optional string fail_text = 2;
+}
+
+message UpdateModelRuleOrderRequest {
+  required int32 model_id = 1;
+  repeated int32 rule_id  = 2;
+}
+
+message UpdateModelRuleOrderResponse {
+  enum Result {
+    SUCC                   = 0;
+    FAIL_PERMISSION_DENIED = 1; // 没有操作权限
+    FAIL_MODEL_NOT_EXIST   = 2;
+    FAIL_RULE_INVALID      = 3;
+    
+    FAIL_UNKNOWN         = 99;
+  }
+  optional Result result    = 1 [default = FAIL_UNKNOWN];
+  optional string fail_text = 2;
+}
+
+message UpdateUserRuleRequest {
+  required int32  model_id    = 1;
+  required int32  rule_id     = 2;
+  required string rule_name   = 3;
+  required Action rule_action = 4;
+  repeated int64  user_id     = 5;
+}
+
+message UpdateUserRuleResponse {
+  enum Result {
+    SUCC                   = 0;
+    FAIL_PERMISSION_DENIED = 1; // 没有操作权限
+    FAIL_MODEL_NOT_EXIST   = 2;
+    FAIL_RULE_NOT_EXIST    = 3;
+    FAIL_RULE_INVALID      = 4;
+    FAIL_USER_INVALID      = 5;
+    
+    FAIL_UNKNOWN           = 99;
+  }
+  optional Result result    = 1 [default = FAIL_UNKNOWN];
+  optional string fail_text = 2;
+}
+
+message UpdateTeamRuleRequest {
+  required int32  model_id    = 1;
+  required int32  rule_id     = 2;
+  required string rule_name   = 3;
+  required Action rule_action = 4;
+  repeated int32  team_id     = 5;
+}
+
+message UpdateTeamRuleResponse {
+  enum Result {
+    SUCC                   = 0;
+    FAIL_PERMISSION_DENIED = 1; // 没有操作权限
+    FAIL_MODEL_NOT_EXIST   = 2;
+    FAIL_RULE_NOT_EXIST    = 3;
+    FAIL_RULE_INVALID      = 4;
+    FAIL_TEAM_INVALID      = 5;
+    
+    FAIL_UNKNOWN           = 99;
+  }
+  optional Result result    = 1 [default = FAIL_UNKNOWN];
+  optional string fail_text = 2;
+}
+
+message UpdatePositionRuleRequest {	
+  required int32  model_id    = 1;
+  required int32  rule_id     = 2;
+  required string rule_name   = 3;
+  required Action rule_action = 4;
+  repeated int32  position_id = 5;
+}
+
+message UpdatePositionRuleResponse {
+  enum Result {
+    SUCC                   = 0;
+    FAIL_PERMISSION_DENIED = 1; // 没有操作权限
+    FAIL_MODEL_NOT_EXIST   = 2;
+    FAIL_RULE_NOT_EXIST    = 3;
+    FAIL_RULE_INVALID      = 4;
+    FAIL_POSITION_INVALID  = 5;
+    
+    FAIL_UNKNOWN           = 99;
+  }
+  optional Result result    = 1 [default = FAIL_UNKNOWN];
+  optional string fail_text = 2;
+}
+
+message UpdateLevelRuleRequest {
+  required int32  model_id    = 1;
+  required int32  rule_id     = 2;
+  required string rule_name   = 3;
+  required Action rule_action = 4;
+  repeated int32  level_id    = 5;
+}
+
+message UpdateLevelRuleResponse {
+  enum Result {
+    SUCC = 0;
+    FAIL_PERMISSION_DENIED = 1;
+    FAIL_MODEL_NOT_EXIST   = 2;
+    FAIL_RULE_NOT_EXIST    = 3;
+    FAIL_RULE_INVALID      = 4;
+    FAIL_LEVEL_INVALID     = 5;
+    
+    FAIL_UNKNOWN           = 99;
+  }
+  optional Result result    = 1 [default = FAIL_UNKNOWN];
+  optional string fail_text = 2;
+}
+
+message CopyModelRequest {
+  required int32 model_id = 1;
+}
+
+message CopyModelResponse {
+  enum Result {
+    SUCC                   = 0;
+    FAIL_PERMISSION_DENIED = 1;
+    FAIL_MODEL_NOT_EXIST   = 2;
+    
+    FAIL_UNKNOWN           = 99;
+  }
+  optional Result result        = 1 [default = FAIL_UNKNOWN];
+  optional string fail_text     = 2;
+  optional int32  new_model_id  = 3;
+}
+
+service AllowService {
+
+  // 检查批量用户是否具有访问某个模块的权限
+  rpc CheckAllow (CheckAllowRequest) returns (CheckAllowResponse);
+
+  // 获取资源访问模型
+  rpc GetModelList (GetModelListRequest) returns (GetModelListResponse);
+  
+  // 根据模型id获取资源访问模型
+  rpc GetModelById (GetModelByIdRequest) returns (GetModelByIdResponse);
+  
+  // 根据模型id获取资源访问规则列表
+  rpc GetModelRuleList (GetModelRuleListRequest) returns (GetModelRuleListResponse);
+
+  // 创建资源访问模型
+  rpc CreateModel (CreateModelRequest) returns (CreateModelResponse);
+  
+  // 创建用户规则
+  rpc CreateUserRule (CreateUserRuleRequest) returns (CreateUserRuleResponse);
+  
+  // 创建部门规则
+  rpc CreateTeamRule (CreateTeamRuleRequest) returns (CreateTeamRuleResponse);
+  
+  // 创建职位规则
+  rpc CreatePositionRule (CreatePositionRuleRequest) returns (CreatePositionRuleResponse);
+  
+  // 创建职级规则
+  rpc CreateLevelRule (CreateLevelRuleRequest) returns (CreateLevelRuleResponse);
+  
+  // 删除资源访问模型
+  rpc DeleteModel (DeleteModelRequest) returns (DeleteModelResponse);
+  
+  // 删除规则
+  rpc DeleteRule (DeleteRuleRequest) returns (DeleteRuleResponse);
+  
+  // 更新模型名称
+  rpc UpdateModel (UpdateModelRequest) returns (UpdateModelResponse);
+  
+  // 更新模型规则顺序
+  rpc UpdateModelRuleOrder (UpdateModelRuleOrderRequest) returns (UpdateModelRuleOrderResponse);
+  
+  // 更新用户规则
+  rpc UpdateUserRule (UpdateUserRuleRequest) returns (UpdateUserRuleResponse);
+  
+  // 更新部门规则
+  rpc UpdateTeamRule (UpdateTeamRuleRequest) returns (UpdateTeamRuleResponse);
+  
+  // 更新职位规则
+  rpc UpdatePositionRule (UpdatePositionRuleRequest) returns (UpdatePositionRuleResponse);
+  
+  // 更新职级规则
+  rpc UpdateLevelRule (UpdateLevelRuleRequest) returns (UpdateLevelRuleResponse);
+  
+  // 复制模型
+  rpc CopyModel (CopyModelRequest) returns (CopyModelResponse);
+}

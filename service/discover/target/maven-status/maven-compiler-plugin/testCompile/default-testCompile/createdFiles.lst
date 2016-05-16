@@ -1,0 +1,5 @@
+com/weizhu/service/discover_v2/test/DiscoverV2ServiceTestModule.class
+com/weizhu/service/discover/test/DiscoverServiceTest.class
+com/weizhu/service/discover_v2/test/DiscoverV2ServiceTest.class
+com/weizhu/service/discover_v2/test/AdminDiscoverServiceTest.class
+com/weizhu/service/discover/test/DiscoverServiceTestModule.class

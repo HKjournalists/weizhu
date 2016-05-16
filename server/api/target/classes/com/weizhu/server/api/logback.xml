@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    
+    <appender name="other" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${server.logs}/other.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${server.logs}/other.%d{yyyy-MM-dd}.log.gz</fileNamePattern>
+		</rollingPolicy>
+		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+			<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %logger{36} %msg%n</pattern>
+		</encoder>
+	</appender>
+	
+    <appender name="jetty" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${server.logs}/jetty.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${server.logs}/jetty.%d{yyyy-MM-dd}.log.gz</fileNamePattern>
+		</rollingPolicy>
+		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+			<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %logger{24} %msg%n</pattern>
+		</encoder>
+	</appender>
+	
+	<appender name="weizhu" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${server.logs}/weizhu.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${server.logs}/weizhu.%d{yyyy-MM-dd}.log.gz</fileNamePattern>
+		</rollingPolicy>
+		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+			<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %logger{24} %msg%n</pattern>
+		</encoder>
+	</appender>
+	
+	<appender name="weizhu_api_access" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${server.logs}/weizhu_api_access.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${server.logs}/weizhu_api_access.%d{yyyy-MM-dd}.log.gz</fileNamePattern>
+		</rollingPolicy>
+		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+			<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %msg%n</pattern>
+		</encoder>
+	</appender>
+	
+	<!-- 
+	<root level="NONE">
+		<appender-ref ref="other" />
+	</root>
+	 -->
+	
+	<logger name="com.google.common" level="INFO">
+	    <appender-ref ref="other" />
+	</logger>
+	
+	<logger name="io.netty" level="INFO">
+	    <appender-ref ref="other" />
+	</logger>
+	
+	<logger name="redis.clients" level="INFO">
+	    <appender-ref ref="other" />
+	</logger>
+	
+	<logger name="com.zaxxer.hikari" level="INFO">
+	    <appender-ref ref="other" />
+	</logger>
+	
+	<logger name="org.eclipse.jetty" level="INFO">
+	    <appender-ref ref="jetty" />
+	</logger>
+	
+	<logger name="com.weizhu" level="INFO">
+	    <appender-ref ref="weizhu" />
+	</logger>
+	
+	<logger name="weizhu_api_access" level="INFO">
+	    <appender-ref ref="weizhu_api_access" />
+	</logger>
+</configuration>

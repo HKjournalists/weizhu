@@ -1,0 +1,676 @@
+import "weizhu.proto";
+import "discover_v2.proto";
+
+package weizhu.admin.discover;
+
+option java_package = "com.weizhu.proto";
+option java_outer_classname = "AdminDiscoverProtos";
+// option optimize_for = LITE_RUNTIME;
+
+// 条目的所有分类，一个条目有可能属于多个分类
+message ItemCategory {
+  required int64 item_id     = 1; // 条目id
+  repeated int32 category_id = 2; // 分类ID列表
+}
+
+// 设置发现页首页请求
+message SetDiscoverHomeRequest {
+  repeated int32 banner_order_id = 1; // banner id的序列字符串，用来实现banner的显示顺序.注：该列表为空的话，不更改这个字段原有值
+  repeated int32 module_order_id = 2; // 模块id的序列字符串，用来实现模块的展示顺序.注：该列表为空的话，不更改这个字段原有值
+}
+
+// 设置发现页首页响应
+message SetDiscoverHomeResponse {
+  enum Result {
+    SUCC                         = 0;
+    FAIL_BANNER_ORDER_ID_INVALID = 1; //banner_order_str序列错误
+    FAIL_MODULE_ORDER_ID_INVALID = 2; //module_order_str错误
+    
+    FAIL_UNKNOWN                 = 99;
+  }
+  
+  optional Result result    = 1 [default = FAIL_UNKNOWN]; // 返回结果
+  optional string fail_text = 2; // 错误文本
+}
+
+// 获取Banner响应
+message GetBannerResponse {
+   repeated weizhu.discover_v2.Banner banner = 1; // banner列表
+}
+
+// 创建banner请求
+message CreateBannerRequest {
+  required string                    banner_name    = 1; // banner名称
+  required string                    image_name     = 2; // banner图片名称
+  optional int64                     item_id        = 3; // 条目id
+  optional weizhu.discover_v2.WebUrl web_url        = 4; // web页面url
+  optional weizhu.discover_v2.AppUri app_uri        = 5; // app内部跳转uri
+  optional int32                     allow_model_id = 6;
+}
+
+// 创建banner响应
+message CreateBannerResponse {
+  enum Result {
+    SUCC                     = 0; 
+    FAIL_BANNER_NAME_INVALID = 2; // banner名称错误
+    FAIL_IMAGE_NAME_INVALID  = 3; // 图片名称错误
+    FAIL_ITEM_ID_NOT_EXIST   = 4; // 条目id不存在
+    FAIL_WEB_URL_INVALID     = 5; // web页面url错误
+    FAIL_APP_URI_INVALID     = 6; // app内部跳转uri错误
+     
+    FAIL_UNKNOWN             = 99;
+  }
+  
+  optional Result result    = 1 [default = FAIL_UNKNOWN]; // 返回结果
+  optional string fail_text = 2; // 错误文本
+  optional int32  banner_id = 3; // 新生成的banner id
+}
+
+// 更新banner请求
+message UpdateBannerRequest {
+  required int32                     banner_id      = 1; // banner id
+  required string                    banner_name    = 2; // banner名称
+  required string                    image_name     = 3; // banner图片名称
+  optional int64                     item_id        = 4; // 条目id
+  optional weizhu.discover_v2.WebUrl web_url        = 5; // web页面url
+  optional weizhu.discover_v2.AppUri app_uri        = 6; // app内部跳转uri
+  optional int32                     allow_model_id = 7;
+}
+
+// 更新banner响应
+message UpdateBannerResponse {
+  enum Result {
+    SUCC                     = 0;    
+    FAIL_BANNER_NOT_EXIST    = 1; // banner不存在
+    FAIL_BANNER_NAME_INVALID = 2; // banner名称错误
+    FAIL_IMAGE_NAME_INVALID  = 3; // 图片名称错误
+    FAIL_ITEM_ID_NOT_EXIST   = 4; // 条目id不存在
+    FAIL_WEB_URL_INVALID     = 5; // web页面url错误
+    FAIL_APP_URI_INVALID     = 6; // app内部跳转uri错误
+     
+    FAIL_UNKNOWN             = 99;
+  }
+  
+  optional Result result          = 1 [default = FAIL_UNKNOWN]; // 返回结果
+  optional string fail_text       = 2; // 错误文本
+}
+
+// 更新banner状态（包括：正常，作废和删除）请求
+message UpdateBannerStateRequest {
+  repeated int32                    banner_id = 1; // banner id
+  required weizhu.discover_v2.State state     = 2; // 状态
+}
+
+// 更新banner状态（包括：正常，作废和删除）响应
+message UpdateBannerStateResponse {
+  enum Result {
+    SUCC                  = 0; 
+    FAIL_BANNER_NOT_EXIST = 1; // banner id不存在
+     
+    FAIL_UNKNOWN          = 99;
+  }
+  
+  optional Result result    = 1 [default = FAIL_UNKNOWN]; // 返回结果
+  optional string fail_text = 2; // 错误文本
+}
+
+// 获取模块响应
+message GetModuleResponse {
+   repeated weizhu.discover_v2.Module module = 1; // 模块列表
+}
+
+// 创建模块请求
+message CreateModuleRequest {
+  required string                    module_name    = 1; // 模块名称
+  required string                    image_name     = 2; // 模块图片名称
+  optional int32                     allow_model_id = 3; // 访问权限模型id
+  optional weizhu.discover_v2.WebUrl web_url        = 4; // web页面url
+  optional weizhu.discover_v2.AppUri app_uri        = 5; // app内部跳转uri
+  optional bool                      is_prompt_dot  = 6; // 是否设置红点提示
+}
+
+// 创建模块响应
+message CreateModuleResponse {
+  enum Result {
+    SUCC                     = 0; 
+    FAIL_MODULE_NAME_INVALID = 1; // 模块名称错误
+    FAIL_IMAGE_NAME_INVALID  = 2; // 图片名称错误
+    FAIL_WEB_URL_INVALID     = 3; // web页面url错误
+    FAIL_APP_URI_INVALID     = 4; // app内部跳转uri错误
+     
+    FAIL_UNKNOWN             = 99;
+  }
+  
+  optional Result result    = 1 [default = FAIL_UNKNOWN]; // 返回结果
+  optional string fail_text = 2; // 错误文本
+  optional int32  module_id = 3; // 新生成的module id
+}
+
+// 更新模块请求
+message UpdateModuleRequest {
+  required int32                     module_id         = 1; // 模块id
+  required string                    module_name       = 2; // 模块名称
+  required string                    image_name        = 3; // 模块图片名称
+  optional int32                     allow_model_id    = 4; // 访问权限模型id
+  optional weizhu.discover_v2.WebUrl web_url           = 5; // web页面url
+  optional weizhu.discover_v2.AppUri app_uri           = 6; // app内部跳转uri
+  optional bool                      is_prompt_dot     = 7; // 提示红点的时间
+  repeated int32                     category_order_id = 8; // 分类id序列字符串
+}
+
+// 更新模块响应
+message UpdateModuleResponse {
+  enum Result {
+    SUCC                     = 0;  
+    FAIL_MODULE_NOT_EXIST    = 1; // 模块id不存在
+    FAIL_MODULE_NAME_INVALID = 2; // 模块名称错误
+    FAIL_IMAGE_NAME_INVALID  = 3; // 图片名称错误
+    FAIL_WEB_URL_INVALID     = 4; // web页面url错误
+    FAIL_APP_URI_INVALID     = 5; // app内部跳转uri错误
+     
+    FAIL_UNKNOWN             = 99;
+  }
+  
+  optional Result result    = 1 [default = FAIL_UNKNOWN]; // 返回结果
+  optional string fail_text = 2; // 错误文本
+}
+
+// 更新模块状态（包括：正常，作废和删除）请求
+message UpdateModuleStateRequest {
+  repeated int32                    module_id = 1; // 模块id
+  required weizhu.discover_v2.State state     = 2; // 状态
+}
+
+// 更新模块状态（包括：正常，作废和删除）响应
+message UpdateModuleStateResponse {
+  enum Result {
+    SUCC                  = 0; 
+    FAIL_MODULE_NOT_EXIST = 1; // 模块id不存在
+
+    FAIL_UNKNOWN          = 99;
+  }
+  
+  optional Result result          = 1 [default = FAIL_UNKNOWN]; // 返回结果
+  optional string fail_text       = 2; // 错误文本
+}
+
+// 获取模块的分类请求
+message GetModuleCategoryRequest {
+  required int32 module_id = 1; // 模块id
+}
+
+// 获取模块的分类响应
+message GetModuleCategoryResponse {
+  repeated weizhu.discover_v2.Module.Category category = 1; // 分类
+}
+
+// 创建模块的分类请求
+message CreateModuleCategoryRequest {
+  required int32  module_id      = 1; // 模块ID
+  required string category_name  = 2; // 分类名称
+  optional int32  allow_model_id = 3; // 访问权限模型id
+}
+
+// 创建模块的分类响应
+message CreateModuleCategoryResponse {
+  enum Result {
+    SUCC                       = 0;  
+    FAIL_MODULE_NOT_EXIST      = 1; // 模块ID不存在
+    FAIL_CATEGORY_NAME_INVALID = 2; // 分类名称错误
+    
+    FAIL_UNKNOWN               = 99;
+  }
+  
+  optional Result result      = 1 [default = FAIL_UNKNOWN]; // 返回结果
+  optional string fail_text   = 2; // 错误文本
+  optional int32  category_id = 3; // 分类id
+}
+
+// 更新模块的分类请求
+message UpdateModuleCategoryRequest {
+  required int32  category_id    = 1; // 分类id
+  required int32  module_id      = 2; // 模块id
+  required string category_name  = 3; // 分类名称
+  optional int32  allow_model_id = 4; // 访问权限模型id
+}
+
+//  更新模块的分类响应
+message UpdateModuleCategoryResponse {
+  enum Result {
+    SUCC                       = 0;   
+    FAIL_CATEGORY_NOT_EXIST    = 1; // 分类id不存在
+    FAIL_MODULE_NOT_EXIST      = 2; // 模块id不存在
+    FAIL_CATEGORY_NAME_INVALID = 3; // 分类名称错误
+     
+    FAIL_UNKNOWN               = 99;
+  }
+  
+  optional Result result    = 1 [default = FAIL_UNKNOWN]; // 返回结果
+  optional string fail_text = 2; // 错误文本
+}
+
+// 更新模块的分类状态（包括：正常，作废和删除）请求
+message UpdateModuleCategoryStateRequest {
+  repeated int32                     category_id = 1; // 分类id
+  required weizhu.discover_v2.State  state       = 2; // 状态
+}
+
+// 更新模块的分类状态（包括：正常，作废和删除）响应
+message UpdateModuleCategoryStateResponse {
+  enum Result {
+    SUCC                    = 0;
+    FAIL_CATEGORY_NOT_EXIST = 1; // 分类id不存在
+     
+    FAIL_UNKNOWN            = 99;
+  }
+  
+  optional Result result    = 1 [default = FAIL_UNKNOWN]; // 返回结果
+  optional string fail_text = 2; // 错误文本
+}
+
+// 更新模块的分类顺序请求
+message UpdateModuleCategoryOrderRequest {
+  required int32 module_id         = 1; // 模块id
+  repeated int32 category_order_id = 2; // 分类顺序字符串
+}
+
+// 更新模块的分类顺序响应
+message UpdateModuleCategoryOrderResponse {
+  enum Result {
+    SUCC                           = 0;   
+    FAIL_MODULE_NOT_EXIST          = 1; // 模块id不存在
+    FAIL_CATEGORY_ORDER_ID_INVALID = 2; // 分类顺序字符串不可用
+     
+    FAIL_UNKNOWN                   = 99;
+  }
+  
+  optional Result result    = 1 [default = FAIL_UNKNOWN]; // 返回结果
+  optional string fail_text = 2; // 错误文本
+}
+
+// 迁移模块的分类请求
+message MigrateModuleCategoryRequest {
+  repeated int32 category_id = 1; // 分类id
+  required int32 module_id   = 2; // 模块id
+}
+
+// 迁移模块的分类响应
+message MigrateModuleCategoryResponse {
+  enum Result {
+    SUCC                    = 0; 
+    FAIL_CATEGORY_NOT_EXIST = 1; // 分类id不存在
+    FAIL_MODULE_NOT_EXIST   = 2; // 模块id不存在
+     
+    FAIL_UNKNOWN            = 99;
+  }
+  
+  optional Result result    = 1 [default = FAIL_UNKNOWN]; // 返回结果
+  optional string fail_text = 2; // 错误文本
+}
+
+// 向分类中添加条目请求
+message AddItemToCategoryRequest {
+  repeated int64 item_id     = 1; // 条目id
+  required int32 category_id = 2; // 分类id
+}
+
+// 向分类中添加条目响应
+message AddItemToCategoryResponse {
+  enum Result {
+    SUCC                    = 0;  
+    FAIL_ITEM_NOT_EXIST     = 1; // 条目id不存在
+    FAIL_CATEGORY_NOT_EXIST = 2; // 分类id不存在
+     
+    FAIL_UNKNOWN            = 99;
+  }
+  
+  optional Result result    = 1 [default = FAIL_UNKNOWN]; // 返回结果
+  optional string fail_text = 2; // 错误文本
+}
+
+// 从分类下删除条目请求（条目并没有真正删除，只是不在该分类下显示，删除的是分类对条目的引用）
+message DeleteItemFromCategoryRequest {
+  repeated int64 item_id     = 1; // 条目id
+  required int32 category_id = 2; // 分类id
+}
+
+// 从分类下删除条目响应（条目并没有真正删除，只是不在该分类下显示，删除的是分类对条目的引用）
+message DeleteItemFromCategoryResponse {
+  enum Result {
+    SUCC                    = 0;
+    FAIL_ITEM_NOT_EXIST     = 1; // 条目ID不存在 
+    FAIL_CATEGORY_NOT_EXIST = 2; // 模块下不存在该分类 
+    
+    FAIL_UNKNOWN            = 99;
+  }
+  
+  optional Result result    = 1 [default = FAIL_UNKNOWN]; // 返回结果
+  optional string fail_text = 2; // 错误文本
+}
+
+// 获取条目列表请求
+// 参数为空时为全量查询
+message GetItemListRequest {
+  required int32  start                 = 1; // 开始位置
+  required int32  length                = 2; // 查询的条数
+  optional int32  category_id           = 3; // 分类id
+  optional string item_name             = 4; // 条目名称,模糊搜索
+  optional bool   order_create_time_asc = 5; // 是否按照创建时间生序排列。不设置此值为降序排列
+}
+
+// 获取条目列表响应
+message GetItemListResponse {
+  repeated weizhu.discover_v2.Item             item              = 1; // 条目列表
+  required int32                               total_size        = 2; // 所有item个数
+  required int32                               filtered_size     = 3; // 过滤后的item总个数
+  repeated ItemCategory                        ref_item_category = 4; // 条目所属的分类列表
+  repeated weizhu.discover_v2.Module.Category  ref_category      = 5; // 分类列表
+  repeated weizhu.discover_v2.Module           ref_module        = 6; // 模块列表
+}
+
+// 根据条目id获取条目列表请求
+message GetItemByIdRequest {
+  repeated int64 item_id = 1; // 条目id
+}
+
+// 根据条目ID获取条目列表响应
+message GetItemByIdResponse {
+  repeated weizhu.discover_v2.Item             item              = 1; // 条目列表
+  repeated ItemCategory                        ref_item_category = 2; // 条目所属的分类列表
+  repeated weizhu.discover_v2.Module.Category  ref_category      = 3; // 分类列表
+  repeated weizhu.discover_v2.Module           ref_module        = 4; // 模块列表
+}
+
+// 创建条目请求
+message CreateItemRequest {
+  repeated int32                       category_id           = 1; // 分类id
+  required string                      item_name             = 2; // 条目名称
+  required string                      item_desc             = 3; // 条目描述
+  required string                      image_name            = 4; // 图片名称
+  optional int32                       allow_model_id        = 5; // 访问权限模型id
+  required bool                        enable_comment        = 6; // 是否开启评论功能
+  required bool                        enable_score          = 7; // 是否开启打分功能
+  required bool                        enable_remind         = 8; // 是否打开提醒用户评分评论功能
+  required bool                        enable_like           = 9; // 是否开启点赞功能
+  required bool                        enable_share          = 10; // 是否开启分享功能
+  optional bool                        enable_external_share = 11; // 是否开启外部分享功能
+  optional weizhu.discover_v2.WebUrl   web_url               = 12; // web链接
+  optional weizhu.discover_v2.Document document              = 13; // 文档类型课件
+  optional weizhu.discover_v2.Video    video                 = 14; // 视频类型课件
+  optional weizhu.discover_v2.Audio    audio                 = 15; // 音频类型课件
+  optional weizhu.discover_v2.AppUri   app_uri               = 16; // app内部跳转uri        
+}
+
+// 创建条目响应
+message CreateItemResponse {
+  enum Result {
+    SUCC                    = 0;
+    FAIL_CATEGORY_NOT_EXIST = 1; // 分类id不存在
+    FAIL_ITEM_NAME_INVALID  = 2; // 条目名称错误
+    FAIL_ITEM_DESC_INVALID  = 3; // 条目描述错误
+    FAIL_IMAGE_NAME_INVALID = 4; // 图片名称错误
+    FAIL_WEB_URL_INVALID    = 5; // web链接错误
+    FAIL_DOCUMENT_INVALID   = 6; // 文档类型课件错误
+    FAIL_VIDEO_INVALID      = 7; // 视频类型课件错误
+    FAIL_AUDIO_INVALID      = 8; // 音频类型课件错误
+    FAIL_APP_URI_INVALID    = 9; // app内部跳转uri错误
+         
+    FAIL_UNKNOWN            = 99;
+  }
+  
+  optional Result result    = 1 [default = FAIL_UNKNOWN]; // 返回结果
+  optional string fail_text = 2; // 错误文本
+  optional int64  item_id   = 3; // 条目id
+}
+
+// 批量导入创建条目请求
+message ImportItemRequest {
+  repeated CreateItemRequest createItemRequest = 1; // 创建条目请求  
+}
+
+// 批量导入条目响应
+message ImportItemResponse {
+  enum Result {
+    SUCC                    = 0;
+    FAIL_CATEGORY_NOT_EXIST = 1; // 分类id不存在
+    FAIL_ITEM_NAME_INVALID  = 2; // 条目名称错误
+    FAIL_ITEM_DESC_INVALID  = 3; // 条目描述错误
+    FAIL_IMAGE_NAME_INVALID = 4; // 图片名称错误
+    FAIL_WEB_URL_INVALID    = 5; // web链接错误
+    FAIL_DOCUMENT_INVALID   = 6; // 文档类型课件错误
+    FAIL_VIDEO_INVALID      = 7; // 视频类型课件错误
+    FAIL_AUDIO_INVALID      = 8; // 音频类型课件错误
+    FAIL_APP_URI_INVALID    = 9; // app内部跳转uri错误
+         
+    FAIL_UNKNOWN            = 99;
+  }
+  
+  optional Result result    = 1 [default = FAIL_UNKNOWN]; // 返回结果
+  optional string fail_text = 2; // 错误文本
+  repeated int64  item_id   = 3; // 条目id
+}
+
+// 更新条目请求
+message UpdateItemRequest {
+  required int64                       item_id               = 1; // 条目id
+  repeated int32                       category_id           = 2; // 分类id
+  required string                      item_name             = 3; // 条目名称
+  required string                      item_desc             = 4; // 条目描述
+  required string                      image_name            = 5; // 图片名称
+  optional int32                       allow_model_id        = 6; // 访问权限模型id
+  required bool                        enable_comment        = 7; // 是否开启评论功能
+  required bool                        enable_score          = 8; // 是否开启打分功能
+  required bool                        enable_remind         = 9; // 是否打开提醒用户评分评论功能
+  required bool                        enable_like           = 10; // 是否开启点赞功能
+  required bool                        enable_share          = 11; // 是否开启点赞功能
+  optional bool                        enable_external_share = 12; // 是否开启外部分享功能
+  optional weizhu.discover_v2.WebUrl   web_url               = 13; // web链接
+  optional weizhu.discover_v2.Document document              = 14; // 文档类型课件
+  optional weizhu.discover_v2.Video    video                 = 15; // 视频类型课件
+  optional weizhu.discover_v2.Audio    audio                 = 16; // 音频类型课件
+  optional weizhu.discover_v2.AppUri   app_uri               = 17; // app内部跳转uri  
+}
+
+// 更新条目响应
+message UpdateItemResponse {
+  enum Result {
+    SUCC                    = 0; 
+    FAIL_ITEM_NOT_EXIST     = 1; // 条目ID不存在 
+    FAIL_CATEGORY_NOT_EXIST = 2; // 分类ID不存在 
+    FAIL_ITEM_NAME_INVALID  = 3; // 条目名称错误
+    FAIL_ITEM_DESC_INVALID  = 4; // 条目描述错误
+    FAIL_IMAGE_NAME_INVALID = 5; // 图片名称错误
+    FAIL_WEB_URL_INVALID    = 6; // web链接错误
+    FAIL_DOCUMENT_INVALID   = 7; // 文档类型课件错误
+    FAIL_VIDEO_INVALID      = 8; // 视频类型课件错误
+    FAIL_AUDIO_INVALID      = 9; // 音频类型课件错误
+    FAIL_APP_URI_INVALID    = 10; // app内部跳转uri错误
+     
+    FAIL_UNKNOWN            = 99;
+  }
+  
+  optional Result result    = 1 [default = FAIL_UNKNOWN]; // 返回结果
+  optional string fail_text = 2; // 错误文本
+}
+
+// 更新条目状态（包括：正常，作废和删除）请求
+message UpdateItemStateRequest {
+  repeated int64                    item_id = 1; // 条目id
+  required weizhu.discover_v2.State state   = 2; // 状态
+}
+
+// 更新条目状态（包括：正常，作废和删除）响应
+message UpdateItemStateResponse {
+  enum Result {
+    SUCC                = 0;
+    FAIL_ITEM_NOT_EXIST = 1; // 条目ID不存在 
+     
+    FAIL_UNKNOWN        = 99;
+  }
+  
+  optional Result result    = 1 [default = FAIL_UNKNOWN]; // 返回结果
+  optional string fail_text = 2; // 错误文本
+}
+
+// 获取某个条目下的学习列表请求
+message GetItemLearnListRequest {
+  required int64 item_id = 1; // 条目id
+  required int32 start   = 2; // 获取的开始位置
+  required int32 length  = 3; // 获取数目
+}
+
+// 获取某个条目下的学习列表响应
+message GetItemLearnListResponse {
+  repeated weizhu.discover_v2.ItemLearn item_learn          = 1; // 条目学习列表
+  required int32                        total_size          = 2; // 总数量
+  required int32                        filtered_size       = 3; // 过滤后的总数量
+}
+
+// 获取评论列表请求
+message GetItemCommentListRequest {
+  required int64 item_id = 1; // 条目id
+  required int32 start   = 2; // 开始位置
+  required int32 length  = 3; // 查询的条数
+}
+
+// 获取条目列表响应
+message GetItemCommentListResponse {
+  repeated weizhu.discover_v2.ItemComment item_comment  = 1; // 评论列表
+  required int32                          total_size    = 2; // 所有item个数
+  required int32                          filtered_size = 3; // 过滤后的item总个数
+}
+
+// 获取某个条目下的打分列表请求
+message GetItemScoreListRequest {
+  required int64 item_id = 1; // 条目id
+  required int32 start   = 2; // 获取的开始位置
+  required int32 length  = 3; // 获取数目
+}
+
+// 获取某个条目下的打分列表响应
+message GetItemScoreListResponse {
+  repeated weizhu.discover_v2.ItemScore item_score          = 1; // 评论列表
+  required int32                        total_size          = 2; // 总数量
+  required int32                        filtered_size       = 3; // 过滤后的总数量
+}
+
+// 获取某个条目下的点赞列表请求
+message GetItemLikeListRequest {
+  required int64 item_id = 1; // 条目id
+  required int32 start   = 2; // 获取的开始位置
+  required int32 length  = 3; // 获取数目
+}
+
+// 获取某个条目下的点赞列表响应
+message GetItemLikeListResponse {
+  repeated weizhu.discover_v2.ItemLike item_like      = 1; // 评论列表
+  required int32                       total_size     = 2; // 总数量
+  required int32                       filtered_size  = 3; // 过滤后的总数量
+}
+
+// 获取某个条目下的分享列表请求
+message GetItemShareListRequest {
+  required int64 item_id = 1; // 条目id
+  required int32 start   = 2; // 获取的开始位置
+  required int32 length  = 3; // 获取数目
+}
+
+// 获取某个条目下的分享列表响应
+message GetItemShareListResponse {
+  repeated weizhu.discover_v2.ItemShare item_share     = 1; // 分享列表
+  required int32                        total_size     = 2; // 总数量
+  required int32                        filtered_size  = 3; // 过滤后的总数量
+}
+
+// 发现管理后台服务
+service AdminDiscoverService {
+  
+  // 设置发现页首页
+  rpc SetDiscoverHome (SetDiscoverHomeRequest) returns (SetDiscoverHomeResponse);
+  
+  
+  // 获取Banner
+  rpc GetBanner (weizhu.EmptyRequest) returns (GetBannerResponse);
+  
+  // 创建banner
+  rpc CreateBanner (CreateBannerRequest) returns (CreateBannerResponse);
+  
+  // 更新banner
+  rpc UpdateBanner (UpdateBannerRequest) returns (UpdateBannerResponse);
+  
+  // 更新banner状态（包括：正常，作废和删除）
+  rpc UpdateBannerState (UpdateBannerStateRequest) returns (UpdateBannerStateResponse);
+  
+  
+  // 获取模块
+  rpc GetModule (weizhu.EmptyRequest) returns (GetModuleResponse);
+  
+  // 创建模块
+  rpc CreateModule (CreateModuleRequest) returns (CreateModuleResponse);
+  
+  // 更新模块
+  rpc UpdateModule (UpdateModuleRequest) returns (UpdateModuleResponse);
+  
+  // 更新模块状态（包括：正常，作废和删除）
+  rpc UpdateModuleState (UpdateModuleStateRequest) returns (UpdateModuleStateResponse);
+  
+  
+  // 获取模块的分类
+  rpc GetModuleCategory (GetModuleCategoryRequest) returns (GetModuleCategoryResponse);
+  
+  // 创建模块的分类
+  rpc CreateModuleCategory (CreateModuleCategoryRequest) returns (CreateModuleCategoryResponse);
+  
+  // 更新模块的分类
+  rpc UpdateModuleCategory (UpdateModuleCategoryRequest) returns (UpdateModuleCategoryResponse);
+  
+  // 更新模块的分类状态（包括：正常，作废和删除）
+  rpc UpdateModuleCategoryState (UpdateModuleCategoryStateRequest) returns (UpdateModuleCategoryStateResponse);
+  
+  // 迁移模块的分类
+  rpc UpdateModuleCategoryOrder (UpdateModuleCategoryOrderRequest) returns (UpdateModuleCategoryOrderResponse);
+  
+  // 迁移模块的分类
+  rpc MigrateModuleCategory (MigrateModuleCategoryRequest) returns (MigrateModuleCategoryResponse);
+  
+  // 向分类添加条目
+  rpc AddItemToCategory (AddItemToCategoryRequest) returns (AddItemToCategoryResponse);
+  
+  // 从分类下删除条目（条目并没有真正删除，只是不在该分类下显示，删除的是分类对条目的引用）
+  rpc DeleteItemFromCategory (DeleteItemFromCategoryRequest) returns (DeleteItemFromCategoryResponse);
+  
+    
+  // 获取条目列表
+  rpc GetItemList (GetItemListRequest) returns (GetItemListResponse);
+  
+  // 根据条目id获取条目列表
+  rpc GetItemById (GetItemByIdRequest) returns (GetItemByIdResponse);
+  
+  // 创建条目
+  rpc CreateItem (CreateItemRequest) returns (CreateItemResponse);
+  
+  // 创建条目
+  rpc ImportItem (ImportItemRequest) returns (ImportItemResponse);
+  
+  // 更新条目
+  rpc UpdateItem (UpdateItemRequest) returns (UpdateItemResponse);
+  
+  // 更新条目状态（包括：正常，作废和删除）
+  rpc UpdateItemState (UpdateItemStateRequest) returns (UpdateItemStateResponse);
+  
+  
+  // 获取某个条目下的学习列表
+  rpc GetItemLearnList (GetItemLearnListRequest) returns (GetItemLearnListResponse);
+  
+  // 获取评论列表
+  rpc GetItemCommentList (GetItemCommentListRequest) returns (GetItemCommentListResponse);
+  
+  // 获取某个条目下的打分列表
+  rpc GetItemScoreList (GetItemScoreListRequest) returns (GetItemScoreListResponse);
+  
+  // 获取某个条目下的点赞列表
+  rpc GetItemLikeList (GetItemLikeListRequest) returns (GetItemLikeListResponse);
+  
+  // 获取某个条目下的分享列表
+  rpc GetItemShareList (GetItemShareListRequest) returns (GetItemShareListResponse);
+}

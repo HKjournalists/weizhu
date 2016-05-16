@@ -1,0 +1,159 @@
+import "weizhu.proto";
+
+package weizhu.upload;
+
+option java_package = "com.weizhu.proto";
+option java_outer_classname = "UploadProtos";
+// option optimize_for = LITE_RUNTIME;
+
+// 60, 120, 240, 480, 原图
+
+message Image {
+  required string name  = 1;
+  required string type  = 2;
+  required int32  size  = 3;
+  required string md5   = 4;
+  required int32  width = 5;
+  required int32  hight = 6;
+  repeated string tag   = 7;
+}
+
+message Video {
+  required string name  = 1;
+  required string type  = 2;
+  required int32  size  = 3;
+  required int32  time  = 4;
+  required string md5   = 5;
+  required Image  image = 6;
+}
+
+message UploadImageAction {
+  required int64  action_id       = 1;
+  required string image_name      = 2;
+  required int32  upload_time     = 3;
+  optional int64  upload_admin_id = 4;
+  optional int64  upload_user_id  = 5;
+}
+
+message GetUploadUrlPrefixResponse {
+  required string image_url_prefix     = 1;
+  required string image_60_url_prefix  = 2;
+  required string image_120_url_prefix = 3;
+  required string image_240_url_prefix = 4;
+  required string image_480_url_prefix = 5;
+  required string video_url_prefix     = 6;
+}
+
+message UploadImageRequest {
+  required bytes  image_data = 1;
+  repeated string tag        = 2;
+}
+
+message UploadImageResponse {
+  enum Result {
+    SUCC               = 0;
+    FAIL_IMAGE_INVALID = 1;
+    FAIL_TAG_INVALID   = 2;
+    
+    FAIL_UNKNOWN       = 99;
+  }
+  
+  optional Result result    = 1 [default = FAIL_UNKNOWN];
+  optional string fail_text = 2;
+  optional Image  image     = 3;
+}
+
+message UploadVideoRequest {
+  required bytes  video_data = 1;
+  repeated string tag        = 2;
+}
+
+message UploadVideoResponse {
+  enum Result {
+    SUCC               = 0;
+    FAIL_VIDEO_INVALID = 1;
+    FAIL_TAG_INVALID   = 2;
+    
+    FAIL_UNKNOWN       = 99;
+  }
+  
+  optional Result result    = 1 [default = FAIL_UNKNOWN];
+  optional string fail_text = 2;
+  optional Video  video     = 3;
+}
+
+message GetQiniuUploadImageTokenRequest {
+  required string image_name = 1;
+}
+
+message GetQiniuUploadImageTokenResponse {
+  enum Result {
+    SUCC                    = 0;
+    FAIL_IMAGE_NAME_INVALID = 1;
+    FAIL_QINIU_DISABLE      = 2;
+    
+    FAIL_UNKNOWN            = 99;
+  }
+
+  optional Result result                 = 1 [default = FAIL_UNKNOWN];
+  optional string fail_text              = 2;
+  optional string upload_image_key       = 3;
+  optional string upload_image_token     = 4;
+  optional string upload_image_60_key    = 5;
+  optional string upload_image_60_token  = 6;
+  optional string upload_image_120_key   = 7;
+  optional string upload_image_120_token = 8;
+  optional string upload_image_240_key   = 9;
+  optional string upload_image_240_token = 10;
+  optional string upload_image_480_key   = 11;
+  optional string upload_image_480_token = 12;
+}
+
+message GetQiniuUploadVideoTokenRequest {
+  required string video_name = 1;
+}
+
+message GetQiniuUploadVideoTokenResponse {
+  enum Result {
+    SUCC                    = 0;
+    FAIL_VIDEO_NAME_INVALID = 1;
+    FAIL_QINIU_DISABLE      = 2;
+    
+    FAIL_UNKNOWN            = 99;
+  }
+
+  optional Result result             = 1 [default = FAIL_UNKNOWN];
+  optional string fail_text          = 2;
+  optional string upload_video_key   = 3;
+  optional string upload_video_token = 4;
+}
+
+message SaveUploadImageActionRequest {
+  repeated Image image = 1;
+}
+
+message SaveUploadImageActionResponse {
+  required string image_url_prefix     = 1;
+  required string image_60_url_prefix  = 2;
+  required string image_120_url_prefix = 3;
+  required string image_240_url_prefix = 4;
+  required string image_480_url_prefix = 5;
+}
+
+service UploadService {
+
+  rpc GetUploadUrlPrefix (weizhu.EmptyRequest) returns (GetUploadUrlPrefixResponse);
+  
+  rpc UploadImage (UploadImageRequest) returns (UploadImageResponse);
+  
+  rpc UploadVideo (UploadVideoRequest) returns (UploadVideoResponse);
+  
+  // for upload webapp
+  
+  rpc GetQiniuUploadImageToken (GetQiniuUploadImageTokenRequest) returns (GetQiniuUploadImageTokenResponse);
+
+  rpc SaveUploadImageAction (SaveUploadImageActionRequest) returns (SaveUploadImageActionResponse);
+  
+  rpc GetQiniuUploadVideoToken (GetQiniuUploadVideoTokenRequest) returns (GetQiniuUploadVideoTokenResponse);
+
+}

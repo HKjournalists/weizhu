@@ -1,0 +1,128 @@
+2016-05-13 09:06:11.222 ERROR c.w.w.f.UserSessionFilter unkonw error
+com.google.common.util.concurrent.UncheckedExecutionException: com.weizhu.common.rpc.RpcException: connect fail: /127.0.0.1:8093
+	at com.google.common.util.concurrent.Futures.wrapAndThrowUnchecked(Futures.java:2060)
+	at com.google.common.util.concurrent.Futures.getUnchecked(Futures.java:2045)
+	at com.weizhu.web.filter.UserSessionFilter.doFilter(UserSessionFilter.java:96)
+	at com.google.inject.servlet.FilterChainInvocation.doFilter(FilterChainInvocation.java:82)
+	at com.google.inject.servlet.ManagedFilterPipeline.dispatch(ManagedFilterPipeline.java:119)
+	at com.google.inject.servlet.GuiceFilter$1.call(GuiceFilter.java:133)
+	at com.google.inject.servlet.GuiceFilter$1.call(GuiceFilter.java:130)
+	at com.google.inject.servlet.GuiceFilter$Context.call(GuiceFilter.java:203)
+	at com.google.inject.servlet.GuiceFilter.doFilter(GuiceFilter.java:130)
+	at org.eclipse.jetty.servlet.ServletHandler$CachedChain.doFilter(ServletHandler.java:1668)
+	at org.eclipse.jetty.servlet.ServletHandler.doHandle(ServletHandler.java:581)
+	at org.eclipse.jetty.server.handler.ScopedHandler.handle(ScopedHandler.java:143)
+	at org.eclipse.jetty.security.SecurityHandler.handle(SecurityHandler.java:548)
+	at org.eclipse.jetty.server.session.SessionHandler.doHandle(SessionHandler.java:226)
+	at org.eclipse.jetty.server.handler.ContextHandler.doHandle(ContextHandler.java:1160)
+	at org.eclipse.jetty.servlet.ServletHandler.doScope(ServletHandler.java:511)
+	at org.eclipse.jetty.server.session.SessionHandler.doScope(SessionHandler.java:185)
+	at org.eclipse.jetty.server.handler.ContextHandler.doScope(ContextHandler.java:1092)
+	at org.eclipse.jetty.server.handler.ScopedHandler.handle(ScopedHandler.java:141)
+	at org.eclipse.jetty.server.handler.ContextHandlerCollection.handle(ContextHandlerCollection.java:213)
+	at org.eclipse.jetty.server.handler.HandlerCollection.handle(HandlerCollection.java:119)
+	at org.eclipse.jetty.server.handler.HandlerWrapper.handle(HandlerWrapper.java:134)
+	at org.eclipse.jetty.server.Server.handle(Server.java:518)
+	at org.eclipse.jetty.server.HttpChannel.handle(HttpChannel.java:308)
+	at org.eclipse.jetty.server.HttpConnection.onFillable(HttpConnection.java:244)
+	at org.eclipse.jetty.io.AbstractConnection$ReadCallback.succeeded(AbstractConnection.java:273)
+	at org.eclipse.jetty.io.FillInterest.fillable(FillInterest.java:95)
+	at org.eclipse.jetty.io.SelectChannelEndPoint$2.run(SelectChannelEndPoint.java:93)
+	at org.eclipse.jetty.util.thread.strategy.ExecuteProduceConsume.produceAndRun(ExecuteProduceConsume.java:246)
+	at org.eclipse.jetty.util.thread.strategy.ExecuteProduceConsume.run(ExecuteProduceConsume.java:156)
+	at org.eclipse.jetty.util.thread.QueuedThreadPool.runJob(QueuedThreadPool.java:654)
+	at org.eclipse.jetty.util.thread.QueuedThreadPool$3.run(QueuedThreadPool.java:572)
+	at java.lang.Thread.run(Thread.java:745)
+Caused by: com.weizhu.common.rpc.RpcException: connect fail: /127.0.0.1:8093
+	at com.weizhu.common.rpc.RpcClient$1$1.operationComplete(RpcClient.java:78)
+	at com.weizhu.common.rpc.RpcClient$1$1.operationComplete(RpcClient.java:70)
+	at io.netty.util.concurrent.DefaultPromise.notifyListener0(DefaultPromise.java:683)
+	at io.netty.util.concurrent.DefaultPromise.notifyListeners0(DefaultPromise.java:604)
+	at io.netty.util.concurrent.DefaultPromise.notifyListeners(DefaultPromise.java:564)
+	at io.netty.util.concurrent.DefaultPromise.tryFailure(DefaultPromise.java:425)
+	at io.netty.channel.nio.AbstractNioChannel$AbstractNioUnsafe.fulfillConnectPromise(AbstractNioChannel.java:276)
+	at io.netty.channel.nio.AbstractNioChannel$AbstractNioUnsafe.finishConnect(AbstractNioChannel.java:292)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKey(NioEventLoop.java:545)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeysOptimized(NioEventLoop.java:485)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeys(NioEventLoop.java:399)
+	at io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:371)
+	at io.netty.util.concurrent.SingleThreadEventExecutor$2.run(SingleThreadEventExecutor.java:112)
+	at io.netty.util.concurrent.DefaultThreadFactory$DefaultRunnableDecorator.run(DefaultThreadFactory.java:137)
+	... 1 common frames omitted
+Caused by: java.net.ConnectException: Connection refused: /127.0.0.1:8093
+	at sun.nio.ch.SocketChannelImpl.checkConnect(Native Method)
+	at sun.nio.ch.SocketChannelImpl.finishConnect(SocketChannelImpl.java:717)
+	at io.netty.channel.socket.nio.NioSocketChannel.doFinishConnect(NioSocketChannel.java:224)
+	at io.netty.channel.nio.AbstractNioChannel$AbstractNioUnsafe.finishConnect(AbstractNioChannel.java:289)
+	... 7 common frames omitted
+2016-05-13 09:06:11.740 ERROR c.w.w.f.UserSessionFilter unkonw error
+com.google.common.util.concurrent.UncheckedExecutionException: com.weizhu.common.rpc.RpcException: no active client
+	at com.google.common.util.concurrent.Futures.wrapAndThrowUnchecked(Futures.java:2060)
+	at com.google.common.util.concurrent.Futures.getUnchecked(Futures.java:2045)
+	at com.weizhu.web.filter.UserSessionFilter.doFilter(UserSessionFilter.java:96)
+	at com.google.inject.servlet.FilterChainInvocation.doFilter(FilterChainInvocation.java:82)
+	at com.google.inject.servlet.ManagedFilterPipeline.dispatch(ManagedFilterPipeline.java:119)
+	at com.google.inject.servlet.GuiceFilter$1.call(GuiceFilter.java:133)
+	at com.google.inject.servlet.GuiceFilter$1.call(GuiceFilter.java:130)
+	at com.google.inject.servlet.GuiceFilter$Context.call(GuiceFilter.java:203)
+	at com.google.inject.servlet.GuiceFilter.doFilter(GuiceFilter.java:130)
+	at org.eclipse.jetty.servlet.ServletHandler$CachedChain.doFilter(ServletHandler.java:1668)
+	at org.eclipse.jetty.servlet.ServletHandler.doHandle(ServletHandler.java:581)
+	at org.eclipse.jetty.server.handler.ScopedHandler.handle(ScopedHandler.java:143)
+	at org.eclipse.jetty.security.SecurityHandler.handle(SecurityHandler.java:548)
+	at org.eclipse.jetty.server.session.SessionHandler.doHandle(SessionHandler.java:226)
+	at org.eclipse.jetty.server.handler.ContextHandler.doHandle(ContextHandler.java:1160)
+	at org.eclipse.jetty.servlet.ServletHandler.doScope(ServletHandler.java:511)
+	at org.eclipse.jetty.server.session.SessionHandler.doScope(SessionHandler.java:185)
+	at org.eclipse.jetty.server.handler.ContextHandler.doScope(ContextHandler.java:1092)
+	at org.eclipse.jetty.server.handler.ScopedHandler.handle(ScopedHandler.java:141)
+	at org.eclipse.jetty.server.handler.ContextHandlerCollection.handle(ContextHandlerCollection.java:213)
+	at org.eclipse.jetty.server.handler.HandlerCollection.handle(HandlerCollection.java:119)
+	at org.eclipse.jetty.server.handler.HandlerWrapper.handle(HandlerWrapper.java:134)
+	at org.eclipse.jetty.server.Server.handle(Server.java:518)
+	at org.eclipse.jetty.server.HttpChannel.handle(HttpChannel.java:308)
+	at org.eclipse.jetty.server.HttpConnection.onFillable(HttpConnection.java:244)
+	at org.eclipse.jetty.io.AbstractConnection$ReadCallback.succeeded(AbstractConnection.java:273)
+	at org.eclipse.jetty.io.FillInterest.fillable(FillInterest.java:95)
+	at org.eclipse.jetty.io.SelectChannelEndPoint$2.run(SelectChannelEndPoint.java:93)
+	at org.eclipse.jetty.util.thread.strategy.ExecuteProduceConsume.produceAndRun(ExecuteProduceConsume.java:246)
+	at org.eclipse.jetty.util.thread.strategy.ExecuteProduceConsume.run(ExecuteProduceConsume.java:156)
+	at org.eclipse.jetty.util.thread.QueuedThreadPool.runJob(QueuedThreadPool.java:654)
+	at org.eclipse.jetty.util.thread.QueuedThreadPool$3.run(QueuedThreadPool.java:572)
+	at java.lang.Thread.run(Thread.java:745)
+Caused by: com.weizhu.common.rpc.RpcException: no active client
+	at com.weizhu.common.rpc.AutoSwitchRpcClient.invoke0(AutoSwitchRpcClient.java:112)
+	at com.weizhu.common.rpc.AutoSwitchRpcClient.invoke(AutoSwitchRpcClient.java:35)
+	at com.weizhu.common.service.ServiceStub$RpcServiceInvoker.invoke0(ServiceStub.java:485)
+	at com.weizhu.common.service.ServiceStub$RpcServiceInvoker.invoke(ServiceStub.java:453)
+	at com.weizhu.common.service.ServiceStub$ServiceInvokerApiHandler.invoke(ServiceStub.java:264)
+	at com.sun.proxy.$Proxy40.verifySessionKey(Unknown Source)
+	at com.weizhu.web.filter.UserSessionFilter.doFilter(UserSessionFilter.java:97)
+	... 30 common frames omitted
+2016-05-13 10:29:31.755 INFO  c.w.w.m.a.TestLoginServlet |SendSmsCode|weizhu|18810450562|0|
+2016-05-13 10:29:52.131 INFO  c.w.w.m.a.TestLoginServlet |Login|weizhu|18810450562|666666|
+2016-05-13 10:32:22.858 INFO  c.w.w.m.a.TestLoginServlet |SendSmsCode|weizhu|18810450562|0|
+2016-05-13 10:32:52.357 INFO  c.w.w.m.a.TestLoginServlet |Login|weizhu|18810450561|666666|
+2016-05-13 10:33:28.379 INFO  c.w.w.m.a.TestLoginServlet |SendSmsCode|weizhu|18810450562|0|
+2016-05-13 10:34:04.756 INFO  c.w.w.m.a.TestLoginServlet |SendSmsCode|weizhu|18810450562|0|
+2016-05-13 10:34:43.280 INFO  c.w.w.m.a.TestLoginServlet |Login|weizhu|18810450562|666666|
+2016-05-13 10:44:22.718 INFO  c.w.w.m.a.TestLoginServlet |SendSmsCode|weizhu|18810450562|0|
+2016-05-13 10:44:27.984 INFO  c.w.w.m.a.TestLoginServlet |Login|weizhu|18810450562|666666|
+2016-05-13 10:45:43.243 INFO  c.w.w.m.a.TestLoginServlet |SendSmsCode|weizhu|18810450562|0|
+2016-05-13 10:45:48.402 INFO  c.w.w.m.a.TestLoginServlet |Login|weizhu|18810450562|666666|
+2016-05-13 11:46:31.427 INFO  c.w.w.m.a.TestLoginServlet |SendSmsCode|weizhu|18810450562|0|
+2016-05-13 11:46:35.385 INFO  c.w.w.m.a.TestLoginServlet |Login|weizhu|18810450562|666666|
+2016-05-13 13:09:09.107 INFO  c.w.w.m.a.TestLoginServlet |SendSmsCode|weizhu|18810450562|0|
+2016-05-13 13:09:27.106 INFO  c.w.w.m.a.TestLoginServlet |Login|weizhu|18810450562|666666|
+2016-05-13 13:31:55.382 INFO  c.w.w.m.a.TestLoginServlet |SendSmsCode|weizhu|18810450662|0|
+2016-05-13 13:32:03.268 INFO  c.w.w.m.a.TestLoginServlet |SendSmsCode|weizhu|18810450562|0|
+2016-05-13 13:32:08.163 INFO  c.w.w.m.a.TestLoginServlet |Login|weizhu|18810450562|666666|
+2016-05-13 13:33:18.850 INFO  c.w.w.m.a.TestLoginServlet |SendSmsCode|we|18810450562|0|
+2016-05-13 13:33:25.434 INFO  c.w.w.m.a.TestLoginServlet |SendSmsCode|weizhu|18810450562|0|
+2016-05-13 13:33:29.890 INFO  c.w.w.m.a.TestLoginServlet |Login|weizhu|18810450562|666666|
+2016-05-13 13:56:53.402 INFO  c.w.w.m.a.TestLoginServlet |SendSmsCode|weizhu|18810450562|0|
+2016-05-13 13:56:58.624 INFO  c.w.w.m.a.TestLoginServlet |Login|weizhu|18810450562|666666|
+2016-05-13 15:26:21.114 INFO  c.w.w.m.a.TestLoginServlet |SendSmsCode|weizhu|18810450562|0|
+2016-05-13 15:26:25.045 INFO  c.w.w.m.a.TestLoginServlet |Login|weizhu|18810450562|666666|
+2016-05-13 16:46:51.395 INFO  c.w.w.m.a.TestLoginServlet |SendSmsCode|weizhu|18810450562|0|
+2016-05-13 16:46:56.428 INFO  c.w.w.m.a.TestLoginServlet |Login|weizhu|18810450562|666666|

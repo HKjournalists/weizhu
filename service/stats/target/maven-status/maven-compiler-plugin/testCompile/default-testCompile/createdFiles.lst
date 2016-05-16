@@ -1,0 +1,9 @@
+com/weizhu/service/stats/test/log/LogCollector.class
+com/weizhu/service/stats/test/log/LogCreator.class
+com/weizhu/service/stats/test/DumpLogToStats$ApiItem.class
+com/weizhu/service/stats/test/DumpLogToStats$1.class
+com/weizhu/service/stats/test/kafka/ProducerTest.class
+com/weizhu/service/stats/test/StatsServiceTest$1.class
+com/weizhu/service/stats/test/kafka/ConsumerTest.class
+com/weizhu/service/stats/test/DumpLogToStats.class
+com/weizhu/service/stats/test/StatsServiceTest.class

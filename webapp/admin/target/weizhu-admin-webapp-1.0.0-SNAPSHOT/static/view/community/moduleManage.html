@@ -1,0 +1,78 @@
+<div id="community-module-wrap" data-options="region:'center',border:false" class="easyui-layout" style="width:100%;height:100%;">
+   <%if(Wz.getPermission('community/board/list')) {%>
+   <div data-options="region:'north',border:false" style="width: 100%;">
+        <div class="easyui-panel" data-options="border:false">
+            <div style="padding:10px 20px;">
+                <form id="community-community-edit-form" class="easyui-form form-layout-inline" method="get">
+                	<div class="form-item">
+                		<label>社区名称：</label>
+                		<input type="text" name="community_name"></input>
+                	</div>
+                	<%if(Wz.getPermission('community/board/update_name')){%>
+                    	<a href="javascript:void(0)" class="easyui-linkbutton edit-btn">编辑</a>
+                    	<a style="display:none;" href="javascript:void(0)" class="easyui-linkbutton save-btn">保存</a>
+                    	<a style="display:none;" href="javascript:void(0)" class="easyui-linkbutton cancel-btn">取消</a>
+                    <%}%>
+                </form>
+            </div>
+        </div>
+    </div>
+    <%}%>
+    <div data-options="region:'center',border:false">
+    	<table id="community-module-table" style="width:100%;height: 100%;"></table>
+    </div>
+   <div id="community-module-edit-win" class="easyui-window" data-options="title:'添加板块',collapsible:false,maximizable:false,minimizable:false,closed: true,modal:true,width:500,height:320">
+        <div class="easyui-layout" style="width:100%;height:100%;">
+            <div region="center" border="false" style="padding:10px 12px;">
+                <form id="community-module-edit-form" class="easyui-form form-layout-column" method="post" data-options="novalidate:true">
+                    <input type="hidden" name="parent_board_id" />
+                    <input type="hidden" name="board_id" />
+                    <div class="form-item">
+                        <label>板块名称：</label>
+                        <input class="easyui-textbox form-item-box" type="text" name="board_name" data-options="required:true,width:350,prompt:'请输入板块名称，1~10个字符',validType:'length[1,10]'" />
+                    </div>
+                    <div class="form-item">
+                        <label>板块图标：</label>
+                        <input type="text" name="board_icon" />
+                    </div>
+                    <div class="form-item">
+                        <label>板块介绍：</label>
+                        <input class="easyui-textbox form-item-box" type="text" name="board_desc" data-options="width:350,prompt:'请输入板块介绍，1~10个字符',validType:'length[1,10]'" />
+                    </div>
+                    <div class="form-item">
+                        <label>访问模型：</label>
+                        <input type="text" name="allow_model_id" />
+                    </div>
+                </form>
+            </div>
+            <div region="south" border="false" style="text-align:right;padding:10px 12px;">
+                <a href="javascript:void(0)" class="easyui-linkbutton edit-save" onclick='Wz.community.moduleManage.saveModule();' data-options="iconCls:'icon-ok'">保存</a>
+                <a href="javascript:void(0)" class="easyui-linkbutton edit-cancel" onclick="$(this).parents('.easyui-window').window('close');" data-options="iconCls:'icon-cancel'">取消</a>
+            </div>
+        </div>
+    </div>
+    <div id="community-module-tagmanage-win" class="easyui-window" data-options="title:'标签管理',collapsible:false,maximizable:false,minimizable:false,closed: true,modal:true,width:550,height:430">
+        <div class="easyui-layout" style="width:100%;height:100%;">
+            <div region="center" border="false" style="padding:10px 12px;">
+                <form id="community-module-tagmanage-form" class="easyui-form form-layout-column" method="post" data-options="novalidate:true">
+                    <input type="hidden" name="board_id" />
+                    <div class="form-item">
+				         <input class="easyui-textbox form-item-box" type="text" name="tag" data-options="required:true,width:350,prompt:'请输入标签名，1~20个字符',validType:'length[1,20]'" />
+				         <a href="javascript:void(0)" class="easyui-linkbutton add-btn">添加</a>
+                    </div>
+                    <div class="form-item">
+				                    标签可以帮助帖子更快找到感兴趣的人参与其中。<br/>
+						标签数量限20个，标签中关联有相应的专家牛人。<br/>
+						删除标签会导致无法通知相应牛人，请谨慎操作。
+                    </div>
+                    <div class="form-item easyui-panel" style="height:200px;width:100%;">
+                    	<table id="community-module-tag-table"></table>
+                    </div>
+                </form>
+            </div>
+            <div region="south" border="false" style="text-align:right;padding:10px 12px;">
+                <a href="javascript:void(0)" class="easyui-linkbutton edit-cancel" onclick="$(this).parents('.easyui-window').window('close');" data-options="iconCls:'icon-cancel'">关闭</a>
+            </div>
+        </div>
+    </div>
+</div>

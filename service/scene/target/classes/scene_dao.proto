@@ -1,0 +1,28 @@
+import "scene.proto";
+
+package weizhu.scene.dao;
+
+option java_package = "com.weizhu.service.scene";
+option java_outer_classname = "SceneDAOProtos";
+
+// 场景首页结构
+message SceneHome {
+  repeated weizhu.scene.Scene scene            = 1;
+}
+
+// 场景模块扩展信息结构
+message SceneExt {
+  repeated weizhu.scene.Item.ItemIndex              item_index          = 1; // 最近n条条目的索引列表
+}
+
+
+// 工具——盖帽神器（超值推荐）
+// 场景首页结构
+message RecommenderHome {
+  repeated weizhu.scene.RecommenderCategory recommenderCategory            = 1;
+}
+
+// 场景首页结构
+message RecommenderCategoryExt {
+  repeated weizhu.scene.RecommenderCompetitorProduct competitorProduct            = 1;
+}

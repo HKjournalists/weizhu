@@ -1,0 +1,211 @@
+import "weizhu.proto";
+
+package weizhu.exam;
+
+option java_package         = "com.weizhu.proto";
+option java_outer_classname = "ExamProtos";
+
+enum ShowResult {
+  NONE           = 0;
+  AFTER_EXAM_END = 1;
+  AFTER_SUBMIT   = 2;
+}
+
+// 考题
+message Question {
+  // 考题类型
+  enum Type{
+    OPTION_SINGLE = 0; // 选择题
+    OPTION_MULTI  = 1; // 多选题
+    OPTION_TF     = 2; // 判断题
+    
+    UNKNOWN       = 99;
+  }
+  
+  required int32  question_id              = 1; // 考题id
+  required string question_name            = 2; // 考题题目
+  optional Type   type                     = 3 [default = UNKNOWN]; // 考目类型
+  repeated Option option                   = 4; // 选择题选项
+  optional int32  score                    = 5; // 考题分值 (关联考试)
+  
+  optional int32  create_question_time     = 6; // 创建考题时间
+  optional int64  create_question_admin_id = 7; // 创建考题管理员id
+  optional int32  category_id              = 8; // 考题分类
+}
+
+// 选择题选项
+message Option {
+  required int32  option_id   = 1; // 选择题选项ID
+  required string option_name = 2; // 选择题选项内容
+  optional bool   is_right    = 3; // 该选项是否是正确选项，不填此字段标示未知
+}
+
+// 考试
+message Exam {
+  enum Type {
+    MANUAL      = 1; // 手动选题，机器阅卷
+    AUTO        = 2; // 随机出题，机器阅卷
+    AUTO_MANUAL = 3; // 手动随机都 存在，机器阅卷
+    
+    UNKNOWN     = 99;
+  }
+  
+  required int32      exam_id              = 1; // 考试id
+  required string     exam_name            = 2; // 考试名称
+  optional string     image_name           = 3;
+  required int32      start_time           = 4; // 考试开始时间
+  required int32      end_time             = 5; // 考试结束时间
+  
+  optional bool       is_submit_execute    = 6; // 是否已执行提交任务
+
+  optional int32      create_exam_time     = 7; // 创建考试时间
+  optional int64      create_exam_admin_id = 8; // 创建考试管理员id
+  optional int32      pass_mark            = 9; // 通过分数
+  
+  optional int32      allow_model_id       = 10; // 权限模型id
+  optional ShowResult show_result          = 11; // 考试结束后是否显示答案
+  
+  optional Type       type                 = 12 [default = UNKNOWN]; // 考试类型，默认是手动选题
+  optional bool       is_load_all_user     = 13; // 是否加载完所有应该参加考试的用户
+}
+
+// 考试用户答案信息
+message UserAnswer {
+  required int32 question_id      = 1; // 考题id
+  repeated int32 answer_option_id = 2; // 用户答题的选项(不一定是正确的选项，可多个)
+  optional bool  is_right         = 3; // 用户该题是否回答正确(只有已交卷或者考试已结束后才有该字段)
+}
+
+// 考试用户结果
+message UserResult {
+  required int64 user_id     = 1; // 用户id
+  required int32 exam_id     = 2; // 考试id
+  optional int32 start_time  = 3; // 参加考试时间
+  optional int32 submit_time = 4; // 交卷时间,未交卷此字段为空
+  optional int32 score       = 5; // 最终得分,如果未交卷.则用中间存储的答案计算出部分分值
+  optional int32 ranking     = 6; // 当前排名
+}
+
+// 获取未交卷的, 正在进行or未开始考试,按照考试结束时间排序 请求
+message GetOpenExamListRequest {
+  optional int32 last_exam_id       = 1;
+  optional int32 last_exam_end_time = 2;
+  required int32 size               = 3;
+}
+
+message GetOpenExamListResponse {
+  repeated Exam exam     = 1;
+  required bool has_more = 2;
+}
+
+message GetOpenExamCountResponse {
+  required int32 open_exam_count = 1;
+}
+
+message GetClosedExamListRequest {
+  optional int32 last_exam_id          = 1;
+  optional int32 last_exam_submit_time = 2;
+  required int32 size                  = 3;
+}
+
+message GetClosedExamListResponse {
+  repeated Exam       exam        = 1;
+  repeated UserResult user_result = 2;
+  required bool       has_more    = 3;
+}
+
+message GetExamByIdRequest {
+  repeated int32 exam_id = 1;
+}
+
+message GetExamByIdResponse {
+  repeated Exam exam = 1;
+}
+
+// 获取考试相关信息请求
+message GetExamInfoRequest {
+  required int32 exam_id = 1;
+}
+
+// 获取考试相关信息相应
+message GetExamInfoResponse {
+  // 考试状态
+  enum ExamState {
+    EXAM_NOT_START = 0; // 未开考
+    EXAM_RUNNING   = 1; // 正在考
+    EXAM_FINISH    = 2; // 已结束
+  }
+
+  optional Exam       exam        = 1; // 考试基本信息
+  optional ExamState  state       = 2; // 考试状态
+  optional bool       is_join     = 3; // 当前用户是否可以参加考试
+  repeated Question   question    = 4; // 考试题目 (未开考或者不能参加该考试的话，该字段为空)
+  repeated UserAnswer user_answer = 5; // 考试题目用户答题信息
+  optional UserResult user_result = 6; // 用户参加考试时间 
+}
+
+// 保存考题选项请求
+message SaveAnswerRequest {
+  required int32      exam_id     = 1;
+  repeated UserAnswer user_answer = 2;
+}
+
+// 保存考题选项
+message SaveAnswerResponse {
+  enum Result {
+    SUCC = 0;                // 标记成功
+    FAIL_EXAM_NOT_EXSIT = 1; // 考试不存在
+    FAIL_EXAM_CLOSED    = 2; // 考试已结束或者已交卷
+    FAIL_EXAM_NOT_JOIN  = 3; // 不在考试成员中
+    FAIL_ANSWER_INVALID = 4; // 考试考题的答案非法 (问题不存在，选项不存在，单选题选了多项等)
+    
+    FAIL_UNKNOWN        = 99;
+  }
+  optional Result result    = 1 [default = FAIL_UNKNOWN];
+  optional string fail_text = 2;
+}
+
+message SubmitExamRequest {
+  required int32      exam_id     = 1;
+  repeated UserAnswer user_answer = 2;
+}
+
+message SubmitExamResponse {
+  enum Result {
+    SUCC = 0;                // 标记成功
+    FAIL_EXAM_NOT_EXSIT = 1; // 考试不存在
+    FAIL_EXAM_CLOSED    = 2; // 考试已结束或者已交卷
+    FAIL_EXAM_NOT_JOIN  = 3; // 不在考试成员中
+    FAIL_ANSWER_INVALID = 4; // 考试考题的答案非法 (问题不存在，选项不存在，单选题选了多项等)
+    
+    FAIL_UNKNOWN        = 99;
+  }
+  optional Result result     = 1 [default = FAIL_UNKNOWN];
+  optional string fail_text  = 2;
+  optional int32  user_score = 3;
+}
+
+// 考试服务
+service ExamService {
+  
+  // 获取未交卷的, 正在进行or未开始考试,按照考试结束时间排序
+  rpc GetOpenExamList (GetOpenExamListRequest) returns (GetOpenExamListResponse);
+  
+  // 获取未交卷的, 正在进行or未开始考试的数量
+  rpc GetOpenExamCount (weizhu.EmptyRequest) returns (GetOpenExamCountResponse);
+  
+  // 获取已经结束的考试.按照用户交卷时间排序,如果弃考则认为考试结束时间为交卷时间
+  rpc GetClosedExamList (GetClosedExamListRequest) returns (GetClosedExamListResponse);
+  
+  // 根据id获取考试信息
+  rpc GetExamById (GetExamByIdRequest) returns (GetExamByIdResponse);
+  
+  // 获取考试详细信息：考试, 状态, 题目列表，得分情况
+  rpc GetExamInfo (GetExamInfoRequest) returns (GetExamInfoResponse);
+  
+  // 保存考题选项
+  rpc SaveAnswer (SaveAnswerRequest) returns (SaveAnswerResponse);
+  
+  // 交卷
+  rpc SubmitExam (SubmitExamRequest) returns (SubmitExamResponse);
+}

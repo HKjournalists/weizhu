@@ -1,0 +1,275 @@
+import "official.proto";
+
+package weizhu.admin.official;
+
+option java_package = "com.weizhu.proto";
+option java_outer_classname = "AdminOfficialProtos";
+
+enum ReservedOfficialId {
+  WEIZHU_SECRETARY = 1; // 微助小秘书
+}
+
+// 服务号发送消息计划
+message OfficialSendPlan {
+  enum SendState {
+    WAIT_SEND    = 0;
+    ALREADY_SEND = 1;
+    CANCEL_SEND  = 2;
+  }
+
+  required int32                           plan_id         = 1;
+  required int64                           official_id     = 2;
+  required int32                           send_time       = 3;
+  required SendState                       send_state      = 4;
+  required int64                           send_msg_ref_id = 5;
+  required weizhu.official.OfficialMessage send_msg        = 6;
+  optional int32                           allow_model_id  = 7; // 访问模型id
+
+  required int64                           create_admin_id = 96;
+  required int32                           create_time     = 97;
+  optional int64                           update_admin_id = 98;
+  optional int32                           update_time     = 99;
+}
+
+message OfficialMessageInfo {
+  required int64                           user_id     = 1;
+  required int64                           official_id = 2;
+  required weizhu.official.OfficialMessage msg         = 3;
+}
+
+// 根据id获取服务号请求
+message GetOfficialByIdRequest {
+  repeated int64 official_id = 1; // 服务号id
+}
+
+// 根据id获取服务号返回
+message GetOfficialByIdResponse {
+  repeated weizhu.official.Official official = 1; // 服务号信息
+}
+
+// 获取服务号列表请求
+message GetOfficialListRequest {
+  required int32  start  = 1;
+  required int32  length = 2;
+}
+
+// 获取服务号列表返回
+message GetOfficialListResponse {
+  repeated weizhu.official.Official official   = 1;
+  required int32                    total_size = 2;
+}
+
+// 创建服务号请求
+message CreateOfficialRequest {
+  required string official_name  = 1; // 名称
+  required string avatar         = 2; // 头像
+  optional string official_desc  = 3; // 账号描述
+  optional string function_desc  = 4; // 功能描述
+  optional int32  allow_model_id = 5; // 访问模型id
+}
+
+// 创建服务号返回
+message CreateOfficialResponse {
+  enum Result {
+    SUCC = 0;                       // 创建成功
+    FAIL_NAME_INVALID          = 1; // 服务号名称错误
+    FAIL_AVATAR_INVALID        = 2; // 服务号头像错误
+    FAIL_OFFICIAL_DESC_INVALID = 3; // 服务号账号描述错误
+    FAIL_FUNCTION_DESC_INVALID = 4; // 服务号功能描述错误
+    FAIL_ALLOW_MODEL_NOT_EXIST = 5; // 访问模型不存在
+    
+    FAIL_UNKNOWN               = 99;
+  }
+  required Result result      = 1 [default = FAIL_UNKNOWN];
+  optional string fail_text   = 2;
+  optional int64  official_id = 3; // 创建成功后的服务号id
+}
+
+// 更新服务号请求
+message UpdateOfficialRequest {
+  required int64                 official_id    = 1; // id
+  required string                official_name  = 2; // 名称
+  required string                avatar         = 3; // 头像
+  optional string                official_desc  = 4; // 账号描述
+  optional string                function_desc  = 5; // 功能描述
+  optional int32                 allow_model_id = 6; // 访问模型id
+  optional weizhu.official.State state          = 7; // 服务号状态
+}
+
+message UpdateOfficialResponse {
+  enum Result {
+    SUCC = 0;                       // 创建成功
+    FAIL_NAME_INVALID          = 1; // 服务号名称错误
+    FAIL_AVATAR_INVALID        = 2; // 服务号头像错误
+    FAIL_OFFICIAL_DESC_INVALID = 3; // 服务号账号描述错误
+    FAIL_FUNCTION_DESC_INVALID = 4; // 服务号功能描述错误
+    FAIL_OFFICIAL_NOT_EXIST    = 5; // 服务号不存在
+    FAIL_ALLOW_MODEL_NOT_EXIST = 6; // 访问模型不存在
+    
+    FAIL_UNKNOWN               = 99;
+  }
+  required Result result      = 1 [default = FAIL_UNKNOWN];
+  optional string fail_text   = 2;
+}
+
+message DeleteOfficialRequest {
+  repeated int64 official_id = 1;
+}
+
+message DeleteOfficialResponse {
+  enum Result {
+    SUCC = 0; // 创建成功
+  
+    FAIL_UNKNOWN = 99; 
+  }
+  optional Result result    = 1 [default = FAIL_UNKNOWN];
+  optional string fail_text = 2;
+}
+
+message SetOfficialStateRequest {
+  repeated int64                 official_id = 1;
+  required weizhu.official.State state       = 2;
+}
+
+message SetOfficialStateResponse {
+  enum Result {
+    SUCC = 0; // 创建成功
+    
+    FAIL_UNKNOWN = 99;
+  }
+  required Result result      = 1 [default = FAIL_UNKNOWN];
+  optional string fail_text   = 2;
+}
+
+message GetOfficialSendPlanByIdRequest {
+  repeated int32 plan_id = 1;
+}
+
+message GetOfficialSendPlanByIdResponse {
+  repeated OfficialSendPlan         official_send_plan = 1;
+  repeated weizhu.official.Official ref_official       = 2; 
+}
+
+message CreateOfficialSendPlanRequest {
+  required int64                           official_id         = 1;
+  required weizhu.official.OfficialMessage send_msg            = 2;
+  required bool                            is_send_immediately = 3;
+  optional int32                           send_time           = 4;
+  optional int32                           allow_model_id      = 5; // 访问模型id
+}
+
+message CreateOfficialSendPlanResponse {
+  enum Result {
+    SUCC = 0;                       // 创建成功
+    FAIL_OFFICIAL_NOT_EXIST    = 1; // 服务号不存在
+    FAIL_SEND_MSG_INVALID      = 2; // 发送消息错误
+    FAIL_SEND_TIME_INVALID     = 3; // 发送时间错误
+    FAIL_ALLOW_MODEL_NOT_EXIST = 4; // 访问模型不存在
+    
+    FAIL_UNKNOWN               = 99;
+  }
+  required Result result      = 1 [default = FAIL_UNKNOWN];
+  optional string fail_text   = 2;
+  optional int32  plan_id     = 3;
+}
+
+message CancelOfficialSendPlanRequest {
+  repeated int32 plan_id = 1;
+}
+
+message CancelOfficialSendPlanResponse {
+  enum Result {
+    SUCC = 0; // 创建成功
+    
+    FAIL_UNKNOWN = 99;
+  }
+  required Result result      = 1 [default = FAIL_UNKNOWN];
+  optional string fail_text   = 2;
+}
+
+// 获取服务号发送计划请求
+message GetOfficialSendPlanListRequest {
+  required int32  start       = 1;
+  required int32  length      = 2;
+  optional int64  official_id = 3;
+}
+
+// 获取服务号发送计划返回
+message GetOfficialSendPlanListResponse {
+  repeated OfficialSendPlan         official_send_plan = 1;
+  required int32                    total_size         = 2;
+  required int32                    filtered_size      = 3;
+  repeated weizhu.official.Official ref_official       = 4;
+}
+
+// 获取服务号消息请求
+message GetOfficialMessageRequest {
+  required int64  official_id  = 1;
+  required int32  start        = 2;
+  required int32  length       = 3;
+  optional int64  user_id      = 4;
+  optional bool   is_from_user = 5;
+}
+
+// 获取服务号消息返回
+message GetOfficialMessageResponse {
+  repeated OfficialMessageInfo msg_info      = 1;
+  required int32               total_size    = 2;
+  required int32               filtered_size = 3;
+}
+
+message SendSecretaryMessageRequest {
+  repeated int64                           user_id  = 1;
+  required weizhu.official.OfficialMessage send_msg = 2;
+}
+
+message SendSecretaryMessageResponse {
+  enum Result {
+    SUCC = 0;             // 发送成功
+    FAIL_MSG_INVALID = 1; // 发送消息不正确
+    
+    FAIL_UNKNOWN     = 99;
+  }
+  optional Result result    = 1 [default = FAIL_UNKNOWN];
+  optional string fail_text = 2;
+}
+
+// 服务号后台管理服务
+service AdminOfficialService {
+
+  // 根据id获取服务号
+  rpc GetOfficialById (GetOfficialByIdRequest) returns (GetOfficialByIdResponse);
+
+  // 获取服务号列表
+  rpc GetOfficialList (GetOfficialListRequest) returns (GetOfficialListResponse);
+
+  // 创建服务号
+  rpc CreateOfficial (CreateOfficialRequest) returns (CreateOfficialResponse);
+
+  // 更新服务号
+  rpc UpdateOfficial (UpdateOfficialRequest) returns (UpdateOfficialResponse);
+  
+  // 删除服务号
+  rpc DeleteOfficial (DeleteOfficialRequest) returns (DeleteOfficialResponse);
+  
+  // 设置服务号状态
+  rpc SetOfficialState (SetOfficialStateRequest) returns (SetOfficialStateResponse);
+
+  // 根据id获取服务号发布消息计划
+  rpc GetOfficialSendPlanById (GetOfficialSendPlanByIdRequest) returns (GetOfficialSendPlanByIdResponse);
+
+  // 创建服务号发布消息计划
+  rpc CreateOfficialSendPlan (CreateOfficialSendPlanRequest) returns (CreateOfficialSendPlanResponse);
+  
+  // 取消服务号发布消息计划
+  rpc CancelOfficialSendPlan (CancelOfficialSendPlanRequest) returns (CancelOfficialSendPlanResponse);
+  
+  // 获取服务号发送消息计划
+  rpc GetOfficialSendPlanList (GetOfficialSendPlanListRequest) returns (GetOfficialSendPlanListResponse);
+
+  // 获取服务号消息
+  rpc GetOfficialMessage (GetOfficialMessageRequest) returns (GetOfficialMessageResponse);
+  
+  // 发送小秘书通知消息
+  rpc SendSecretaryMessage (SendSecretaryMessageRequest) returns (SendSecretaryMessageResponse);
+}

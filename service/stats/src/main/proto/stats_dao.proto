@@ -1,0 +1,14 @@
+import "weizhu.proto";
+import "stats.proto";
+
+package weizhu.stats.dao;
+
+option java_package = "com.weizhu.service.stats";
+option java_outer_classname = "StatsDAOProtos";
+
+message StatsLog {
+  required string log_name  = 1;
+  required int64  log_id    = 2;
+  required int64  timestamp = 3;
+  required string message   = 4;
+}

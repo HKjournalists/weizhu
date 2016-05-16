@@ -1,0 +1,94 @@
+<div id="official-official-wrap" data-options="region:'center',border:false" class="easyui-layout" style="width:100%;height:100%;">
+    <table id="official-official-table" style="width:100%;height: 100%;"></table>
+    <div id="official-official-edit-win" class="easyui-window" data-options="title:'新建服务号',collapsible:false,maximizable:false,minimizable:false,closed: true,modal:true,width:500,height:440">
+        <div class="easyui-layout" style="width:100%;height:100%;">
+            <div region="center" border="false" style="padding:10px 12px;">
+                <form id="official-official-edit-form" class="easyui-form form-layout-column" method="post" data-options="novalidate:true">
+                    <input type="hidden" name="official_id" />
+                    <div class="form-item">
+                        <label>头像：</label>
+                        <input name="avatar_name" />
+                    </div>
+                    <div class="form-item">
+                        <label>名称：</label>
+                        <input class="easyui-textbox form-item-box" type="text" name="official_name" data-options="required:true,width:350,prompt:'请输入服务号名称，1~10个字符',validType:'length[1,10]'" />
+                    </div>
+                    <div class="form-item">
+                        <label>功能介绍：</label>
+                        <input class="easyui-textbox form-item-box" type="text" name="function_desc" data-options="width:350,multiline:true,prompt:'请输入功能介绍，0~100个字符',height:100,validType:'length[0,100]'" />
+                    </div>
+                    <div class="form-item">
+                        <label>账号说明：</label>
+                        <input class="easyui-textbox form-item-box" type="text" name="official_desc" data-options="width:350,multiline:true,prompt:'请输入账号说明，0~30个字符',height:50,validType:'length[0,30]'" />
+                    </div>
+                    <div class="form-item">
+                        <label>服务对象：</label>
+                        <input name="allow_model_id" />
+                    </div>
+                </form>
+            </div>
+            <div region="south" border="false" style="text-align:right;padding:10px 12px;">
+                <a href="javascript:void(0)" class="easyui-linkbutton edit-save" onclick='Wz.official.officialManage.saveEdit();' data-options="iconCls:'icon-ok'">保存</a>
+                <a href="javascript:void(0)" class="easyui-linkbutton edit-cancel" onclick="$(this).parents('.easyui-window').window('close');" data-options="iconCls:'icon-cancel'">取消</a>
+            </div>
+        </div>
+    </div>
+    <div id="official-msg-win" class="easyui-window" data-options="title:'查看服务号信息',collapsible:false,maximizable:false,minimizable:false,closed: true,modal:true,width:900,height:600">
+        <div class="easyui-layout" style="width:100%;height:100%;">
+            <div region="center" border="false" style="padding:10px 12px;">
+                <div id="official-msg-tabs" style="width:100%;height:100%;">
+	            	<div title="发送的消息" id="official-sendmsg-tab">
+	            		<table id="official-sendmsg-table" style="width:100%;height: 100%;"></table>
+	            	</div>
+	            	<div title="接收到的消息" id="official-rcvmsg-tab">
+	            		<table id="official-rcvmsg-table" style="width:100%;height: 100%;"></table>
+	            	</div>
+	            </div>
+            </div>
+            <div region="south" border="false" style="text-align:right;padding:10px 12px;">
+                <a href="javascript:void(0)" class="easyui-linkbutton edit-cancel" onclick="$(this).parents('.easyui-window').window('close');" data-options="iconCls:'icon-cancel'">关闭</a>
+            </div>
+        </div>
+    </div>
+    <div id="official-official-sendmsg-win" class="easyui-window" data-options="title:'发送消息',collapsible:false,maximizable:false,minimizable:false,closed: true,modal:true,width:500,height:440">
+        <div class="easyui-layout" style="width:100%;height:100%;">
+            <div region="center" border="false" style="padding:10px 12px;">
+                <form id="official-official-sendmsg-form" class="easyui-form form-layout-column" method="post" data-options="novalidate:true">
+                    <input type="hidden" name="official_id" />
+                    <div class="form-item">
+                        <label>发送对象：</label>
+                        <input name="allow_model_id" />
+                    </div>
+                    <!-- <div class="form-item">
+                        <label>消息类型：</label>
+                        <input type="text" name="msg_type"></input>
+                    </div> -->
+                    <div class="form-item">
+                        <label>消息内容：</label>
+                        <input class="easyui-textbox form-item-box" type="text" name="send_msg_text_content" data-options="required: true,width:350,multiline:true,prompt:'消息内容限制1000个字符(含文字、标点、数字、符号)',height:200,validType:'length[1,1000]'" />
+                    </div>
+                    <!-- <div class="form-item" style="display:none;">
+                        <label>图片：</label>
+                        <input name="send_msg_image_name" />
+                    </div>
+                    <div class="form-item" style="display:none;">
+                        <label>用户：</label>
+                        <select name="send_msg_user_user_id"></select>
+                    </div> -->
+                    <div class="form-item">
+                        <label>发送方式：</label>
+                        <input type="text" name="is_send_immediately"></input>
+                    </div>
+                    <div class="form-item" style="display:none;">
+                        <label>发送时间：</label>
+                        <input name="send_time"/>
+                    </div>
+                </form>
+            </div>
+            <div region="south" border="false" style="text-align:right;padding:10px 12px;">
+                <a href="javascript:void(0)" class="easyui-linkbutton edit-save" onclick='Wz.official.officialManage.sendMsg();' data-options="iconCls:'icon-ok'">保存</a>
+                <a href="javascript:void(0)" class="easyui-linkbutton edit-cancel" onclick="$(this).parents('.easyui-window').window('close');" data-options="iconCls:'icon-cancel'">取消</a>
+            </div>
+        </div>
+    </div>
+</div>

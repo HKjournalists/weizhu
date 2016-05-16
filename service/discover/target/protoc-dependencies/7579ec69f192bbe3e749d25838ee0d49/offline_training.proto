@@ -1,0 +1,373 @@
+import "weizhu.proto";
+
+package weizhu.offline_training;
+
+option java_package = "com.weizhu.proto";
+option java_outer_classname = "OfflineTrainingProtos";
+// option optimize_for = LITE_RUNTIME;
+
+// 数据状态
+enum State {
+  NORMAL  = 0; // 正常
+  DISABLE = 1; // 停用
+  DELETE  = 2; // 已删除
+}
+
+// 培训
+message Train {
+  required int32  train_id            = 1;  // 培训id, 大于0
+  required string train_name          = 2;  // 培训名称 1-50个字
+  optional string image_name          = 3;  // 培训图片，默认最多191个字符
+  required int32  start_time          = 4;  // 培训开始时间
+  required int32  end_time            = 5;  // 培训结束时间
+  required bool   apply_enable        = 6;  // 是否开启报名
+  optional int32  apply_start_time    = 7;  // 报名开始时间
+  optional int32  apply_end_time      = 8;  // 报名结束时间
+  optional int32  apply_user_count    = 9;  // 报名人数限制
+  optional bool   apply_is_notify     = 10; // 报名是否已经通知到用户
+  required string train_address       = 11; // 培训地点，默认最多191个字符
+  optional string lecturer_name       = 12; // 外部讲师名称
+  repeated int64  lecturer_user_id    = 13; // 内部讲师关联的用户id
+  required int32  check_in_start_time = 14; // 签到开始时间
+  required int32  check_in_end_time   = 15; // 签到结束时间
+  required string arrangement_text    = 16; // 培训安排文本，默认最多65535个字符
+  optional string describe_text       = 17; // 培训描述文本，默认最多65535个字符
+  optional int32  allow_model_id      = 18;
+  repeated int64  discover_item_id    = 19; // 培训关联的发现课件id
+  
+  optional State  state               = 95 [default = NORMAL];
+  optional int64  create_admin_id     = 96;
+  optional int32  create_time         = 97;
+  optional int64  update_admin_id     = 98;
+  optional int32  update_time         = 99;
+}
+
+message TrainCount {
+  required int32 train_id            = 1; // 培训id
+  required int32 user_allow_count    = 2; // 可参与培训的用户数
+  required int32 user_apply_count    = 3; // 已报名用户数
+  required int32 user_check_in_count = 4; // 已签到用户数
+  required int32 user_leave_count    = 5; // 已请假用户数
+}
+
+// 用户参与培训信息
+message TrainUser {
+  required int32  train_id      = 1; // 培训id
+  required int64  user_id       = 2; // 用户id
+  required bool   is_apply      = 3; // 是否已报名
+  optional int32  apply_time    = 4; // 报名时间
+  required bool   is_check_in   = 5; // 是否已签到
+  optional int32  check_in_time = 6; // 签到时间
+  required bool   is_leave      = 7; // 是否请假
+  optional int32  leave_time    = 8; // 请假时间
+  optional string leave_reason  = 9; // 请假事由
+  required int32  update_time   = 10; // 更新时间
+}
+
+// 线下培训课程
+message Course {
+  required int32  course_id        = 1; // 课程id
+  required string course_name      = 2; // 课程名称，最多50个字
+  optional string image_name       = 3; // 课程图片
+  optional string describe_text    = 4; // 课程描述文本, 最多200个字
+  repeated int64  discover_item_id = 5; // 课程关联的发现课件id
+  
+  optional State  state            = 95 [default = NORMAL];
+  optional int64  create_admin_id  = 96;
+  optional int32  create_time      = 97;
+  optional int64  update_admin_id  = 98;
+  optional int32  update_time      = 99;
+}
+
+// 线下培训课程计数
+message CourseCount {
+  required int32 course_id      = 1; // 课程id
+  required int32 lecturer_count = 2; // 已认证讲师数
+}
+
+// 线下培训课程讲师信息
+message CourseLecturer {
+  required int32  course_id        = 1; // 课程id
+  required int64  lecturer_user_id = 2; // 讲师用户id
+  required int32  permit_time      = 3; // 讲师获得认证时间
+}
+
+// 讲师相关信息
+message Lecturer {
+  required int64 lecturer_user_id = 1; // 讲师用户id
+  required int32 score_id         = 2;
+}
+
+// 讲师计数信息
+message LecturerCount {
+  required int64 lecturer_user_id             = 1; // 讲师用户id
+  required int32 course_count                 = 2; // 讲师被认证的课程数
+  required int32 course_schedule_open_count   = 3; // 正在进行或者未开始的已被设为讲师的课程安排数
+  required int32 course_schedule_closed_count = 4; // 已结束的已被设为讲师的课程安排数
+}
+
+// 线下培训课程讲师认证
+message CourseLecturerPermit {
+  required int32  permit_id        = 1; // 认证id
+  required string permit_name      = 2; // 认证名称
+  required int32  course_id        = 3; // 认证课程id
+  optional string image_name       = 4; // 认证图片
+  required int32  apply_start_time = 5; // 报名认证开始时间
+  required int32  apply_end_time   = 6; // 报名认证结束时间
+  optional string describe_text    = 7; // 认证描述文本, 最多200个字
+  optional int32  allow_model_id   = 8; // 允许参加认证的用户访问模型id
+  required bool   is_permit_finish = 9; // 本次认证是否结束
+  
+  optional State  state            = 95 [default = NORMAL];
+  optional int64  create_admin_id  = 96;
+  optional int32  create_time      = 97;
+  optional int64  update_admin_id  = 98;
+  optional int32  update_time      = 99;
+}
+
+// 线下培训课程讲师认证计数
+message CourseLecturerPermitCount {
+  required int32 permit_id         = 1; // 认证id
+  required int32 apply_user_count  = 2; // 已报名用户数
+  required int32 handle_user_count = 3; // 已处理用户数
+  required int32 permit_user_count = 4; // 已认证用户数
+}
+
+// 线下培训课程讲师认证用户相关信息
+message CourseLecturerPermitUser {
+  required int32 permit_id   = 1; // 认证id
+  required int64 user_id     = 2; // 用户id
+  required int32 apply_time  = 3; // 报名时间
+  required bool  is_handle   = 4; // 是否被处理
+  optional int32 handle_time = 5; // 处理时间
+  optional bool  is_permit   = 6; // 如果被处理，是否通过
+}
+
+// 课程安排
+message CourseSchedule {
+  required int32  schedule_id            = 1; // 课程安排id
+  required int32  course_id              = 2; // 课程id
+  required int32  course_start_time      = 3; // 课程开始时间
+  required int32  course_end_time        = 4; // 课程结束时间
+  required string course_address         = 5; // 授课地址
+  required int32  apply_start_time       = 6; // 报名开始时间
+  required int32  apply_end_time         = 7; // 报名结束时间
+  repeated int64  allow_lecturer_user_id = 8; // 允许授课的讲师用户id
+  optional int64  lecturer_user_id       = 9; // 正式讲师的用户id
+  
+  optional State  state                  = 95 [default = NORMAL];
+  optional int64  create_admin_id        = 96;
+  optional int32  create_time            = 97;
+  optional int64  update_admin_id        = 98;
+  optional int32  update_time            = 99;
+}
+
+// 课程安排计数信息
+message CourseScheduleCount {
+  required int32  schedule_id            = 1; // 课程安排id
+  required int32  handle_lecturer_count  = 2; // 已处理讲师数
+  required int32  accept_lecturer_count  = 3; // 已接受讲师数
+}
+
+// 课程安排讲师相关信息
+message CourseScheduleLecturer {
+  required int32  schedule_id      = 1; // 课程安排id
+  required int64  lecturer_user_id = 2; // 讲师用户id
+  required bool   is_handle        = 3; // 是否已处理
+  optional int32  handle_time      = 4; // 处理时间
+  optional bool   is_accept        = 5; // 是否已接受
+  optional string remark_text      = 6; // 备注，如果拒绝，填写拒绝原因
+}
+
+message GetOpenTrainListRequest {
+  required int32 size         = 1;
+  optional bytes offset_index = 2;
+}
+
+message GetOpenTrainListResponse {
+  repeated Train      train           = 1;
+  required bool       has_more        = 2; // 是否还有更多
+  required bytes      offset_index    = 3; // 翻页偏移索引
+  repeated TrainCount ref_train_count = 4;
+  repeated TrainUser  ref_train_user  = 5;
+}
+
+message GetOpenTrainCountResponse {
+  required int32 open_train_count = 1;
+}
+
+message GetClosedTrainListRequest {
+  required int32 size         = 1;
+  optional bytes offset_index = 2;
+}
+
+message GetClosedTrainListResponse {
+  repeated Train      train           = 1;
+  required bool       has_more        = 2; // 是否还有更多
+  required bytes      offset_index    = 3; // 翻页偏移索引
+  repeated TrainCount ref_train_count = 4;
+  repeated TrainUser  ref_train_user  = 5;
+}
+
+message GetTrainByIdRequest {
+  repeated int32 train_id = 1;
+}
+
+message GetTrainByIdResponse {
+  repeated Train      train           = 1;
+  repeated TrainCount ref_train_count = 2;
+  repeated TrainUser  ref_train_user  = 3;
+}
+
+message ApplyTrainRequest {
+  required int32 train_id  = 1;
+  required bool  is_cancel = 2;
+}
+
+message ApplyTrainResponse {
+  enum Result {
+    SUCC                  = 0;
+    
+    FAIL_UNKNOWN          = 99;
+  }
+  
+  optional Result result    = 1 [default = FAIL_UNKNOWN]; // 返回结果
+  optional string fail_text = 2; // 错误文本
+}
+
+message CheckInTrainRequest {
+  required int32 train_id = 1;
+}
+
+message CheckInTrainResponse {
+  enum Result {
+    SUCC                  = 0;
+    
+    FAIL_UNKNOWN          = 99;
+  }
+  
+  optional Result result    = 1 [default = FAIL_UNKNOWN]; // 返回结果
+  optional string fail_text = 2; // 错误文本
+}
+
+message LeaveTrainRequest {
+  required int32  train_id     = 1;
+  required bool   is_cancel    = 2;
+  optional string leave_reason = 3;
+}
+
+message LeaveTrainResponse {
+  enum Result {
+    SUCC                  = 0;
+    
+    FAIL_UNKNOWN          = 99;
+  }
+  
+  optional Result result    = 1 [default = FAIL_UNKNOWN]; // 返回结果
+  optional string fail_text = 2; // 错误文本
+}
+
+message GetOpenCourseLecturerPermitListRequest {
+  required int32 size         = 1;
+  optional bytes offset_index = 2;
+}
+
+message GetOpenCourseLecturerPermitListResponse {
+  repeated CourseLecturerPermit     course_lecturer_permit          = 1;
+  required bool                     has_more                        = 2; // 是否还有更多
+  required bytes                    offset_index                    = 3; // 翻页偏移索引
+  repeated CourseLecturerPermitUser ref_course_lecturer_permit_user = 4;
+  repeated Course                   ref_course                      = 5;
+}
+
+message GetOpenCourseLecturerPermitCountResponse {
+  required int32 open_course_lecturer_permit_count = 1;
+}
+
+message GetClosedCourseLecturerPermitListRequest {
+  required int32 size         = 1;
+  optional bytes offset_index = 2;
+}
+
+message GetClosedCourseLecturerPermitListResponse {
+  repeated CourseLecturerPermit     course_lecturer_permit          = 1;
+  required bool                     has_more                        = 2; // 是否还有更多
+  required bytes                    offset_index                    = 3; // 翻页偏移索引
+  repeated CourseLecturerPermitUser ref_course_lecturer_permit_user = 4;
+  repeated Course                   ref_course                      = 5;
+}
+
+message GetCourseLecturerPermitByIdRequest {
+  repeated int32 permit_id = 1;
+}
+
+message GetCourseLecturerPermitByIdResponse {
+  repeated CourseLecturerPermit     course_lecturer_permit          = 1;
+  repeated CourseLecturerPermitUser ref_course_lecturer_permit_user = 2;
+  repeated Course                   ref_course                      = 3;
+}
+
+message ApplyCourseLecturerPermitRequest {
+  required int32 permit_id = 1;
+}
+
+message ApplyCourseLecturerPermitResponse {
+  enum Result {
+    SUCC                  = 0;
+    
+    FAIL_UNKNOWN          = 99;
+  }
+  
+  optional Result result    = 1 [default = FAIL_UNKNOWN]; // 返回结果
+  optional string fail_text = 2; // 错误文本
+}
+
+message GetLecturerByIdRequest {
+  repeated int32 lecturer_user_id = 1;
+}
+
+message GetLecturerByIdResponse {
+  repeated LecturerCount lecturer_count = 4;
+}
+
+message GetOpenCourseScheduleListRequest {
+  required int64 lecturer_user_id = 1;
+  optional bool  is_handle        = 2;
+  required int32 size             = 3;
+  optional bytes offset_index     = 4;
+}
+
+message GetOpenCourseScheduleListResponse {
+  repeated CourseSchedule         course_schedule              = 1;
+  repeated CourseScheduleLecturer ref_course_schedule_lecturer = 2;
+  repeated Course                 ref_course                   = 3;
+}
+
+
+// 线下培训服务
+service OfflineTrainingService {
+  rpc GetOpenTrainList (GetOpenTrainListRequest) returns (GetOpenTrainListResponse);
+  rpc GetOpenTrainCount (weizhu.EmptyRequest) returns (GetOpenTrainCountResponse);
+  rpc GetClosedTrainList (GetClosedTrainListRequest) returns (GetClosedTrainListResponse);
+  rpc GetTrainById (GetTrainByIdRequest) returns (GetTrainByIdResponse);
+  
+  rpc ApplyTrain (ApplyTrainRequest) returns (ApplyTrainResponse);
+  rpc CheckInTrain (CheckInTrainRequest) returns (CheckInTrainResponse);
+  rpc LeaveTrain (LeaveTrainRequest) returns (LeaveTrainResponse);
+  
+  rpc GetOpenCourseLecturerPermitList (GetOpenCourseLecturerPermitListRequest) returns (GetOpenCourseLecturerPermitListResponse);
+  rpc GetOpenCourseLecturerPermitCount (weizhu.EmptyRequest) returns (GetOpenCourseLecturerPermitCountResponse);
+  rpc GetClosedCourseLecturerPermitList (GetClosedCourseLecturerPermitListRequest) returns (GetClosedCourseLecturerPermitListResponse);
+  rpc GetCourseLecturerPermitById (GetCourseLecturerPermitByIdRequest) returns (GetCourseLecturerPermitByIdResponse);
+  
+  rpc ApplyCourseLecturerPermit (ApplyCourseLecturerPermitRequest) returns (ApplyCourseLecturerPermitResponse);
+  
+  rpc GetLecturerById (GetLecturerByIdRequest) returns (GetLecturerByIdResponse);
+  
+  rpc GetOpenCourseScheduleList (GetOpenCourseScheduleListRequest) returns (GetOpenCourseScheduleListResponse);
+  // rpc GetOpenCourseScheduleCount (weizhu.EmptyRequest) returns (GetOpenCourseScheduleCountResponse);
+  // rpc GetClosedCourseScheduleList (GetClosedCourseScheduleListRequest) returns (GetClosedCourseScheduleListResponse);
+  // rpc GetCourseScheduleById (GetCourseScheduleByIdRequest) returns (GetCourseScheduleByIdResponse);
+  
+  // rpc HandleCourseSchedule (HandleCourseScheduleRequest) returns (HandleCourseScheduleResponse); 
+}

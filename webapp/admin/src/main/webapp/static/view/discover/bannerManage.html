@@ -1,0 +1,44 @@
+<div id="discover-banner-wrap" data-options="region:'center',border:false" class="easyui-layout" style="width:100%;height:100%;">
+    <table id="discover-banner-table" style="width:100%;height: 100%;"></table>
+    <div id="discover-banner-edit-win" class="easyui-window" data-options="title:'新建服务号',collapsible:false,maximizable:false,minimizable:false,closed: true,modal:true,width:500,height:350">
+        <div class="easyui-layout" style="width:100%;height:100%;">
+            <div region="center" border="false" style="padding:10px 12px;">
+                <form id="discover-banner-edit-form" class="easyui-form form-layout-column" method="post" data-options="novalidate:true">
+                    <input type="hidden" name="banner_id" />
+                    <div class="form-item">
+                        <label>轮播标题：</label>
+                        <input class="easyui-textbox form-item-box" type="text" name="banner_name" data-options="required:true,width:350,prompt:'请输入轮播图 标题，1~50个字符',validType:'length[1,50]'" />
+                    </div>
+                    <div class="form-item">
+                        <label>轮播图片：</label>
+                        <input name="image_name" />
+                    </div>
+                    <div class="form-item">
+                        <label>轮播内容：</label>
+                        <input type="text" name="banner_type" />
+                    </div>
+                    <div class="form-item" style="display:none;">
+                        <label>发现课件：</label>
+                        <input type="text" name="item_id" />
+                    </div>
+                    <div class="form-item" style="display:none;">
+                        <label>链接地址：</label>
+                        <input class="easyui-textbox form-item-box" type="text" name="web_url" data-options="required:true,width:350,prompt:'请输入正确的url地址，1~200个字符',validType:['url','length[1,200]']" />
+                    </div>
+                    <div class="form-item" style="display:none;">
+                        <label>微助链接：</label>
+                        <input type="checkbox" name="is_weizhu" />
+                    </div>
+                    <div class="form-item">
+                        <label>访问对象：</label>
+                        <input name="allow_model_id" />
+                    </div>
+                </form>
+            </div>
+            <div region="south" border="false" style="text-align:right;padding:10px 12px;">
+                <a href="javascript:void(0)" class="easyui-linkbutton edit-save" onclick='Wz.discover.bannerManage.saveEdit();' data-options="iconCls:'icon-ok'">保存</a>
+                <a href="javascript:void(0)" class="easyui-linkbutton edit-cancel" onclick="$(this).parents('.easyui-window').window('close');" data-options="iconCls:'icon-cancel'">取消</a>
+            </div>
+        </div>
+    </div>
+</div>

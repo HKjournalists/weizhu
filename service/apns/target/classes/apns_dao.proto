@@ -1,0 +1,18 @@
+import "weizhu.proto";
+
+package weizhu.apns.dao;
+
+option java_package = "com.weizhu.service.apns";
+option java_outer_classname = "APNsDAOProtos";
+
+message APNsDeviceToken {
+  required weizhu.Session session       = 1;
+  required string         app_id        = 2;
+  required bool           is_production = 3;
+  required string         device_token  = 4;
+  required int32          badge_number  = 5;
+}
+
+message APNsDeviceTokenList {
+  repeated APNsDeviceToken device_token = 1;
+}

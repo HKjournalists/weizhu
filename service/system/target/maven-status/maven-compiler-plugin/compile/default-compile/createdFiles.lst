@@ -1,0 +1,7 @@
+com/weizhu/service/system/authurl/QiniuAuthUrl.class
+com/weizhu/service/system/SystemServiceModule.class
+com/weizhu/service/system/SystemServiceImpl$1.class
+com/weizhu/service/system/SystemServiceImpl.class
+com/weizhu/service/system/authurl/AuthUrl.class
+com/weizhu/service/system/SystemConfig.class
+com/weizhu/service/system/authurl/CompositeAuthUrl.class

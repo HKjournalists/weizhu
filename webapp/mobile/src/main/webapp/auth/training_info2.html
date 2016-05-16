@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<meta name="format-detection" content="telephone=no">
+		<title>线下培训-讲师认证</title>
+		<link type="text/css" rel="stylesheet" href="../static/css/mobiscroll/train/common.css"/>
+		<link type="text/css" rel="stylesheet" href="../static/css/mobiscroll/train/new.css"/>
+		<script type="text/javascript" src="../static/js/zepto.js"></script>
+		<script type="text/javascript" src="./template-native.js"></script>
+		<style type="text/css">
+			#basic-info{
+				height:120px;
+				
+			}
+			#basic-info .bcg{
+				background:url(../static/images/train/thumb.png) no-repeat;
+				width:100%;
+				height:120px;
+				position:absolute;
+				-webkit-filter:brightness(.5);
+				z-index:0;
+			}
+			.is-apply{
+				position:absolute;
+				left:12px;
+				top:12px;
+				width:40px;
+				height:40px;
+			}
+			.theme-area{
+				float:left;
+				height:100px;
+				padding:12px 0px 12px 12px;
+				
+				width:35%;
+			}
+			.theme-icon{
+				width:80%;
+				height:95%;
+			}
+			.theme-desc{
+				margin-left:35%;
+				width:60%;
+				height:100px;
+				
+				padding-top:12px;
+			}
+			.content{
+				position:absolute;
+				z-index:1;
+				width:100%;
+				
+			}
+			.theme-title{
+				
+				height:50px;
+				color:#fff;
+				
+			}
+			.number{
+				height:43px;
+				padding-top:20px;
+			}
+			.total{
+				margin-top:4px;
+				color:#d7d5d5;
+				display:inline-block;
+				float:left;
+				font-size:14px;
+			}
+			.total:before{
+				content:"";;
+				display:inline-block;
+				
+				background:url(../static/images/train/portrait.png) no-repeat;
+				background-size:18px 28px;
+				width:18px;
+				height:28px;
+				margin-right:10px;
+				vertical-align:top;
+				
+			}
+			.real{
+				color:#ffffff;
+				margin-top:4px;
+				display:inline-block;
+				float:right;
+				margin-right:12px;
+				
+			}
+		</style>
+	</head>
+	<body>
+		<div id="main_wraper">
+			<section id="basic-info">
+				<!-- <div class="bcg"></div>
+				<div class="content">
+					<div class="theme-area"><img class="theme-icon" src="../static/images/train/thumb.png"/><img class="is-apply" src="../static/images/train/apply-in-doing.png"/></div>
+					<div class="theme-desc"><div class="theme-title">题目</div><div class="number"><span class="total">&nbsp;&nbsp;20</span><span class="real">4</span></div></div>
+				</div> -->
+				<div>
+			</section>
+			<script type="text/template" id="basic-info-html">
+				<div class="bcg"></div>
+				<div class="content">
+					<div class="theme-area"><%if(!!image_name){%><img class="theme-icon" src="<%=image_url%>"/><%}%><%else{%><img class="theme-icon" src="../static/images/train/thumb.png"/><%}%><%if(is_apply){%><img class="is-apply" src="../static/images/train/apply-in-doing.png"/><%}%><%else{%><img class="is-apply" src="../static/images/train/apply-in-doing.png"/><%}%></div>
+					<div class="theme-desc"><div class="theme-title"><%=train_name%></div><div class="number"><span class="total">&nbsp;&nbsp;<%=apply_user_count%>&nbsp;&nbsp;人</span><span class="real">已报名<%=user_apply_count%>人</span></div></div>				
+				</div>
+			</script>
+			
+			<section id="description" style="background-color:#fff;padding:12px 12px 2px 12px;">
+				<!-- <div class="description">
+					<p></p>
+					<a class="look-more" href="javascript:void(0);">展开</a>
+					<a class="pull-up2" style="display:none;">收起</a>
+				</div> -->
+			</section>
+			<script type="text/template" id="description-html">
+				<div class="description">
+					<%if(!!describe_text){%><p><%=describe_text%></p><%}%>
+					<a class="look-more">展开</a>
+					<a class="pull-up2" style="display:none">收起</a>
+				</div>
+			</script>
+			<section  class="card time-place-teacher" id="time-place-teacher">
+				<!-- <div class="card-items">
+					<ul>
+						<li class="item"><span class="item-title time">时间 :</span>&nbsp;<span class="item-title time-value" >12:00-14:00</span></li>
+						<li class="item"><span class="item-title place">地点 :</span>&nbsp;<span class="item-title place-value" style="display:inline-block;width:70%;vertical-align:top;">海尔营销部102会议室</span></li>
+						<li class="item teacher" >
+							<span class="item-title">讲师 :</span>
+							<a>
+								
+							</a>
+							<p class="other-teachers">张小丽，万小铺</p>
+						</li>
+					</ul>
+				</div> -->
+			</section>
+			<script type="text/template" id="time-place-teacher-html">
+				<div class="card-items">
+					<ul>
+						<li class="item"><span class="item-title time">时间 :</span>&nbsp;<span class="item-title time-value"><%=start_time_standard%></span>
+						</li>				
+						<li class="item"><span class="item-title place">地点 :</span>&nbsp;<span class="item-title place-value" style="display:inline-block;width:70%;vertical-align:top;"><%=train_address%></span></li>
+						<li class="item teacher" >
+							<span class="item-title">讲师 :</span>
+							<a>
+								<%for(var i = 0;i<lecturer_user.length;i++){%><div class="inner-teacher-item" user_id="<%=lecturer_user[i].user_id%>"><img src="<%=lecturer_user[i].avatar_60_url%>"/><span><%=lecturer_user[i].user_name%></span></div><%}%>
+							</a>
+							<p class="other-teachers"><%if(lecturer_name){%><%=lecturer_name%><%}%></p>
+						</li>
+					</ul>
+				</div>
+			</script>
+			<section class="card plan" id="plan">
+				
+			</section>
+			<script id="plan-html" type="text/template">
+				<div class="card-header"><div><img src="../static/images/train/plan.png"/></div><span>培训安排</span></div>
+				<div class="card-items">
+					<p><%=arrangement_text%></p>
+					<a class="look-more" style="">展开</a>
+					<a class="pull-up3" style="display:none;">收起</a>
+				</div>
+			</script>
+			<section class="card relavant-courses" id="relavant-courses">
+				<div class="card-header"><div><img src="../static/images/train/courses.png"/></div><span>培训相关课程</span></div>
+				<div class="card-items">
+					
+				</div>
+			</section>
+			<script type="text/template" id="relavant-courses-html">
+				<div class="card-header"><div><img src="../static/images/train/courses.png"/></div><span>培训相关课程</span></div>
+				<div class="card-items">
+					<ul>
+						<% if(!!discover_item){%>
+							<%for(var i=0;i<discover_item.length;i++){%>
+								<li><span><%if(true){%><%=discover_item[i].item_name%><%}%></span></li>
+							<%}%>
+						<%}%>
+					</ul>
+				</div>
+			</script>
+ 			<section class="card forum-post">
+ 				<div class="comment-bar">
+ 					<div class="input-box">
+ 						<input class="input-comments" type="text" placeholder="  写评论"/>
+					</div>
+				</div>				
+ 				<div class="mask"></div>
+ 				<div class="input-comment"><!-- z-index:10 -->
+ 					<!-- z-index:-1 -->
+ 					<div class="txt-publish-wraper">
+ 						<textarea id="txt-publish"></textarea>
+ 					</div>
+ 					<div class="header">
+ 						<!-- <div class="cancel-left"><a href="javascript:void(0)">取消</a></div> -->
+ 						<div class="save-right"><a href="javascript:void(0)">发布</a></div>
+ 						<!-- <div class="write-comment"><span>写评论</span></div> -->
+ 					</div>
+ 					
+ 					
+ 				</div>
+ 				<div class="comment-area">
+	 				<div class="comment-title"><div class="comment-title-logo"><img src="../static/images/train/comment-title-icon.png"></div><span class="comment-title-name"><strong>热门评论</strong></span></div>
+	 				<div class="show-comments">
+	 					<ul class="comment-lists">
+	 						<li>
+	 							<div class="desc">
+	 								<div class="people-icon"><img src="../static/images/train/people-icon.png"/><p>1楼</p></div>
+	 								<div class="post-info">
+	 									<div class="name"><span>都是月亮惹得祸</span></div>
+	 									<div class="post-time">
+	 										<span>2015-05-3</span>
+	 									</div>
+	 								</div>
+	 								<div class="like"><span>3608顶</span></div>
+	 							</div>
+	 							<p class="comment-content">不要养成指责他人的习惯fssfsdf要养成指责他人的习惯fssf要养成指责他人的习惯fssf</p>
+	 						</li>
+	 						<li>
+	 							<div class="desc">
+	 								<div class="people-icon"><img src="../static/images/train/people-icon2.png"/><p>2楼</p></div>
+	 								<div class="post-info">
+	 									<div class="name"><span>都是月亮惹得祸</span></div>
+	 									<div class="post-time">
+	 										<span>2015-05-3</span>
+	 									</div>
+	 								</div>
+	 								<div class="like"><span>3608顶</span></div>
+	 							</div>
+	 							<p class="comment-content">不要养成指责他人的习惯fssfsdf要养成指责他人的习惯fssf要养成指责他人的习惯fssf</p>
+	 						</li>
+	 					</ul>
+	 					<a class="look-more">查看更多</a>
+	 				</div>
+	 			</div>
+ 			</section> 
+ 		</div> 
+ 		<div class="operation">
+ 			<div class="operation-bar">
+ 				<a class="sign-up" href="javascript:void(0)">报名</a>
+ 				<a class="check-in" href="javascript:void(0)">签到</a>
+ 			</div>
+ 		</div>
+ 		<div class="success-signup" style="color:#fff">报名成功</div>
+ 		<div class="fail-signup" style="color:#fff">报名失败</div>
+ 		<div class="cancel-success-signup" style="color:#fff">取消报名成功</div>
+ 		<div class="cancel-fail-signup" style="color:#fff">取消报名失败</div>
+ 		<div class="leave-tips-suc" style="color:#fff">请假成功</div>
+ 		<div class="leave-tips-fail" style="color:#fff">请假失败</div>
+ 		<div class="cancel-leave-tips-suc" style="color:#fff">取消请假成功</div>
+ 		<div class="cancel-leave-tips-fail" style="color:#fff">取消请假失败</div>
+ 		<div class="check-in-suc" style="color:#fff">签到成功</div>
+ 		<div class="check-in-fail" style="color:#fff">签到失败</div>
+ 		<div class="check-in-sure" style="color:#fff">您到达签到地点了吗<a class="check-in-cancel">取消</a><a class="check-in-save">确认</a></div>
+		<div class="click-mask"></div>
+		<div class="leave">
+			<p>请您输入请假事由</p>
+			<div class="input-leave-reason" style="width:50px;width:80%;">
+ 				<input class="input-leave-reason-content" type="text" placeholder="  写评论"/>
+ 				<a class="leave-cancel">取消</a><a class="leave-save">确认</a>
+			</div>
+		</div>
+		<div class="leave-check-in">
+			<p>您已经到达活动地点了吗</p> 
+			<a class="check-in-leave-cancel">取消</a><a class="check-in-leave-save">确认</a>
+		</div>
+		<div class="check-in-tips-mask"><p>您尚未报名</p></div>
+ 		
+    		
+    		
+    		<script type="text/javascript">
+			var train_id = location.search.split('=')[1].split('&')[0];
+				$(function(){
+					$.ajax({
+						type:'get',
+						url:'../api/offline_training/get_train_by_id.json',
+						data:{
+							train_id:train_id
+						},
+						dataType:'json',
+						success:function(json){
+							var data = json.train[0];
+							data.start_time_standard = timeFormat(data.start_time);
+							document.getElementById('basic-info').innerHTML = template('basic-info-html',data);
+							document.getElementById('description').innerHTML = template('description-html',data);						
+							document.getElementById('time-place-teacher').innerHTML = template('time-place-teacher-html',data);
+							document.getElementById('plan').innerHTML = template('plan-html',data);
+							document.getElementById('relavant-courses').innerHTML = template('relavant-courses-html',data);
+						},
+						error:function(e){
+							console.log(e);
+						}
+						
+					});
+					
+				});
+			</script>	
+    		
+    		</script>
+	    
+		<script type="text/javascript">
+		$(function(){
+			var train_id = location.search.split('=')[1].split('&')[0];
+			var closequestions=0;
+			var sign_up_text = $(".sign_up").text();
+			var check_in_text = $(".check-in").text();
+			$.ajax({
+				type: 'get',
+				url: '../api/offline_training/get_train_by_id.json',
+				data: {
+					train_id: train_id,
+				},
+				dataType: 'json',
+				timeout: 30000,
+				success: function(json){
+					var train_info = json.train||[];
+					var apply_enable = train_info[0].apply_enable;
+					var train_name = train_info[0].train_name;
+					var describe_text = train_info[0].describe_text;
+					var start_time = train_info[0].start_time;
+					var end_time = train_info[0].end_time;
+					var is_apply = train_info[0].is_apply;
+					var start_time = train_info[0].start_time;
+					var train_address = train_info[0].train_address;
+					var lecturer_user  = train_info[0].lecturer_user;					
+					var lecture_name = train_info[0].lecture_name;
+					var apply_state = train_info[0].apply_state;
+					var real_number = train_info[0].user_apply_count;
+					var total_number = train_info[0].apply_user_count;
+					var allow_max_number = train_info.user_allow_count;
+					var description = train_info[0].describe_text;
+					var arrangement_text =  train_info[0].arrangement_text;
+					var train_address = train_info[0].train_address;
+					var inner_teachers = train_info[0].lecturer_user;
+					var outer_teachers = train_info[0].lecturer_name;
+					var check_in_start_time = train_info[0].check_in_start_time;
+					var check_in_start_time = train_info[0].check_in_end_time;
+					var discover_item = train_info[0].discover_item;
+				 	var img_url = train_info[0].image_url;
+				 
+					var is_leave = train_info[0].is_leave;
+					var is_check_in = train_info[0].is_check_in;
+					
+					var real_height_des2 = $(".plan .card-items p").height();
+					if(real_height_des2>105){
+						$(".plan .card-items p").css("height","105px");
+						$(".plan .card-items p").css("overflow","hidden");
+						$(".plan .look-more").show();	
+						$(".plan .look-more").click(function(){
+							$(".plan p").css("height",real_height_des2);
+							$(".plan .look-more").hide();	
+							$(".plan .pull-up3").show();
+						});
+						$(".plan .pull-up3").click(function(){
+							$(".plan p").css("height",105);
+							$(".plan .look-more").show();	
+							$(".plan .pull-up3").hide();
+						});
+					}
+					if(real_height_des2<105 || real_height_des2==105){
+						$(".plan .look-more").hide();	
+					}
+					
+					var real_height_des = $(".description p").height();
+					if(real_height_des>60){
+						$(".description p").css("height","60px");
+						$(".description p").css("overflow","hidden");
+						$(".description .look-more").show();	
+						$(".description .look-more").click(function(){
+							$(".description p").css("height",real_height_des);
+							$(".description .look-more").hide();	
+							$(".pull-up2").show();
+						});
+						$(".description .pull-up2").click(function(){
+							$(".description p").css("height",60);
+							$(".description .look-more").show();	
+							$(".pull-up2").hide();
+						});
+					}
+					if(real_height_des<60 || real_height_des==60){
+						
+						$(".description .look-more").hide();	
+					}
+					
+					
+					/*$(document).on("click",".course-item",function(){
+						var item_id = $(this).attr("item_id");
+						 var uri = 'weizhu://com.weizhu/discover/item?item_id='+item_id;
+					        if(!!window.WZWebInterface){
+					            window.WZWebInterface.onWZAction(uri);
+					        }else{
+					            document.location = uri;
+					        }
+						
+					});*/
+					
+					$(document).on("click",".inner-teacher-item",function(){
+						
+						var user_id = $(this).attr('user_id');
+						var uri = 'weizhu://com.weizhu/user/user?id='+user_id;
+				        if(!!window.WZWebInterface){
+				            window.WZWebInterface.onWZAction(uri);
+				        }else{
+				            document.location = uri;
+				        }
+					});	
+						var train_state = train_info[0].train_state;
+						if(is_apply){
+							$(".check-in-icon img").attr("src","../static/images/train/apply-in-done1.png");
+						}else{
+							$(".check-in-icon img").attr("src","../static/images/train/apply-in-none1.png");
+						}
+						if(train_state != "培训已结束"){
+							
+							if(apply_enable == true){//需要报名
+								if(apply_state == '报名正在进行'){//未报名且未到报名时间																		
+									$(".sign-up").text("报名");
+									
+								}else if(apply_state == '报名已满员'){
+									$(".sign-up").text("已满员");
+									
+								}else if(apply_state == '报名已结束'){
+									$(".sign-up").text("报名已截止");
+									
+								}
+								if(is_apply == true && apply_state != '报名已结束' && apply_state != '报名已满员'){
+									
+									$(".sign-up").text("取消报名");
+								}else if(is_apply == true && apply_state != '报名已结束' && apply_state != '报名已满员'){
+									
+									$(".sign-up").text("报名");
+								}else if(is_apply==true && apply_state=="报名已结束"){
+									$(".sign-up").text("请假");
+								}
+							}else{
+								$(".check-in-icon img").attr("src","../static/images/train/apply-in-none.png");
+								$(".sign-up").text("请假");
+							}
+							if(is_leave == true){
+								$(".sign-up").text("取消请假");
+							}
+							if(is_check_in == true){
+								$(".check-in").text("已签到");
+							}else{
+								$(".check-in").text("签到");
+							}
+						}else if(train_state == "培训已结束"){
+							
+							$('.btn').hide();
+							$('.operation').hide();
+						}
+						if(apply_enable == false){
+							$(".number").hide();
+						}
+				},
+				error: function(e){
+					console.info(e);
+				}
+			});
+			
+			$(".check-in").click(function(){
+ 				var train_id = location.search.split('=')[1].split('&')[0];
+ 				var check_in_text = $(this).text();
+ 				if(check_in_text != "已签到"){
+ 					//$(".click-mask").show();
+ 				}
+ 				if(check_in_text == "已签到"){
+					return;
+				}
+				$.ajax({
+					type: 'post',
+					url: '../api/offline_training/check_in_train.json',
+					data: {
+						train_id:train_id
+					},
+					dataType: 'json',
+					timeout: 30000,
+					success: function(json){
+						
+						if(json.result == "FAIL_UNKNOWN"){
+							$(".check-in-fail").text(json.fail_text);
+							$(".check-in-fail").show();
+							setTimeout(function(){
+								$(".check-in-fail").hide();
+								//$(".click-mask").hide();
+							},2000);
+						}else{
+							$(".check-in").text("已签到");
+							$(".check-in-suc").show();
+							setTimeout(function(){
+								$(".check-in-suc").hide();
+								//$(".click-mask").hide();
+							},2000);
+							//$(".leave-check-in").show();
+						}
+					},
+					error: function(e){
+						console.info(e);
+					}
+				});				
+			});
+			$(".check-in-leave-save").click(function(){
+				//此处打开相机,明天准备这些内容
+				//alert("准备打开相机");
+			});
+			$(".check-in-leave-cancel").click(function(){
+				$(".leave-check-in").hide();
+				//$(".click-mask").hide();
+			});
+			$(".sign-up").click(function(){
+				var train_id = location.search.split('=')[1].split('&')[0];
+				var text = $(this).text();
+				var sign_up_text = $(this).text();
+				if(text!="报名已截止" && text != "已满员"){
+					//$(".click-mask").show();
+				}
+				if(text == "报名"){
+					$.ajax({
+						type: 'post',
+						url: '../api/offline_training/apply_train.json',
+						data: {
+							train_id:train_id,
+							is_cancel:false
+						},
+						dataType: 'json',
+						timeout: 30000,
+						success: function(json){
+							if(json.result == "SUCC"){
+								$(".success-signup").show();
+								$(".sign-up").text("取消报名");
+								$(".check-in-icon img").attr("src","../static/images/train/apply-in-done1.png");
+								setTimeout(function(){
+									$(".success-signup").hide();
+									//$(".click-mask").hide();
+								},2000);
+							}else{
+								$(".fail-signup").text(json.fail_text);
+								$(".fail-signup").show();
+								setTimeout(function(){
+									$(".fail-signup").hide();
+									//$(".click-mask").hide();
+								},2000);
+							}
+							
+						},
+						error: function(e){
+							console.info(e);
+							
+						}
+					});
+				}else if(text == "取消报名"){
+					$.ajax({
+						type: 'post',
+						url: '../api/offline_training/apply_train.json',
+						data: {
+							train_id:train_id,
+							is_cancel:true
+						},
+						dataType: 'json',
+						timeout: 30000,
+						success: function(json){
+							
+							if(json.result == "SUCC"){
+								
+								$(".cancel-success-signup").show();
+								$(".sign-up").text("报名");
+								$(".check-in-icon img").attr("src","../static/images/train/apply-in-none1.png");
+								setTimeout(function(){
+									$(".cancel-success-signup").hide();
+									//$(".click-mask").hide();
+								},2000);
+							}else{
+								$(".cancel-fail-signup").text(json.fail_text);
+								$(".cancel-fail-signup").show();
+								setTimeout(function(){
+									$(".cancel-fail-signup").hide();
+									//$(".click-mask").hide();
+								},2000);
+							}
+						},
+						error: function(e){
+							console.info(e);
+							
+						}
+					}
+				);
+			}else if(text == "请假"){
+				$(".click-mask").show();
+				$(".leave").show();
+				
+			}else if(text == "取消请假"){
+				//alert("取消请假啦");
+				$.ajax({
+					type: 'post',
+					url: '../api/offline_training/leave_train.json',
+					data: {
+						train_id:train_id,
+						is_cancel:true
+					},
+					dataType: 'json',
+					timeout: 30000,
+					success: function(json){
+						if(json.result == "SUCC"){
+							$(".sign-up").text("请假");
+							$(".cancel-leave-tips-suc").show();
+							
+							setTimeout(function(){
+								$(".cancel-leave-tips-suc").hide();
+								//$(".click-mask").hide();
+							},2000);
+						}else{
+							var fail_text = json.fail_text;
+							$(".cancel-leave-tips-fail").text(fail_text);
+							$(".cancel-leave-tips-fail").show();
+							
+							setTimeout(function(){
+								$(".cancel-leave-tips-fail").hide();
+								//$(".click-mask").hide();
+							},2000);
+						}
+					},
+					error:function(e){
+						console.log(e);
+						}
+					}
+				);
+			}else if(text == "报名已截止"){
+				return;
+			}else if(text == "已满员"){
+				return;
+			}
+		});	
+		
+		$(".leave-save").click(function(){
+			var leave_reason = $(".input-leave-reason-content").val();
+			var text = $(".sign-up").text();
+			
+			$(".leave").hide();
+			$.ajax({
+				type: 'post',
+				url: '../api/offline_training/leave_train.json',
+				data: {
+					train_id:train_id,
+					is_cancel:false,
+					leave_reason:leave_reason
+				},
+				dataType: 'json',
+				timeout: 30000,
+				success: function(json){
+					if(json.result == "SUCC"){
+						$(".leave-tips-suc").show();
+						setTimeout(function(){
+							$(".leave-tips-suc").hide();
+							$(".click-mask").hide();
+						},2000);
+						$(".sign-up").text("	取消请假");
+						$(".sign-up").click(function(){
+							//$(".click-mask").show();
+							$.ajax({
+								type: 'post',
+								url: '../api/offline_training/leave_train.json',
+								data: {
+									train_id:train_id,
+									is_cancel:true
+								},
+								dataType: 'json',
+								timeout: 30000,
+								success: function(json){
+									if(json.result == "SUCC"){
+										$(".sign-up").text("请假");
+										$(".cancel-leave-tips-suc").show();
+										
+										setTimeout(function(){
+											$(".cancel-leave-tips-suc").hide();
+											//$(".click-mask").hide();
+										},2000);
+									}else{
+										var fail_text = json.fail_text;
+										$(".cancel-leave-tips-fail").text(fail_text);
+										$(".cancel-leave-tips-fail").show();
+										
+										setTimeout(function(){
+											$(".cancel-leave-tips-fail").hide();
+											//$(".click-mask").hide();
+										},2000);
+									}
+								},
+								error:function(e){
+									console.log(e);
+									}
+								}
+							);
+							
+						});
+					}else{
+						$(".leave").hide();
+						$(".leave-tips-fail").text(json.fail_text);
+						$(".leave-tips-fail").show();
+						setTimeout(function(){
+							$(".leave-tips-fail").hide();
+							//$(".click-mask").hide();
+						},2000);		
+					}
+				},
+				error: function(e){
+						console.info(e);
+					}	
+				});
+				
+		});
+		$(".leave-cancel").click(function(){
+			
+			$(".leave").hide();
+			$(".click-mask").hide();
+		
+		});
+	});
+	function timeFormat(time){
+		var date = new Date(time*1000);
+		var hours=date.getHours(),minutes=date.getMinutes(),months=date.getMonth(),days=date.getDate();
+		months=months+1;
+		if(hours<10){
+			hours="0"+hours;
+		}
+		if(minutes<10){
+			minutes="0"+minutes;
+		}
+		if(months<10){
+			months="0"+months;
+		}
+		if(days<10){
+			days="0"+days;
+		}
+		return date.getFullYear()+'-'+months+'-'+days+' '+hours+':'+minutes;
+		}
+		</script>
+	</body>
+</html>

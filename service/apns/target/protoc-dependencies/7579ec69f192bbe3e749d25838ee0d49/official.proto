@@ -1,0 +1,169 @@
+import "weizhu.proto";
+
+package weizhu.official;
+
+option java_package = "com.weizhu.proto";
+option java_outer_classname = "OfficialProtos";
+// option optimize_for = LITE_RUNTIME;
+
+// 数据状态
+enum State {
+  NORMAL  = 0; // 正常
+  DISABLE = 1; // 停用
+  DELETE  = 2; // 已删除
+}
+
+// 公共号结构
+message Official {
+  required int64  official_id     = 1; // 公共号id
+  required string official_name   = 2; // 名称
+  required string avatar          = 3; // 头像
+  optional string official_desc   = 4; // 账号描述
+  optional string function_desc   = 5; // 功能描述
+  optional int32  allow_model_id  = 6; // 访问模型id
+  
+  optional State  state           = 95 [ default = NORMAL]; // 状态。此字段如果没有值视为 NORMAL
+  optional int64  create_admin_id = 96;
+  optional int32  create_time     = 97;
+  optional int64  update_admin_id = 98;
+  optional int32  update_time     = 99;
+}
+
+// 公共号消息结构
+message OfficialMessage {
+  // 文本消息内容
+  message Text {
+    required string content = 1; // 消息内容，长度必须小于 64 * 1024
+  }
+  // 语音消息内容
+  message Voice {
+    required bytes data     = 1; // 语音消息内容，2进制数据. 长度必须小于 64 * 1024
+    optional int32 duration = 2; // 语音信息时间长度，单位：秒
+  }
+  // 图片消息内容
+  message Image {
+    required string name = 1; // 带后缀名图片名称，格式(md5.jpg). 根据im image服务地址可以拼接为完整访问url
+  }
+  // 名片内容
+  message User {
+    required int64 user_id = 1; // 名片对应用户id
+  }
+  // 视频内容
+  message Video {
+    required string name       = 1;
+    required string type       = 2;
+    required int32  size       = 3;
+    required int32  time       = 4;
+    required string image_name = 5;
+  }
+  // 文件消息内容
+  message File {
+    required string name         = 1; // 带后缀名文件名称，格式(md5.doc). 根据im file服务地址可以拼接为完整访问url
+    required string orginal_name = 2; // 原始文件名
+  }
+  // 发现条目
+  message DiscoverItem {
+    required int64 item_id = 1; // 发现条目id
+  }
+  // 社区帖子
+  message CommunityPost {
+    required int32  post_id = 1; // 社区帖子id
+    optional string text    = 2; // 描述文本
+  }
+
+  required int64 msg_seq      = 1; // 消息序列，从1开始，严格保证递增
+  required int32 msg_time     = 2; // 消息发送unix时间戳，单位秒
+  required bool  is_from_user = 3; // 发送者是否是用户
+  
+  // 消息有且只能有一种类型的内容
+  oneof msg_type {
+    Text          text           = 5;
+    Voice         voice          = 6;
+    Image         image          = 7;
+    User          user           = 8;
+    Video         video          = 9;
+    File          file           = 10;
+    DiscoverItem  discover_item  = 12;
+    CommunityPost community_post = 13;
+  }
+}
+
+// 公共号新消息push结构
+message OfficialMessagePush {
+  required int64           official_id = 1; // 公共号id
+  required OfficialMessage msg         = 2; // 消息内容
+}
+
+// 根据id获取公共号请求
+message GetOfficialByIdRequest {
+  repeated int64 official_id = 1;
+}
+
+// 获取公共账号返回
+message GetOfficialByIdResponse {
+  repeated Official official = 1;
+}
+
+// 获取公共号服务列表
+message GetOfficialListRequest {
+  optional int64 last_official_id = 1; // 上次获取到的公共号id,不填从最开始获取
+  optional int32 official_size    = 2; // 不填默认获取所有服务号，最多返回100个
+}
+
+// 获取公共账号返回
+message GetOfficialListResponse {
+  repeated Official official = 1;
+  required bool     has_more = 2;
+}
+
+// 获取公共号信息记录请求
+message GetOfficialMessageRequest {
+  required int64 official_id   = 1; // 公共号id
+  optional int64 msg_seq_begin = 2; // 获取消息开始seq，不包含此seq消息。 not include
+  optional int64 msg_seq_end   = 3; // 获取消息结束seq，不包含此seq消息。 not include
+  required int32 msg_size      = 4; // 获取消息数目，小于等于50
+}
+
+// 获取公共号信息记录响应
+message GetOfficialMessageResponse {
+  repeated OfficialMessage msg      = 1; // 消息内容
+  required bool            has_more = 2; // 是否还有更多
+}
+
+// 发送公共账号信息请求
+message SendOfficialMessageRequest {
+  required int64           official_id = 1; // 公共号id
+  required OfficialMessage msg         = 2; // 消息内容
+}
+
+// 发送公共账号信息响应
+message SendOfficialMessageResponse {
+  enum Result {
+    SUCC = 0;                    // 发送成功
+    FAIL_OFFICIAL_NOT_EXIST = 1; // 公共号不存在
+    FAIL_MSG_INVALID        = 2; // 发送消息不正确
+    
+    FAIL_UNKNOWN            = 99;
+  }
+  optional Result          result       = 1 [default = FAIL_UNKNOWN];
+  optional string          fail_text    = 2;
+  optional int64           msg_seq      = 3; // 发送成功后, 对应消息seq
+  optional int32           msg_time     = 4; // 发送成功后, 对应消息unix时间戳，单位秒
+  repeated OfficialMessage response_msg = 5; // 返回消息
+}
+
+// 公共号服务
+service OfficialService {
+  
+  // 根据id获取公共号
+  rpc GetOfficialById (GetOfficialByIdRequest) returns (GetOfficialByIdResponse);
+  
+  // 获取所有公共号列表
+  rpc GetOfficialList (GetOfficialListRequest) returns (GetOfficialListResponse);
+  
+  // 发送消息到公共号
+  rpc GetOfficialMessage (GetOfficialMessageRequest) returns (GetOfficialMessageResponse);
+  
+  // 发送消息到公共号
+  rpc SendOfficialMessage (SendOfficialMessageRequest) returns (SendOfficialMessageResponse);
+}

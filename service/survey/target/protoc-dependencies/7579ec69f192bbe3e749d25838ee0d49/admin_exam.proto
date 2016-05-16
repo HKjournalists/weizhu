@@ -1,0 +1,601 @@
+import "exam.proto";
+import "weizhu.proto";
+
+package weizhu.admin.exam;
+
+option java_package = "com.weizhu.proto";
+option java_outer_classname = "AdminExamProtos";
+
+// 题库
+message QuestionCategory {
+  required int32            category_id       = 1; // 分类编号
+  required string           category_name     = 2; // 分类名称
+  optional int64            create_admin_id   = 3; // 创建分类管理员编号
+  optional int32            create_time       = 4; // 创建分类时间
+  repeated int32            question_id       = 5;
+    
+  repeated QuestionCategory question_category = 6; // 子分类
+}
+
+// 查询考题
+message GetQuestionRequest {
+  required int32  start         = 1; // 开始编号
+  required int32  length        = 2; // 查询数量
+  optional string question_name = 3; // 查询条件（名称）
+}
+message GetQuestionResponse {
+  repeated weizhu.exam.Question question     = 1; // 考题
+  required int32                total        = 2; // 考题总数
+  required int32                filterd_size = 3; // 过滤之后的数据
+}
+
+// 增加考题
+message CreateQuestionRequest {
+  required string                    question_name = 1; // 考题名称
+  required weizhu.exam.Question.Type type          = 2; // 考题类型
+  repeated weizhu.exam.Option        option        = 3; // 选项
+  optional int32                     category_id   = 4; // 考题分类
+}
+message CreateQuestionResponse {
+  enum Result {
+    SUCC = 0;
+    FAIL_QUESTION_NAME_INVALID = 1; // 考题名称过长（限制191）
+    FAIL_OPTION_INVALID        = 2; // 没有正确选项，单选题多选，多选题单选，选项名称过长
+    FAIL_PERMISSION_DENIED     = 3; // 没有操作权限
+    
+    FAIL_UNKNOWN               = 99;
+  }
+  optional Result result      = 1 [default = FAIL_UNKNOWN];
+  optional string fail_text   = 2; // 错误内容
+  optional int32  question_id = 3; // 考题编号
+}
+
+// 修改考题
+message UpdateQuestionRequest {
+  required int32                     question_id   = 1;
+  required string                    question_name = 2;
+  required weizhu.exam.Question.Type type          = 3;
+  repeated weizhu.exam.Option        option        = 4; // 当option_id为0时，option为新增加的选项。 option_id不为0表示更新的，不存在的表示要删除的
+  
+  optional int32                     category_id   = 5; // 考题分类
+}
+message UpdateQuestionResponse {
+  enum Result {
+    SUCC                       = 0;
+    FAIL_QUESTION_NOT_EXIST    = 1; // 不存在的考题
+    FAIL_QUESTION_NAME_INVALID = 2;
+    FAIL_QUESTION_TYPE_INVALID = 3;
+    FAIL_OPTION_INVALID        = 4;
+    FAIL_PERMISSION_DENIED     = 5;
+    
+    FAIL_UNKNOWN               = 99;
+  }
+  optional Result result    = 1 [default = FAIL_UNKNOWN];
+  optional string fail_text = 2;
+}
+
+// 删除考题
+message DeleteQuestionRequest {
+  repeated int32 question_id = 1;
+}
+message DeleteQuestionResponse {
+  enum Result {
+    SUCC                   = 0;
+    FAIL_QUESTION_IN_USE   = 1; // 正在考试的考题
+    FAIL_PERMISSION_DENIED = 2;
+    
+    FAIL_UNKNOWN           = 99;
+  }
+  optional Result result    = 1 [default = FAIL_UNKNOWN];
+  optional string fail_text = 2;
+}
+
+// 查询考试
+message GetExamRequest {
+  required int32  start     = 1; // 页码
+  required int32  length    = 2; // 每页数量
+  optional int32  state     = 3; // 考试状态
+  optional string exam_name = 4; // 查询条件（根据考试名称）
+}
+message GetExamResponse {
+  repeated weizhu.exam.Exam exam          = 1;
+  required int32            total         = 2;
+  required int32            filtered_size = 3;
+}
+
+// 增加考试
+message CreateExamRequest {
+  required string                 exam_name      = 1; // 考试名称
+  optional string                 image_name     = 2; // 图标
+  required int32                  start_time     = 3; // 开始时间
+  required int32                  end_time       = 4; // 结束时间
+  required int32                  pass_mark      = 5; // 通过分数
+  
+  optional int32                  allow_model_id = 6; // 权限模型id
+  optional weizhu.exam.ShowResult show_result    = 7; // 是否考试结束后显示结果
+  optional weizhu.exam.Exam.Type  type           = 8; // 考试类型
+}
+message CreateExamResponse {
+  enum Result {
+    SUCC = 0;
+    FAIL_EXAM_TIME_INVALID   = 1; // 考试时间错误：时间格式、开始结束时间大小
+    FAIL_USER_NOT_EXIST      = 2; // 不存在的用户id
+    FAIL_TEAM_NOT_EXIST      = 3; // 不存在的组id
+    FAIL_EXAM_NAME_INVALID   = 4;
+    FAIL_EXAM_IMAGE_INVALID  = 5;
+    FAIL_PASS_MARK_INVALID   = 6;
+    FAIL_SHOW_RESULT_INVALID = 7;
+    FAIL_PERMISSION_DENIED   = 8;
+    FAIL_EXAM_TYPE_INVALID   = 9;
+    
+    FAIL_UNKNOWN             = 99;
+  }
+  optional Result result    = 1 [default = FAIL_UNKNOWN];
+  optional string fail_text = 2;
+  optional int32  exam_id   = 3;
+}
+
+// 修改考试
+message UpdateExamRequest {
+  required int32                  exam_id        = 1; // 考试编号
+  required string                 exam_name      = 2; // 考试名称的
+  optional string                 image_name     = 3; // 图标
+  required int32                  start_time     = 4; // 开始时间
+  required int32                  end_time       = 5; // 结束时间
+  
+  optional int32                  pass_mark      = 6; // 通过分数
+  optional int32                  allow_model_id = 7; // 权限模型id
+  optional weizhu.exam.ShowResult show_result    = 8; // 是否考试结束后显示结果
+}
+message UpdateExamResponse {
+  enum Result {
+    SUCC = 0;
+    FAIL_EXAM_NOT_EXIST     = 1; // 不存在的考试
+    FAIL_EXAM_NAME_INVALID  = 2; // 
+    FAIL_EXAM_IMAGE_INVALID = 3;
+    FAIL_EXAM_TIME_INVALID  = 4; // 考试时间错误：时间格式、开始结束时间大小
+    FAIL_PERMISSION_DENIED  = 7;
+    
+    FAIL_UNKNOWN            = 99;
+  }
+  optional Result result    = 1 [default = FAIL_UNKNOWN];
+  optional string fail_text = 2;
+}
+
+// 删除考试
+message DeleteExamRequest {
+  repeated int32 exam_id = 1;
+}
+message DeleteExamResponse {
+  enum Result {
+    SUCC                   = 0;
+    FAIL_EXAM_IN_USE       = 1; // 正在考试中的考试
+    FAIL_PERMISSION_DENIED = 2;
+    
+    FAIL_UNKNOWN           = 99;
+  }
+  optional Result result    = 1 [default = FAIL_UNKNOWN];
+  optional string fail_text = 2;
+}
+
+// 获取考试对应的考题
+message GetExamQuestionRequest {
+  required int32 exam_id = 1;
+}
+message GetExamQuestionResponse {
+  repeated weizhu.exam.Question question = 1;
+}
+
+// 获取考试对应的考题(随机出题)
+message GetExamQuestionRandomRequest {
+  required int32 exam_id = 1;
+}
+message GetExamQuestionRandomResponse {
+  repeated QuestionCategory question_category = 1;
+  optional int32            question_num      = 2;
+}
+
+// 更新考试对应的考题的顺序和分值
+message UpdateExamQuestionRequest {
+  message ExamQuestion {
+    required int32 question_id = 1;
+    required int32 score       = 2;
+  }
+  
+  required int32        exam_id       = 1;
+  repeated ExamQuestion exam_question = 2;
+}
+message UpdateExamQuestionResponse {
+  enum Result {
+    SUCC = 0;
+    
+    FAIL_EXAM_INVALID     = 1;
+    FAIL_QUESTION_INVALID = 2;
+    FAIL_SCORE_INVALID    = 3;
+    
+    FAIL_UNKNOWN          = 99;
+  }
+  optional Result result    = 1;
+  optional string fail_text = 2;
+}
+
+// 更新考试对应题库的编号和题目数量
+message UpdateExamQuestionRandomRequest {
+  required int32 exam_id      = 1;
+  repeated int32 category_id  = 2;
+  required int32 question_num = 3;
+}
+message UpdateExamQuestionRandomResponse {
+  enum Result {
+    SUCC = 0;
+    
+    FAIL_EXAM_INVALID         = 1;
+    FAIL_CATEGORY_INVALID     = 2;
+    FAIL_QUESTION_NUM_INVALID = 3;
+    
+    FAIL_UNKNOWN              = 99;
+  }
+  optional Result result    = 1 [default = FAIL_UNKNOWN];
+  optional string fail_text = 2; 
+}
+
+// 获取考试结果
+message GetExamUserResultRequest {
+  required int32 exam_id = 1;
+  required int32 start   = 2;
+  required int32 length  = 3;
+}
+message GetExamUserResultResponse {
+  repeated weizhu.exam.UserResult user_reuslt   = 1;
+  required int32                  total         = 2;
+  required int32                  filtered_size = 3;
+}
+
+// 根据考试id获取考试信息
+message GetExamByIdRequest {
+  repeated int32 exam_id = 1;
+}
+message GetExamByIdResponse {
+  repeated weizhu.exam.Exam exam = 1; 
+}
+
+// 创建题库
+message CreateQuestionCategoryRequest {
+  required string category_name      = 1; // 分类名称
+  optional int32  parent_category_id = 2; // 父分类id
+}
+message CreateQuestionCategoryResponse {
+  enum Result {
+    SUCC                   = 0;
+    FAIL_NAME_INVALID      = 1;
+    FAIL_PERMISSION_DENIED = 2;
+    
+    FAIL_UNKNOWN           = 99;
+  }
+  optional Result result      = 1 [default = FAIL_UNKNOWN];
+  optional string fail_text   = 2;
+  optional int32  category_id = 3;
+}
+
+// 获取父题库下的所有题库，当父题库id是null时是获取父题库信息
+message GetQuestionCategoryResponse {
+  repeated QuestionCategory question_category = 1;
+}
+
+// 根据题库id获取题库中所有的考题
+message GetQuestionByCategoryIdRequest {
+  required int32 category_id = 1;
+  required int32 start       = 2;
+  required int32 length      = 3;
+}
+message GetQuestionByCategoryIdResponse {
+  repeated weizhu.exam.Question question      = 1; // 考题
+  required int32                total         = 2;
+  required int32                filtered_size = 3;
+}
+
+// 更新题库的节点
+message MoveQuestionCategoryRequest {
+  required int32 category_id        = 1;
+  optional int32 parent_category_id = 2;
+}
+message MoveQuestionCategoryResponse {
+  enum Result {
+    SUCC = 0;
+    FAIL_QUESTION_CATEGORY_NOT_EXIST = 1;
+    FAIL_PERMISSION_DENIED           = 2;
+    
+    FAIL_UNKNOWN                     = 99;
+  }
+  optional Result result    = 1 [default = FAIL_UNKNOWN];
+  optional string fail_text = 2;
+}
+
+// 更新题库中的考题
+message UpdateQuestionInQuestionCategoryRequest {
+  required int32 old_category_id = 1;
+  required int32 new_category_id = 2;
+  repeated int32 question_id     = 3;
+}
+message UpdateQuestionInQuestionCategoryResponse {
+  enum Result {
+    SUCC                             = 0;
+    FAIL_QUESTION_NOT_EXIST          = 1;
+    FAIL_QUESTION_CATEGORY_NOT_EXIST = 2;
+    FAIL_PERMISSION_DENIED           = 3;
+    
+    FAIL_UNKNOWN                     = 99;
+  }
+  optional Result result    = 1 [default = FAIL_UNKNOWN];
+  optional string fail_text = 2;
+}
+
+// 修改题库名称
+message UpdateQuestionCategoryRequest {
+  required string category_name = 1;
+  required int32  category_id   = 2;
+}
+message UpdateQuestionCategoryResponse {
+  enum Result {
+    SUCC = 0;
+    FAIL_QUESTION_CATEGORY_NOT_EXIST    = 1;
+    FAIL_QUESTION_CATEGORY_NAME_INVALID = 2;
+    FAIL_PERMISSION_DENIED              = 3;
+    
+    FAIL_UNKNOWN                        = 99;
+  }
+  optional Result result    = 1 [default = FAIL_UNKNOWN];
+  optional string fail_text = 2;
+}
+
+// 删除题库
+message DeleteQuestionCategoryRequest {
+  repeated int32 category_id = 1;
+}
+message DeleteQuestionCategoryResponse {
+  enum Result {
+    SUCC = 0;
+    FAIL_CATEGORY_INVALID  = 1;
+    FAIL_PERMISSION_DENIED = 2;
+    
+    FAIL_UNKNOWN           = 99;
+  }
+  optional Result result    = 1 [default = FAIL_UNKNOWN];
+  optional string fail_text = 2;
+}
+
+// 补考
+message ReExamRequest {
+  required int32  exam_id    = 1; // 要补考的考试id
+  required string exam_name  = 2; // 补考名称
+  optional string image_name = 3; //
+  required int32  start_time = 4; // 补考开始时间
+  required int32  end_time   = 5; // 补考结束时间
+}
+message ReExamResponse {
+  enum Result {
+    SUCC = 0;
+    FAIL_EXAM_NAME_INVAILD  = 1;
+    FAIL_EXAM_IMAGE_INVALID = 2;
+    FAIL_EXAM_TIME_INVAILD  = 3;
+    FAIL_EXAM_NOT_EXIST     = 4;
+    FAIL_PERMISSION_DENIED  = 5;
+    
+    FAIL_UNKNOWN           = 99;
+  }
+  optional Result result    = 1 [default = FAIL_UNKNOWN];
+  optional string fail_text = 2;
+  optional int32  exam_id   = 3;
+}
+
+// 随机生成考题(这里只是随机选题)
+message CreateExamQuestionRandomRequest {
+  repeated int32 question_category_id = 1;
+  required int32 score                = 2;
+}
+message CreateExamQuestionRandomResponse {
+  enum Result {
+    SUCC                           = 0;
+    FAIL_SCORE_INVALID             = 1;
+    FAIL_QUESTION_CATEGORY_INVALID = 2;
+    FAIL_PERMISSION_DENIED         = 3;
+    
+    FAIL_UNKNOWN                   = 99;
+  }
+  optional Result               result    = 1 [default = FAIL_UNKNOWN];
+  optional string               fail_text = 2;
+  repeated weizhu.exam.Question question  = 3;
+}
+
+// 导入考题
+message ImportQuestionRequest {
+  required int32                question_category_id = 1;
+  repeated weizhu.exam.Question question             = 2;
+}
+message ImportQuestionResponse {
+  enum Result {
+    SUCC                           = 0;
+    FAIL_QUESTION_INVALID          = 1;
+    FAIL_QUESTION_CATEGORY_INVALID = 2;
+    FAIL_PERMISSION_DENIED         = 3;
+    
+    FAIL_UNKNOWN                   = 99;
+  }
+  message InvalidQuestion {
+    required string question_name = 1;
+    required string fail_text     = 2;
+  }
+  optional Result          result           = 1 [default = FAIL_UNKNOWN];
+  optional string          fail_text        = 2;
+  repeated InvalidQuestion invalid_question = 3;
+}
+
+message StatisticalParams {
+  optional int32 total_exam_num = 1; // 指定考试人员数量
+  optional int32 take_exam_num  = 2; // 参加考试人员数量
+  optional int32 pass_exam_num  = 3; // 通过考试人员数量
+  optional int32 average_score  = 4; // 平均分
+}
+
+// 获取整场考试指定参考人数，参考人数，通过人数，平均分
+message GetExamStatisticsRequest {
+  repeated int32 exam_id = 1;
+}
+message GetExamStatisticsResponse {
+  message ExamStatistics {
+    required int32             exam_id            = 1;
+    optional StatisticalParams statistical_params = 2;
+  }
+  repeated ExamStatistics exam_statistics = 1;
+}
+
+// 获取某一场考试某部门的指定参考人数，参考人数，通过人数，平均分
+message GetTeamStatisticsRequest {
+  required int32  exam_id    = 1;
+  optional string team_id    = 2; // 部门编号中间用“,”分隔
+  required int32  start      = 3;
+  required int32  length     = 4;
+}
+message GetTeamStatisticsResponse {
+  message TeamStatistics {
+    repeated int32             team_id            = 1; // 多级部门编号
+    optional StatisticalParams statistical_params = 2;
+  }
+  repeated TeamStatistics team_statistics = 1;
+  required int32          total           = 2;
+  required int32          filtered_size   = 3;
+}
+
+// 获取某一场考试某职位的指定参考人数，参考人数，通过人数，平均分
+message GetPositionStatisticsRequest {
+  required int32 exam_id = 1;
+  required int32 start   = 2;
+  required int32 length  = 3;
+}
+message GetPositionStatisticsResponse {
+  message PositionStatistics {
+    required int32 position_id                    = 1;
+    optional StatisticalParams statistical_params = 2;
+  }
+  repeated PositionStatistics postion_statistics = 1;
+  required int32             total              = 2;
+  required int32             filtered_size      = 3;
+}
+
+// 获取某一场考试对应考题的正确率
+message GetQuestionCorrectRateRequest {
+  required int32 exam_id = 1;
+  required int32 start   = 2;
+  required int32 length  = 3;
+}
+message GetQuestionCorrectRateResponse {
+  message QuestionCorrect {
+    required weizhu.exam.Question question    = 1;
+    optional int32                correct_num = 2;
+    optional int32                answer_num  = 3;
+  }
+  repeated QuestionCorrect question_correct = 1;
+  required int32           total            = 2;
+  required int32           filtered_size    = 3;
+}
+
+message GetUserAnswerRequest {
+  required int32 exam_id = 1;
+  required int64 user_id = 2;
+}
+message GetUserAnswerResponse {
+  optional weizhu.exam.Exam       exam        = 1; // 考试基本信息
+  repeated weizhu.exam.Question   question    = 2; // 考试题目 (未开考或者不能参加该考试的话，该字段为空)
+  repeated weizhu.exam.UserAnswer user_answer = 3; // 考试题目用户答题信息
+  optional weizhu.exam.UserResult user_result = 4; // 用户参加考试时间 
+}
+
+service AdminExamService {
+
+  // 获取题库中所有的题
+  rpc GetQuestion (GetQuestionRequest) returns (GetQuestionResponse);
+  
+  // 创建考题
+  rpc CreateQuestion (CreateQuestionRequest) returns (CreateQuestionResponse);
+  
+  // 更新考题，正在考试的不能更新
+  rpc UpdateQuestion (UpdateQuestionRequest) returns (UpdateQuestionResponse);
+  
+  // 删除考题，正在考试的不能删出
+  rpc DeleteQuestion (DeleteQuestionRequest) returns (DeleteQuestionResponse);
+  
+  // 获取所有的考试：考试id，考试名称，考试开始结束时间
+  rpc GetExam (GetExamRequest) returns (GetExamResponse);
+  
+  // 创建新的考试：考试名称，考试开始结束时间，参加考试的用户和组织
+  rpc CreateExam (CreateExamRequest) returns (CreateExamResponse);
+  
+  // 更新考试
+  rpc UpdateExam (UpdateExamRequest) returns (UpdateExamResponse);
+  
+  // 删除考试，再考的不能删
+  rpc DeleteExam (DeleteExamRequest) returns (DeleteExamResponse);
+  
+  // 获取考试对应的考题(手动出题)
+  rpc GetExamQuestion (GetExamQuestionRequest) returns (GetExamQuestionResponse);
+  
+  // 获取考试对应的考题(随机出题)
+  rpc GetExamQuestionRandom (GetExamQuestionRandomRequest) returns (GetExamQuestionRandomResponse);
+  
+  // 更新考试对应的考题(手动出题)
+  rpc UpdateExamQuestion (UpdateExamQuestionRequest) returns (UpdateExamQuestionResponse);
+  
+  // 更新考试对应的考题(随机出题)
+  rpc UpdateExamQuestionRandom (UpdateExamQuestionRandomRequest) returns (UpdateExamQuestionRandomResponse);
+  
+  // 获取考试结果
+  rpc GetExamResult (GetExamUserResultRequest) returns (GetExamUserResultResponse);
+  
+  // 根据考试id获取考试
+  rpc GetExamById (GetExamByIdRequest) returns (GetExamByIdResponse);
+  
+  // 创建题库分类
+  rpc CreateQuestionCategory (CreateQuestionCategoryRequest) returns (CreateQuestionCategoryResponse);
+  
+  // 获取所有题库
+  rpc GetQuestionCategory (weizhu.EmptyRequest) returns (GetQuestionCategoryResponse);
+  
+  // 根据题库id获取题库中所有的考题
+  rpc GetQuestionByCategoryId (GetQuestionByCategoryIdRequest) returns (GetQuestionByCategoryIdResponse);
+  
+  // 修改题库名称
+  rpc UpdateQuestionCategory (UpdateQuestionCategoryRequest) returns (UpdateQuestionCategoryResponse);
+  
+  // 更新题库的节点 
+  rpc MoveQuestionCategory (MoveQuestionCategoryRequest) returns (MoveQuestionCategoryResponse);
+  
+  // 更新题库中的考题
+  rpc UpdateQuestionInQuestionCategory (UpdateQuestionInQuestionCategoryRequest) returns (UpdateQuestionInQuestionCategoryResponse);
+  
+  // 补考
+  rpc ReExam (ReExamRequest) returns (ReExamResponse);
+  
+  // 随机生成考题
+  rpc CreateExamQuestionRandom (CreateExamQuestionRandomRequest) returns (CreateExamQuestionRandomResponse);
+  
+  // 导入考题
+  rpc ImportQuestion (ImportQuestionRequest) returns (ImportQuestionResponse);
+  
+  // 加载考试结算任务
+  rpc LoadExamSubmitTask (weizhu.EmptyRequest) returns (weizhu.EmptyResponse);
+  
+  // 获取考试统计
+  rpc GetExamStatistics (GetExamStatisticsRequest) returns (GetExamStatisticsResponse);
+  
+  // 获取单场考试对应的部门统计
+  rpc GetTeamStatistics (GetTeamStatisticsRequest) returns (GetTeamStatisticsResponse);
+  
+  // 获取单场考试对应的职位统计
+  rpc GetPositionStatistics (GetPositionStatisticsRequest) returns (GetPositionStatisticsResponse);
+  
+  // 获取考试题目正确率
+  rpc GetQuestionCorrectRate (GetQuestionCorrectRateRequest) returns (GetQuestionCorrectRateResponse);
+  
+  // 获取单个考试人员的考卷信息
+  rpc GetUserAnswer (GetUserAnswerRequest) returns (GetUserAnswerResponse);
+} 

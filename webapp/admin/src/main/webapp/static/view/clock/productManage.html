@@ -1,0 +1,68 @@
+<div id="clock-product-wrap" data-options="region:'center',border:false" class="easyui-layout" style="width:100%;height:100%;">
+	    <div data-options="region:'north',border:false" style="width: 100%;">
+        <div class="easyui-panel" data-options="border:false">
+            <div style="padding:10px 20px;">
+                <form id="clock-product-search-form" class="easyui-form form-layout-inline" method="get">
+                	<div class="form-item">
+                		<label>产品名称：</label>
+                		<input class="easyui-textbox" type="text" name="product_name"></input>
+                	</div>
+					<a href="javascript:void(0)" class="easyui-linkbutton search-btn" iconCls="icon-search"><%=lang.common.search_btn%></a>
+                </form>
+            </div>
+        </div>
+    </div>
+	<div data-options="region:'center',border:false">
+        <table id="clock-product-table" style="width:100%;height: 100%;"></table>
+    </div>
+       <div id="product-edit" class="easyui-window" data-options="title:'新建产品',collapsible:false,maximizable:false,minimizable:false,closed: true,modal:true,width:480,height:400">
+    	<div class="easyui-layout" style="width:100%;height:100%">
+    	<div  id="product-new-add" region="center" border="false">
+            		<div class="easyui-layout" style="width:100%;height:100%;">
+			            <div region="center" border="false" style="padding:10px 12px;">
+			                <form id="product-add-form" class="easyui-form form-layout-column" method="post" data-options="novalidate:true">
+			                    <input type="hidden" name="product_id" />
+			                    <div class="form-item">
+			                        <label>产品名称：</label>
+									<input class="easyui-textbox form-item-box" type="text" name="product_name" data-options="required:true,width:350,prompt:'请输入产品名称，1~20位中英文、数字、字符',validType:'length[1,20]'" />
+			                    </div>
+			                    <div class="form-item">
+			                        <label>默认提醒周期：</label>
+			                        <input class="easyui-textbox form-item-box" type="text" name="remind_period_day" data-options="required:true,width:350,prompt:'请输入提醒周期，1~20位数字',validType:'length[1,20]'" />
+			                    </div>
+			                    <div class="form-item">
+			                        <label>产品图标：</label>
+			                        <input name="image_name" />
+			                    </div>
+			                    <div class="form-item">
+			                        <label>产品简介：</label>
+			                        <input class="easyui-textbox form-item-box" type="text" name="product_desc" data-options="required:false,width:350,height:100,multiline:true" />
+			                    </div>
+			                </form>
+			            </div>
+			            <div region="south" border="false" style="text-align:right;padding:10px 12px;">
+			                <a href="javascript:void(0)" onclick='Wz.clock.productManage.saveedit();' class="easyui-linkbutton creat-btn">完成</a>
+			            </div>
+			        </div>
+            	</div>
+          </div>
+    </div>
+        <div id="clock-product-import-win" class="easyui-window" data-options="title:'导入产品信息',collapsible:false,maximizable:false,minimizable:false,closed: true,modal:true,width:400,height:180">
+        <div class="easyui-layout" style="width:100%;height:100%;">
+            <div region="center" border="false" style="padding:10px 12px;">
+                <form id="product-import-forms" class="easyui-form form-layout-column" method="post" data-options="novalidate:true" enctype="multipart/form-data">
+                    <div class="form-item">
+                        <p>请按照<a href="javascript:void(0)" class="download-btn" src_url="">产品导入模板</a>填写您要导入的产品信息后上传。<i class="important-info">填写时请勿修改、挪动表单内项目，请勿修改文件名。</i></p>
+                    </div>
+                    <div class="form-item">
+                        <input class="easyui-filebox" name="import_product_file" style="width:350px" data-options="buttonText:'选择文件'">
+                    </div>
+                </form>
+            </div>
+            <div region="south" border="false" style="text-align:right;padding:10px 12px;">
+                <a href="javascript:void(0)" class="easyui-linkbutton edit-save" onclick='Wz.clock.productManage.importProduct();' data-options="iconCls:'icon-ok'">上传</a>
+                <a href="javascript:void(0)" class="easyui-linkbutton edit-cancel" onclick="$(this).parents('.easyui-window').window('close');" data-options="iconCls:'icon-cancel'">取消</a>
+            </div>
+        </div>
+    </div>
+</div>

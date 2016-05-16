@@ -1,0 +1,344 @@
+import "weizhu.proto";
+import "tools.proto";
+
+package weizhu.admin.tools;
+
+option java_package = "com.weizhu.proto";
+option java_outer_classname = "AdminToolsProtos";
+
+message GetToolListRequest {
+  required int32 start  = 1;
+  required int32 length = 2;
+}
+
+message GetToolListResponse {
+  repeated weizhu.tools.Tool tool          = 1; 
+  required int32             total_size    = 2;
+  required int32             filtered_size = 3;
+}
+
+message CreateToolRequest {
+  required string                 tool_name = 1;
+  required weizhu.tools.Tool.Type type      = 2;
+  required string                 data_json = 3;
+}
+
+message CreateToolResponse {
+  enum Result {
+    SUCC              = 0;
+    FAIL_NAME_INVALID = 1;
+    FAIL_DATA_INVALID = 2;
+    
+    FAIL_UNKNOWN      = 99;
+  }
+  
+  optional Result result    = 1 [default = FAIL_UNKNOWN];
+  optional string fail_text = 2;
+  optional int32  tool_id   = 3;
+}
+
+message UpdateToolRequest {
+  required int32  tool_id   = 1;
+  required string tool_name = 2;
+  required string data_json = 3;
+}
+
+message UpdateToolResponse {
+  enum Result {
+    SUCC              = 0;
+    FAIL_TOOL_INVALID = 1;
+    FAIL_NAME_INVALID = 2;
+    FAIL_DATA_INVALID = 3;
+    
+    FAIL_UNKNOWN      = 99;
+  }
+  
+  optional Result result    = 1 [default = FAIL_UNKNOWN];
+  optional string fail_text = 2;
+}
+
+message DeleteToolRequest {
+  repeated int32 tool_id = 1;
+}
+
+message DeleteToolResponse {
+  enum Result {
+    SUCC              = 0;
+    FAIL_TOOL_INVALID = 1;
+    
+    FAIL_UNKNOWN      = 99;
+  }
+  
+  optional Result result    = 1 [default = FAIL_UNKNOWN];
+  optional string fail_text = 2;
+}
+
+message GetInfoDimensionTagRequest {
+  required int32 tool_id = 1;
+}
+
+message GetInfoDimensionTagResponse {
+  repeated weizhu.tools.InfoDimension dimension = 1;
+  repeated weizhu.tools.InfoTag       tag       = 2;
+}
+
+message GetInfoItemListRequest {
+  required int32 tool_id = 1;
+  required int32 start   = 2;
+  required int32 length  = 3;
+}
+
+message GetInfoItemListResponse {
+  repeated weizhu.tools.InfoItem item          = 1;
+  required int32                 total_size    = 2;
+  required int32                 filtered_size = 3;
+}
+
+message GetInfoItemContentRequest {
+  required int32 tool_id = 1;
+  required int32 item_id = 2;
+}
+
+message GetInfoItemContentResponse {
+  optional weizhu.tools.InfoItemContent item_content = 1;
+}
+
+message CreateInfoDimensionRequest {
+  required int32  tool_id        = 1;
+  required string dimension_name = 2;
+  required string data_json      = 3;
+}
+
+message CreateInfoDimensionResponse {
+  enum Result {
+    SUCC               = 0;
+    FAIL_TOOL_INVALID  = 1;
+    FAIL_NAME_INVALID  = 2;
+    FAIL_DATA_INVALID  = 3;
+    
+    FAIL_UNKNOWN       = 99;
+  }
+  
+  optional Result result       = 1 [default = FAIL_UNKNOWN];
+  optional string fail_text    = 2;
+  optional int32  dimension_id = 3;
+}
+
+message UpdateInfoDimensionRequest {
+  required int32  tool_id        = 1;
+  required int32  dimension_id   = 2;
+  required string dimension_name = 3;
+  required string data_json      = 4;
+}
+
+message UpdateInfoDimensionResponse {
+  enum Result {
+    SUCC                   = 0;
+    FAIL_TOOL_INVALID      = 1;
+    FAIL_DIMENSION_INVALID = 2;
+    FAIL_NAME_INVALID      = 3;
+    FAIL_DATA_INVALID      = 4;
+    
+    FAIL_UNKNOWN           = 99;
+  }
+  
+  optional Result result       = 1 [default = FAIL_UNKNOWN];
+  optional string fail_text    = 2;
+}
+
+message DeleteInfoDimensionRequest {
+  required int32 tool_id      = 1;
+  repeated int32 dimension_id = 2;
+}
+
+message DeleteInfoDimensionResponse {
+  enum Result {
+    SUCC                   = 0;
+    FAIL_TOOL_INVALID      = 1;
+    FAIL_DIMENSION_INVALID = 2;
+    
+    FAIL_UNKNOWN           = 99;
+  }
+  
+  optional Result result    = 1 [default = FAIL_UNKNOWN];
+  optional string fail_text = 2;
+}
+
+message CreateInfoTagRequest {
+  required int32  tool_id      = 1;
+  required string tag_name     = 2;
+  required int32  dimension_id = 3;
+  required string data_json    = 4;
+}
+
+message CreateInfoTagResponse {
+  enum Result {
+    SUCC                   = 0;
+    FAIL_TOOL_INVALID      = 1;
+    FAIL_NAME_INVALID      = 2;
+    FAIL_DIMENSION_INVALID = 3;
+    FAIL_DATA_INVALID      = 4;
+    
+    FAIL_UNKNOWN           = 99;
+  }
+  
+  optional Result result    = 1 [default = FAIL_UNKNOWN];
+  optional string fail_text = 2;
+  optional int32  tag_id    = 3;
+}
+
+message UpdateInfoTagRequest {
+  required int32  tool_id   = 1;
+  required int32  tag_id    = 2;
+  required string tag_name  = 3;
+  required string data_json = 4;
+}
+
+message UpdateInfoTagResponse {
+  enum Result {
+    SUCC              = 0;
+    FAIL_TOOL_INVALID = 1;
+    FAIL_TAG_INVALID  = 2;
+    FAIL_NAME_INVALID = 3;
+    FAIL_DATA_INVALID = 4;
+    
+    FAIL_UNKNOWN      = 99;
+  }
+  
+  optional Result result    = 1 [default = FAIL_UNKNOWN];
+  optional string fail_text = 2;
+}
+
+message DeleteInfoTagRequest {
+  required int32  tool_id  = 1;
+  repeated int32  tag_id   = 2;
+}
+
+message DeleteInfoTagResponse {
+  enum Result {
+    SUCC              = 0;
+    FAIL_TOOL_INVALID = 1;
+    FAIL_TAG_INVALID  = 2;
+    
+    FAIL_UNKNOWN      = 99;
+  }
+  
+  optional Result result       = 1 [default = FAIL_UNKNOWN];
+  optional string fail_text    = 2;
+}
+
+message CreateInfoItemRequest {
+  required int32  tool_id      = 1;
+  required string item_name    = 2;
+  repeated int32  tag_id       = 3;
+  required string data_json    = 4;
+  required string content_json = 5;
+}
+
+message CreateInfoItemResponse {
+  enum Result {
+    SUCC                 = 0;
+    FAIL_TOOL_INVALID    = 1;
+    FAIL_NAME_INVALID    = 2;
+    FAIL_TAG_INVALID     = 3;
+    FAIL_DATA_INVALID    = 4;
+    FAIL_CONTENT_INVALID = 5;
+    
+    FAIL_UNKNOWN         = 99;
+  }
+  
+  optional Result result    = 1 [default = FAIL_UNKNOWN];
+  optional string fail_text = 2;
+  optional int32  item_id   = 3;
+}
+
+message UpdateInfoItemRequest {
+  required int32  tool_id   = 1;
+  required int32  item_id   = 2;
+  required string item_name = 3;
+  repeated int32  tag_id    = 4;
+  required string data_json = 5;
+}
+
+message UpdateInfoItemResponse {
+  enum Result {
+    SUCC              = 0;
+    FAIL_TOOL_INVALID = 1;
+    FAIL_ITEM_INVALID = 2;
+    FAIL_NAME_INVALID = 3;
+    FAIL_TAG_INVALID  = 4;
+    FAIL_DATA_INVALID = 5;
+    
+    FAIL_UNKNOWN      = 99;
+  }
+  
+  optional Result result    = 1 [default = FAIL_UNKNOWN];
+  optional string fail_text = 2;
+}
+
+message UpdateInfoItemContentRequest {
+  required int32  tool_id       = 1;
+  required int32  item_id       = 2;
+  required string content_json  = 3;
+}
+
+message UpdateInfoItemContentResponse {
+  enum Result {
+    SUCC                 = 0;
+    FAIL_TOOL_INVALID    = 1;
+    FAIL_ITEM_INVALID    = 2;
+    FAIL_CONTENT_INVALID = 3;
+    
+    FAIL_UNKNOWN         = 99;
+  }
+  
+  optional Result result    = 1 [default = FAIL_UNKNOWN];
+  optional string fail_text = 2;
+}
+
+message DeleteInfoItemRequest {
+  required int32 tool_id = 1;
+  repeated int32 item_id = 2;
+}
+
+message DeleteInfoItemResponse {
+  enum Result {
+    SUCC              = 0;
+    FAIL_TOOL_INVALID = 1;
+    FAIL_ITEM_INVALID = 2;
+    
+    FAIL_UNKNOWN      = 99;
+  }
+  
+  optional Result result    = 1 [default = FAIL_UNKNOWN];
+  optional string fail_text = 2;
+}
+
+
+service AdminToolsService {
+  
+  // tool
+  
+  rpc GetToolList (GetToolListRequest) returns (GetToolListResponse);
+  rpc CreateTool (CreateToolRequest) returns (CreateToolResponse);
+  rpc UpdateTool (UpdateToolRequest) returns (UpdateToolResponse);
+  rpc DeleteTool (DeleteToolRequest) returns (DeleteToolResponse);
+  
+  // info tool
+  
+  rpc GetInfoDimensionTag (GetInfoDimensionTagRequest) returns (GetInfoDimensionTagResponse);
+  rpc GetInfoItemList (GetInfoItemListRequest) returns (GetInfoItemListResponse);
+  rpc GetInfoItemContent (GetInfoItemContentRequest) returns (GetInfoItemContentResponse);
+  
+  rpc CreateInfoDimension (CreateInfoDimensionRequest) returns (CreateInfoDimensionResponse);
+  rpc UpdateInfoDimension (UpdateInfoDimensionRequest) returns (UpdateInfoDimensionResponse);
+  rpc DeleteInfoDimension (DeleteInfoDimensionRequest) returns (DeleteInfoDimensionResponse);
+  rpc CreateInfoTag (CreateInfoTagRequest) returns (CreateInfoTagResponse);
+  rpc UpdateInfoTag (UpdateInfoTagRequest) returns (UpdateInfoTagResponse);
+  rpc DeleteInfoTag (DeleteInfoTagRequest) returns (DeleteInfoTagResponse);
+  rpc CreateInfoItem (CreateInfoItemRequest) returns (CreateInfoItemResponse);
+  rpc UpdateInfoItem (UpdateInfoItemRequest) returns (UpdateInfoItemResponse);
+  rpc UpdateInfoItemContent (UpdateInfoItemContentRequest) returns (UpdateInfoItemContentResponse);
+  rpc DeleteInfoItem (DeleteInfoItemRequest) returns (DeleteInfoItemResponse);
+  
+}

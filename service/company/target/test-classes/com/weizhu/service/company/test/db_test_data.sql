@@ -1,0 +1,2 @@
+INSERT INTO weizhu_company (company_id, company_name, server_name) VALUES (0, '微助', 'LOCAL'), (1, '测试', 'LOCAL');
+INSERT INTO weizhu_company_key (company_id, company_key) VALUES (0, 'weizhu'), (1, 'test');

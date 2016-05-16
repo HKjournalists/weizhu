@@ -1,0 +1,2452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+	<meta name="format-detection" content="telephone=no">
+    <title>请假</title>
+    <script src="../static/js/mobiscroll/jquery-1.11.1.min.js"></script>
+    <script src="../static/js/mobiscroll/mobiscroll.core.js"></script>
+    <script src="../static/js/mobiscroll/mobiscroll.widget.js"></script>
+    <script src="../static/js/mobiscroll/mobiscroll.scroller.js"></script>
+    <script src="../static/js/mobiscroll/mobiscroll.util.datetime.js"></script>
+    <script src="../static/js/mobiscroll/mobiscroll.datetimebase.js"></script>
+    <script src="../static/js/mobiscroll/mobiscroll.widget.ios.js"></script>
+    <script src="../static/js/mobiscroll/mobiscroll.i18n.zh.js"></script>
+	
+    <link href="../static/css/mobiscroll/mobiscroll.animation.css" rel="stylesheet" type="text/css" />
+    <link href="../static/css/mobiscroll/mobiscroll.widget.css" rel="stylesheet" type="text/css" />
+    <link href="../static/css/mobiscroll/mobiscroll.widget.ios.css" rel="stylesheet" type="text/css" />
+    <link href="../static/css/mobiscroll/mobiscroll.scroller.css" rel="stylesheet" type="text/css" />
+    <link href="../static/css/mobiscroll/mobiscroll.scroller.ios.css" rel="stylesheet" type="text/css" />
+    <style type="text/css">
+    *{margin: 0;padding: 0;}
+html
+{
+	width: 100%;
+	height: 100%;
+}
+body
+{
+	background-color:#f8f8f8;
+	color:#666;
+	position: relative;
+	font-size: 14px;
+	overflow: hidden;
+    font-family: "Helvetica Neue",Helvetica,"Hiragino Sans GB","Microsoft YaHei",Arial,sans-serif;
+}
+img
+{
+	display: block;
+	border: 0;
+}
+a
+{
+	display: block;
+	border: 0;
+	text-decoration: none;
+	color: #666;
+	-webkit-tap-highlight-color: rgba(0,0,0,0);
+}
+input:focus 
+{
+    outline:none;
+}
+ul,ol
+{
+	list-style: none;
+}
+.content .display_none
+{
+	display:none;
+}
+.content .redf66
+{
+	color:#f66;
+}
+.left
+{
+	float: left;
+}
+.right
+{
+	float: right;
+}
+.w50
+{
+	width: 50%;
+}
+.ml5
+{
+	margin-left:5%;
+}
+.mr30
+{
+	margin-right:30px ;
+}
+.c333
+{
+	color: #333;
+}
+.mb10
+{
+	margin-bottom:10px;
+}
+.c999
+{
+	color: #999;
+}
+.bt1
+{
+	border-top: 1px solid #ddd;
+}
+.content .bottomborder_red
+{
+	border-bottom:1px solid #f66;
+}
+
+
+.wordCount
+{ 
+	width: 100%;
+	position:relative;
+	margin-bottom: 7px;
+}
+.wordCount textarea
+{ 
+	width: 90%;
+	padding-left:5%;
+	padding-right:5%;
+	height: 90px;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	resize: none;
+	border: 0;
+	border-top:1px solid #ddd;
+	border-bottom:1px solid #ddd;
+	font-size:14px;
+}
+.wordCount .wordwrap
+{ 
+	position:absolute; 
+	right: 5%; 
+	bottom: 6px;
+}
+.wordCount .word
+{ 
+	color: #666; 
+	padding: 0 4px;
+}
+header
+{
+	position: fixed;
+	width: 100%;
+	height: 50px;
+	background-color:#fff;
+	border-bottom:1px solid #ddd;
+	top: 0;
+	left: 0;
+	z-index: 10;
+}
+.tiao
+{
+	width: 100%;
+	height: 10px;
+	position: fixed;
+	top: 51px;
+	left: 0;
+	z-index: 10;
+	background-color:#f8f8f8;
+}
+.header1
+{
+	width: 50%;
+	height: 50px;
+	float: left;
+	text-align: center;		
+}
+.ttt
+{
+	margin-left: auto;
+	margin-right: auto;
+	width:70px;
+	border-bottom: 2px solid #fff;
+	height: 48px;
+	color: #666;
+	line-height: 48px;
+}
+ .blue
+{
+	color:#2095f2;
+	border-bottom: 2px solid #2095f2;
+}
+.content
+{
+	width: 100%;
+	position: relative;
+	display: block;
+	overflow-y:auto;
+	top: 62px;
+}
+.f12
+{
+	font-size: 12px;
+}
+.type1
+{
+	width: 100%;
+	height: 50px;
+	position: relative;
+	background-color:#fff;
+	border-bottom:1px solid #ddd;
+}
+.types
+{
+	width: 95%;
+	height: 50px;
+	margin-left: 5%;
+	position: relative;
+	background-color:#fff;
+	border-bottom:1px solid #ddd ;
+}
+.typee
+{
+	width: 95%;
+	height: 50px;
+	margin-left: 5%;
+	position: relative;
+	background-color:#fff;
+	border-bottom:1px solid #ddd ;
+}
+.type3
+{
+	width: 95%;
+	height: 50px;
+	margin-left: 5%;
+	position: relative;
+}
+.types span,.typee span,.type3 span,.remind div,.type1 span
+{
+	line-height: 50px;
+}
+.sanjiao
+{
+	position: absolute;
+	width: 8px;
+	height: 16px;
+	background-image:url(../static/images/you.png);
+	background-repeat:no-repeat ;
+	background-size:contain;
+	top: 18px;
+	right: 5px;
+}
+.time
+{
+	width: 100%;
+	border-top:1px solid #ddd;
+	border-bottom:1px solid #ddd;
+	background-color:#fff;
+	margin-bottom: 10px;
+}
+.input
+{
+	width: 120px;
+	height: 20px;
+	position: absolute;
+	top: 17px;
+	right: 15px;
+	color:#333;
+}
+.timelang
+{
+	font-size: 18px;
+	font-weight: 900;
+	float: right;
+	margin-right: 20px;
+}
+.t_timelang
+{
+	position:absolute;
+	width:150px;
+	right:40px;
+	top:13px;
+	border:0;
+	font-size: 18px;
+	font-weight:900;
+	text-align:right;
+	color:#333;
+}
+.t_p
+{
+	position:absolute;
+	top:15px;
+	right:10px;
+}
+.remind
+{
+	width: 100%;
+	border-top:1px solid #ddd;
+	background-color:#fff;
+	border-bottom:1px solid #ddd ;
+}
+.r_top
+{
+	width: 95%;
+	height: 50px;
+	position: relative;
+	margin-left: 5%;
+}
+.linkman
+{
+	width: 60px;
+	height: 70px;
+}
+.linkman1
+{
+	width: 60px;
+	height: 70px;
+}
+
+.r_bottom
+{
+	width: 95%;
+	margin-left: 2%;
+	overflow: hidden;
+}
+.pic
+{
+	width: 50px;
+	height: 50px;
+	background-repeat:no-repeat ;
+	background-size:contain;
+	margin-left: 5px;
+	border:1px solid #ddd;
+	border-radius:5px;
+}
+.name
+{
+	width: 100%;
+	text-align: center;
+	height:20px;
+	line-height:20px;
+	overflow: hidden;
+	font-size: 12px;
+}
+.add
+{
+	width: 50px;
+	height: 50px;
+	background-image:url(../static/images/add.png);
+	background-repeat:no-repeat ;
+	background-size:contain;
+	margin-left: 5px;
+}
+
+.submit
+{
+	width: 80%;
+	height: 40px;
+	border: 1px solid #fff;
+	background-color:#2095f2;
+	border-radius:5px;
+	text-align: center;
+	line-height: 40px;
+	margin-left:10%;
+	margin-top: 10px;
+	color: #fff;
+	font-size: 18px;
+	margin-bottom: 10px;
+	position:absolute;
+}
+
+.cancle
+{
+	width: 80%;
+	height: 40px;
+	border: 1px solid #fff;
+	background-color:#2095f2;
+	border-radius:5px;
+	text-align: center;
+	line-height: 40px;
+	margin-left:10%;
+	margin-top: 10px;
+	color: #fff;
+	font-size: 18px;
+	margin-bottom: 10px;
+	position:absolute;
+}
+
+/*弹出框*/
+.reveal-modal-bg 
+{ 
+	position: fixed; 
+	height: 100%;
+	width: 100%;
+	background: #000;
+	background: rgba(0,0,0,.8);
+	z-index: 10;
+	display: none;
+	top: 0;
+	left: 0; 
+}
+.reveal-modal 
+{
+	visibility: hidden;
+	top: 10%; 
+	left: 10%;
+	width: 60%;
+	background:url(../static/images/modal-gloss.png) #eee;
+	background-repeat: no-repeat;
+	background-size:contain;
+	position: absolute;
+	padding-left:10%;
+	padding-right:10%;
+	padding-top:10px;
+	padding-bottom:10px ;
+	z-index: 11;
+	height: 170px;
+
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
+	-moz-box-shadow: 0 0 10px rgba(0,0,0,.4);
+	-webkit-box-shadow: 0 0 10px rgba(0,0,0,.4);
+	-box-shadow: 0 0 10px rgba(0,0,0,.4);
+}	
+.reveal-modal.small { width: 200px; margin-left: -140px;}
+.reveal-modal.medium{ width: 400px; margin-left: -240px;}
+.reveal-modal.large { width: 600px; margin-left: -340px;}
+.reveal-modal.xlarge{ width: 800px; margin-left: -440px;}
+.reveal-modal .close-reveal-modal 
+{
+	font-size: 22px;
+	line-height: .5;
+	position: absolute;
+	top: 8px;
+	right: 11px;
+	color: #aaa;
+	text-shadow: 0 -1px 1px rbga(0,0,0,.6);
+	font-weight: bold;
+	cursor: pointer;
+} 
+.reveal-modal .remo_title
+{
+	width: 100%;
+	text-align: center;
+	font-size: 18px;
+	font-weight:900 ;
+}
+.remo_text
+{
+	width: 100%;
+	margin-top:10px;
+	height: 120px;
+	border: 1px solid #ddd;
+	border-radius: 5px;
+}
+.remo_text div
+{
+	display: inline-block;
+	width: 40%;
+	height: 30px;
+	line-height: 30px;
+	margin-left: 5%;
+	margin-top: 6px;
+	font-size:12px;
+	color: #333;
+	background:#fff;
+	border: 1px solid #ddd;
+	-webkit-border-radius: 5px;
+	text-align: center;
+	position: relative;
+}
+.selector_item.active:before 
+{
+    content: "";
+    position: absolute;
+    display: inline-block;
+    right: 0px;
+    bottom: 0px;
+    border-bottom: 10px solid #2095f2;
+    border-right: 10px solid #2095f2;
+    border-top: 10px solid transparent;
+    border-left: 10px solid transparent;
+}
+.selector_item.active:after 
+{
+    position: absolute;
+    content: "✔";
+    color: #fff;
+    right: 0px;
+    bottom: 0px;
+    font-size: 12px;
+    line-height: normal;
+} 
+#myModal .active 
+{
+    border-color: #2095f2;
+    color: #2095f2;
+}
+
+/*下拉刷新模块*/
+
+.fresh-loading
+{
+	position:absolute;
+	top:0;
+	left:50%;
+	margin-top:-40px;
+	margin-left:-15px;
+	width:30px;
+	height:30px;
+	border:1px solid #eee;
+	border-radius:50%;
+	background-color:#fff;
+	-webkit-box-shadow:0 0 5px 1px rgba(0,0,0,.5);
+	text-align:center;
+}
+.fresh-loading:before
+{
+	display:inline-block;
+	margin-top:5px;
+	width:13px;
+	height:13px;
+	border:3px solid transparent;
+	border-top:3px solid #2095f2;
+	border-left:3px solid #2095f2;
+	border-radius:50%;
+	content:''
+}
+.fresh-transition
+{
+	-webkit-transition:margin-top .3s
+}
+.goaround 
+{
+	animation: goaround .5s infinite linear
+}
+@-webkit-keyframes goaround
+{
+	0%{-webkit-transform:rotate(0)}
+	to{-webkit-transform:rotate(360deg)}
+}	
+@-webkit-keyframes loading
+{
+    0% {-webkit-transform: rotate(0deg);transform: rotate(0deg);}
+    100% {-webkit-transform: rotate(360deg);transform: rotate(360deg);}
+}   
+@-webkit-keyframes bounceIn
+{
+	0%{opacity:0}
+	to{opacity:1}
+}
+.loading-wrap{width: 100%;height:100%;top:0;left: 0;position: fixed;background-color: RGBA(0,0,0,0.4);z-index: 1;}
+.loading-wrap .loader{width:50px;height: 50px;top: 50%;left:50%;margin-top:-80px;margin-left: -35px;font-size: 10px;position: absolute;text-indent: -9999em;border-top: 10px solid rgba(255, 255, 255, 0.2);border-right: 10px solid rgba(255, 255, 255, 0.2);border-bottom: 10px solid rgba(255, 255, 255, 0.2);border-left: 10px solid #ffffff;-webkit-animation: loading .8s infinite linear;animation: loading .8s infinite linear;}
+.loading-wrap .loader, .loading-wrap .loader:after{border-radius: 50%;width: 50px;height: 50px;}
+
+/*历史*/
+.launch
+{
+	width: 100%;
+	position: absolute;
+	top: 0;
+	left: 0;
+	display:block;
+}
+.history
+{
+	width: 100%;
+	min-height:100%;
+	position: absolute;
+	background-color:#f8f8f8;
+}
+.h_count
+{
+	overflow: hidden;
+	width: 90%;
+	padding-left:5%;
+	padding-right:5%;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	border-top: 1px solid #ddd;
+	border-bottom: 1px solid #ddd;
+	background-color:#fff;
+	margin-bottom:10px;
+	font-size:12px;
+}
+.h_count span
+{
+	font-size:12px ;
+	height: 30px;
+	line-height: 30px;
+}
+.h_type
+{
+	width: 50%;
+}
+.h_totletime
+{
+	width: 50%;
+}
+.h_type span,.h_totletime span
+{
+	font-weight: 900;
+}
+.h_time
+{
+	line-height: 30px;
+	width:80%;
+	padding-left:20%;
+	position:relative;
+}
+.h_resion
+{
+	width:80%;
+	padding-left:20%;
+	position:relative;
+}
+.h_resion_2
+{
+	width:20%;
+	height:30px;
+	line-height: 30px;
+	position:absolute;
+	top:0;
+	left:0;
+}
+.h_time_3
+{
+	width:20%;
+	height:30px;
+	line-height: 30px;
+	position:absolute;
+	top:30px;
+	left:0;
+	font-size:12px;
+}
+.h_resion_1
+{
+	line-height: 30px;
+	width:100%;
+}
+
+/*添加联系人*/
+.attention
+{
+	width: 100%;
+	height: 100%;
+	background-color:#fff;
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: 11;
+	overflow: hidden;
+	display: none;
+}
+
+.at_search
+{
+	width: 100%;
+	height: 50px;
+	position: fixed;
+	top: 0;
+	left: 0;
+	z-index: 10;
+	background: #fff;
+	background-repeat:no-repeat;*/
+}
+
+.search_input
+{
+	position: absolute;
+	top: 10px;
+	left: 5%;
+	display: block;
+	width: 61%;
+	height: 30px;
+	border-radius:5px;
+	border: 1px solid #ddd;	
+	font-size:12px;
+	color: #666;
+	padding-left: 8%;
+	background-image:url(../static/images/icon_search.png);
+	background-repeat:no-repeat;
+	background-size: 15px 15px;
+	background-position:8px 7px;
+}
+.sure
+{
+	display: block;
+	position: absolute;
+	width: 20%;
+	height: 30px;
+	right: 1%;
+	top: 10px;
+	text-align: center;
+	line-height: 30px;
+	color: #2095f2;
+	border-radius:5px;
+}
+.search_man
+{
+	display: block;
+	position: absolute;
+	width: 20%;
+	height: 30px;
+	left: 79%;
+	top: 10px;
+	text-align: center;
+	line-height: 30px;
+	background-color:#2095f2;
+	color: #fff;
+	border-radius:5px;
+}
+.hint
+{
+	position: fixed;
+	top: 50px;
+	left: 0;
+	width: 95%;
+	height: 25px;
+	line-height: 25px;
+	background-color:#f1f2f6;
+	z-index: 10;
+	padding-left: 5%;
+	font-size: 13px;
+	color: #999;
+}
+
+.at_cancle
+{
+	display: block;
+	position: absolute;
+	width: 20%;
+	height: 30px;
+	left: 1%;
+	top: 10px;
+	text-align: center;
+	line-height: 30px;
+	color: #2095f2;
+	border-radius:5px;
+	
+}
+.attention .hint span
+{
+	font-size: 12px;
+	margin-left: 10px;
+}
+.atte_bg
+{
+	display: block;
+	position: absolute;
+	width: 50%;
+	height: 100px;
+	top: 30%;
+	left: 25%;
+}
+.atte_bg p
+{
+	font-family:"微软雅黑";
+	font-size: 16px;
+	font-weight: 900;
+	text-align: center;
+	height:30px;
+	line-height: 30px;
+	border-bottom:1px solid #ddd;
+}
+.atte_bg div
+{
+	width: 100%;
+	height: 70px;
+	background-image:url(../static/images/bgbody.png);
+	background-repeat:no-repeat;
+	background-size: 30px 40px;
+	background-position:center center;  
+}
+
+.choice_peoples
+{
+	width: 95%;
+	position: absolute;
+	top: 75px;
+	left: 0;
+	overflow-y:auto;
+	margin-left: 5%;
+	display: none;
+}
+.choice_people
+{
+	width: 100%;
+	height: 55px;
+	padding-top: 5px;
+	border-bottom: 1px solid #ddd;
+	background-image:url(../static/images/icon_choice_1.png);
+	background-repeat:no-repeat;
+	background-size: 20px 20px;
+	background-position:0px center;  
+}
+.choice2_people
+{
+	background-image:url(../static/images/icon_choice_2.png);
+}
+.tuming
+{
+	width: 70%;
+	height:50px;
+	margin-left: 30px;
+}
+.sure_cancle
+{
+	width: 100%;
+	height: 50px;
+	position: absolute;
+	bottom: 50px;
+	overflow: hidden;
+}
+.tu
+{
+	display: inline-block;
+	width:50px;
+	height: 50px;
+	border: 1px solid #fff;
+	border-radius:5px;
+ 	background-image:url(../static/images/liaotianbug.jpg);
+	background-repeat:no-repeat;
+	background-size: contain;
+}
+
+.default_image
+{
+	background-image:url(../static/images/liaotianbug.jpg);
+}
+
+.ming
+{
+	display: inline-block;
+	width: 150px;
+	height: 50px;
+	margin-left: 10px;
+	position: relative;
+}
+.c_name
+{
+	position: absolute;
+	top: 0;
+	font-weight: 900;
+	width:100px;
+}
+.c_job
+{
+	position: absolute;
+	bottom: 0;	
+}
+
+#wrapper
+{
+	width: 100%;
+	margin-top:10px;
+	height: 50px;
+	background: #eee;
+	position: absolute;
+	bottom: 0;
+	overflow: hidden;
+	white-space:nowrap;
+}
+
+.wrapper_ul
+{
+	width: 100%;
+	height: 50px;
+	overflow-x: scroll;
+}
+
+.wrapper_li
+{
+	margin-top: 5px;
+	margin-left:5px;
+	display: inline-block;
+	width: 40px;
+	height: 40px;
+
+	background-repeat:no-repeat;
+	background-size:100%;
+	border-radius:5px ;
+}
+/*loading*/
+.loading
+{
+	width: 100%;
+	height: 100%;
+	z-index: 20;
+	display: none;
+	position: fixed;
+	top: 0;
+	left: 0;
+}
+.sure_asbence_lang
+{
+	width: 100%;
+	height: 100%;
+	z-index: 20;
+	display:none;
+	position: fixed;
+	top: 0;
+	left: 0;
+}
+
+.kong
+{
+	width: 60%;
+	height: 40px;
+	z-index: 20;
+	display: none;
+	position: fixed;
+	bottom: 30%;
+	left: 20%;
+	background-color:#999;
+	opacity:.5;
+	text-align:center;
+	line-height:40px;
+	border-radius:8px;
+}
+
+.loading_font1
+{
+	color:#fff;
+	
+}
+
+
+.loading_bg
+{
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	background: #959595;
+	position: absolute;
+	top: 0;
+	left: 0;
+	opacity: .3;
+	z-index: 20;
+}
+.loading_content
+{
+	width:200px;
+	height: 170px;
+	position: absolute;
+	top: 40%;
+	left: 50%;
+	margin-top: -100px;
+	margin-left: -100px;
+	background: #fff;
+	z-index: 21;
+	border-radius:10px ;
+}
+
+
+
+.loading_font
+{
+	margin-top: 130px;
+	text-align: center;
+}
+ 
+/*css3动画失败*/
+.loading_picplay
+{
+	-webkit-animation: xuanzhuan 2s infinite linear;
+	-webkit-animation:xuanzhuan 2s infinite linear;
+    -moz-animation:xuanzhuan 2s infinite linear;
+    -ms-animation:xuanzhuan 2s infinite linear;
+    animation:xuanzhuan 2s infinite linear;
+}
+
+@-webkit-keyframes  xuanzhuan
+{
+	0%{transform: rotate(0deg);}
+	100%{transform: rotate(360deg);}
+}
+@-moz-keyframes xuanzhuan
+{
+	0%{transform: rotate(0deg);}
+	100%{transform: rotate(360deg);}
+}
+@-ms-keyframes xuanzhuan
+{
+	0%{transform: rotate(0deg);}
+	100%{transform: rotate(360deg);}
+}
+@keyframes xuanzhuan{
+	0%{transform: rotate(0deg);}
+	100%{transform: rotate(360deg);}
+}
+
+@-moz-keyframes spinner-loader {
+  0% {
+    -moz-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -moz-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+@-webkit-keyframes spinner-loader {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+@keyframes spinner-loader {
+  0% {
+    -moz-transform: rotate(0deg);
+    -ms-transform: rotate(0deg);
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -moz-transform: rotate(360deg);
+    -ms-transform: rotate(360deg);
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+/* :not(:required) hides this rule from IE9 and below */
+.spinner-loader:not(:required) {
+  -moz-animation: spinner-loader 1500ms infinite linear;
+  -webkit-animation: spinner-loader 1500ms infinite linear;
+  animation: spinner-loader 1500ms infinite linear;
+  -moz-border-radius: 0.5em;
+  -webkit-border-radius: 0.5em;
+  border-radius: 0.5em;
+  -moz-box-shadow: rgba(0, 0, 51, 0.3) 1.5em 0 0 0, rgba(0, 0, 51, 0.3) 1.1em 1.1em 0 0, rgba(0, 0, 51, 0.3) 0 1.5em 0 0, rgba(0, 0, 51, 0.3) -1.1em 1.1em 0 0, rgba(0, 0, 51, 0.3) -1.5em 0 0 0, rgba(0, 0, 51, 0.3) -1.1em -1.1em 0 0, rgba(0, 0, 51, 0.3) 0 -1.5em 0 0, rgba(0, 0, 51, 0.3) 1.1em -1.1em 0 0;
+  -webkit-box-shadow: rgba(0, 0, 51, 0.3) 1.5em 0 0 0, rgba(0, 0, 51, 0.3) 1.1em 1.1em 0 0, rgba(0, 0, 51, 0.3) 0 1.5em 0 0, rgba(0, 0, 51, 0.3) -1.1em 1.1em 0 0, rgba(0, 0, 51, 0.3) -1.5em 0 0 0, rgba(0, 0, 51, 0.3) -1.1em -1.1em 0 0, rgba(0, 0, 51, 0.3) 0 -1.5em 0 0, rgba(0, 0, 51, 0.3) 1.1em -1.1em 0 0;
+  box-shadow: rgba(0, 0, 51, 0.3) 1.5em 0 0 0, rgba(0, 0, 51, 0.3) 1.1em 1.1em 0 0, rgba(0, 0, 51, 0.3) 0 1.5em 0 0, rgba(0, 0, 51, 0.3) -1.1em 1.1em 0 0, rgba(0, 0, 51, 0.3) -1.5em 0 0 0, rgba(0, 0, 51, 0.3) -1.1em -1.1em 0 0, rgba(0, 0, 51, 0.3) 0 -1.5em 0 0, rgba(0, 0, 51, 0.3) 1.1em -1.1em 0 0;
+  display: inline-block;
+  font-size: 10px;
+  width: 1em;
+  height: 1em;
+  margin: 1.5em;
+  overflow: hidden;
+  text-indent: 100%;
+}
+.cell 
+{
+   position: absolute;
+   top: 50px;
+   left: 50px;
+   width:100px;
+   height:100px;
+}
+ .card 
+ {
+   background: white;
+   text-align: center;
+   vertical-align: middle;
+ }
+
+.sure_asbence_p
+{
+	margin-top:20px;
+	color:#666;
+	text-align:center;
+}
+.sure_asbence_div
+{
+	width:100%;
+	height:50px;
+}
+.sure_asbence_input
+{
+	border:none;
+	border-bottom:1px solid #666;
+	width:50px;
+	margin-top:25px;
+	margin-left:70px;
+	text-align:center;
+}
+.sa_cancle
+{
+	width:70px;
+	height:25px;
+	border:1px solid #eee;
+	text-align:center;
+	line-height:25px;
+	border-radius:5px;
+	position:absolute;
+	bottom:20px;
+	left:20px;
+	background-color:#f8f8f8;
+	color:#2095f2;
+}
+.sa_sure
+{
+	width:70px;
+	height:25px;
+	border:1px solid #eee;
+	text-align:center;
+	line-height:25px;
+	border-radius:5px;
+	position:absolute;
+	bottom:20px;
+	right:20px;
+	color:#fff;
+	background-color:#2095f2;
+}
+.time_bg
+{
+	width:100%;
+	height:105px;
+	z-index:10;
+	position:absolute;
+	top:60px;
+	left:0;
+	display:none;
+}
+.tijiao_success
+{
+	width: 60%;
+	height: 40px;
+	z-index: 20;
+	display: none;
+	position: fixed;
+	bottom: 30%;
+	left: 20%;
+	background-color:#999;
+	opacity:.5;
+	text-align:center;
+	line-height:40px;
+	border-radius:8px;
+}
+.tijiao_fail
+{
+	width: 60%;
+	height: 40px;
+	z-index: 20;
+	display: none;
+	position: fixed;
+	bottom: 30%;
+	left: 20%;
+	background-color:#999;
+	opacity:.5;
+	text-align:center;
+	line-height:40px;
+	border-radius:8px;
+}
+
+</style>
+
+</head>
+
+<body>
+	<header>
+		<div class='header1'><div class='faqi ttt blue'>发起</div></div>
+		<div class='header1'><div class='jilu ttt '>历史记录</div></div>
+	</header>
+	<div class='tiao'></div>
+	<div class='content'>
+		<div class='launch'>
+			<div class='type1 mb10  bt1 sss' data-reveal-id="myModal" data-animation="fadeAndPop" href="###">
+				<span class='ml5'>请假类型</span>
+				<span class='right mr30 c333 date_type1'></span>
+				<div class='sanjiao'></div>	
+			</div>	
+			<div class='time'>
+				<div class='types start'>
+					<span class='t_start_time'>开始时间</span>
+					<div  class="starttime right input "></div>
+					<div class='sanjiao'></div>	
+				</div>
+				<div class='typee end'>
+					<span class='t_end_time'>结束时间</span>
+					<div  class="endtime right input "></div>
+					<div class='sanjiao'></div>	
+				</div>
+				<div class='type3'>
+					<span class='t_time_long'>请假时长</span>
+				<!-- <span class='timelang'></span>-->
+					<input type="tel" name="num" value="" maxlength="3" autocomplete="off" class="t_timelang" placeholder='点击输入请假时长'/>  
+					<p class='t_p'>天</p>
+				</div>
+			</div>
+			<div class='time_bg'></div>
+			
+			<div class='wordCount' id='wordCount'>
+		    	<textarea placeholder="点击此处输入请假原因" class='textarea'></textarea>
+		    	<span class='wordwrap'><var class='word'>50</var>/50</span>
+		    </div>
+			<div class='remind'>
+				<div class='r_top'>
+					<div>告知通知人<span class='f12 c999'>(点击头像删除相关人)</span></div>
+				</div>
+				<div class='r_bottom'>
+					<!--<div class='linkman left'>
+						<div class='pic'>
+						</div>
+						<p class='name'>帅哥</p>
+					</div>-->
+					<div class='linkman1 left addtop'>
+						<div class='add'>
+						</div>
+					</div>
+				</div>
+			</div>
+			<a class='submit' href="javascript:void(0)">
+				提交
+			</a>
+			<a class='cancle display_none' href="javascript:void(0)">
+				结束假期
+			</a>
+		</div>
+
+		<div class='history display_none'>
+		</div>
+		<div class='fresh-loading'>
+		</div>
+	</div>
+	<!--loading-->
+	<div class='loading'>
+		<div class='loading_bg'>
+		</div>
+		
+		<div class='loading_content'>
+			<div class="cell">
+      			<div class="card">
+        			<span class="spinner-loader"></span>
+      			</div>
+   			 </div>
+			<p class='loading_font'>loading......</p>
+		</div>
+	</div>
+	
+	<!--确认请假时长-->
+	<div class='sure_asbence_lang'>
+		<div class='loading_bg'>
+		</div>
+		<div class='loading_content'>
+			<p class='sure_asbence_p'>请确认请假时长</p>
+			<div class='sure_asbence_div'>
+				<input type="tel" name="num" value="" maxlength="3" autocomplete="off" class="sure_asbence_input"/>天
+			</div>
+			<a href='javascript:void(0)' class='sa_cancle'>取消</a>
+			<a href='javascript:void(0)' class='sa_sure'>确认</a>
+		</div>
+	</div>
+	<!--联系人不能为空-->
+	<div class='kong'>
+			<p class='loading_font1'>联系人不能为空</p>
+	</div>
+	<!--提交成功-->
+	<div class='tijiao_success'>
+		<p class='loading_font1'>提交成功</p>
+	</div>
+	<!--提交失败-->
+	<div class='tijiao_fail'>
+		<p class='loading_font1'>取消成功</p>
+	</div>
+	
+	<!--弹出框-->
+	<div id="myModal" class="reveal-modal">
+		<p class='remo_title'>类型</p>
+		<div class='remo_text'>
+			<div class='selector_item'>事假</div>
+			<div class='selector_item ml5'>年假</div>
+			<div class='selector_item'>产假</div>
+			<div class='selector_item ml5'>病假</div>
+			<div class='selector_item'>婚假</div>
+			<div class='selector_item ml5'>丧假</div>
+		</div>
+	</div>
+	<!--t添加联系人-->
+	<div class='attention'>
+		<div class='at_search'>
+			<input type="text" placeholder="搜索" class='search_input'/>
+			<a href='javascript:void(0)' class='search_man'>搜索</a>
+		</div>
+		<div class='hint'>
+			可选人员<span>(只可添加8个联系人)</span>
+		</div>
+		<div class='choice_peoples'>
+		</div>
+		<div id='wrapper'>
+			<ul class='wrapper_ul'>
+			</ul>	
+		</div>
+		<div class='sure_cancle'>
+			<a href='javascript:void(0)' class='at_cancle'>返回</a>
+			<a href='javascript:void(0)' class='sure'>确认</a>
+		</div>
+		<div class='atte_bg'>
+			<p>搜索人员</p>
+			<div></div>
+		</div>
+	</div>
+</body>
+<script>
+$(function () 
+		{
+			//关于iscroll事件绑定
+			var height=window.screen.height;
+			var width=window.screen.width;
+			
+			$('#wrapper').css({'width':width+'px'});
+//			window.addEventListener('DOMContentLoaded',loaded(),false);
+			
+			//日期选择
+			var nowData=new Date();
+		    var opt= { 
+		    	theme:'ios', //设置显示主题 
+		        mode:'scroller', //设置日期选择方式，这里用滚动
+		        display:'bottom', //设置控件出现方式及样式
+		        preset : 'date', //日期:年 月 日 时 分
+		        minDate: nowData, 
+				maxDate:new Date(nowData.getFullYear(),nowData.getMonth()+12,nowData.getDate()+31,22,00),
+//		        dateFormat: 'yy-mm-dd', // 日期格式
+//		        dateOrder: 'yymmdd', //面板中日期排列格式
+		        stepMinute: 1, //设置分钟步长
+		        yearText:'年', 
+		        monthText:'月',
+		        dayText:'日',
+		        hourText:'时',
+		        minuteText:'分',
+		        lang:'zh' //设置控件语言};
+		    };
+		    
+		    $('.start').mobiscroll(opt);
+			$('.end').mobiscroll(opt);
+		    
+		    count();
+		   
+
+		    $.fn.reveal = function(options) {
+		        var defaults = {  
+			    	animation: 'fadeAndPop', //fade, fadeAndPop, none
+				    animationspeed: 300, //how fast animtions are
+				    closeonbackgroundclick: true, //if you click background will modal close?
+				    dismissmodalclass: 'close-reveal-modal' //the class of a button or element that will close an open modal
+		    	}; 
+		    	
+		        var options = $.extend({}, defaults, options); 
+		        return this.each(function() {
+		        	var modal = $(this),
+		        		topMeasure  = parseInt(modal.css('top')),
+						topOffset = modal.height() + topMeasure,
+		          		locked = false,
+						modalBG = $('.reveal-modal-bg');
+					if(modalBG.length == 0) {
+						modalBG = $('<div class="reveal-modal-bg" />').insertAfter(modal);
+					}		    
+		    		
+					modal.on('reveal:open', function () 
+					{
+					  modalBG.off('click');
+						$('.' + options.dismissmodalclass).off('click');
+						if(!locked) {
+							lockModal();
+							if(options.animation == "fadeAndPop") 
+							{
+								$('.content').css({'overflowY':'auto'});
+								modal.css({'top': $(document).scrollTop()-topOffset, 'opacity' : 0, 'visibility' : 'visible'});
+								modalBG.fadeIn(options.animationspeed/2);
+								modal.delay(options.animationspeed/2).animate
+								(
+									{
+										"top": $(document).scrollTop()+topMeasure + 'px',
+										"opacity" : 1
+									}, 
+									options.animationspeed,
+									unlockModal());
+							}
+							if(options.animation == "fade") {
+								$('.content').css({'overflowY':'auto'});
+								modal.css({'opacity' : 0, 'visibility' : 'visible', 'top': $(document).scrollTop()+topMeasure});
+								modalBG.fadeIn(options.animationspeed/2);
+								modal.delay(options.animationspeed/2).animate({
+									"opacity" : 1
+								}, options.animationspeed,unlockModal());					
+							} 
+							if(options.animation == "none") {
+								$('.content').css({'overflowY':'auto'});
+								modal.css({'visibility' : 'visible', 'top':$(document).scrollTop()+topMeasure});
+								modalBG.css({"display":"block"});	
+								unlockModal()				
+							}
+						}
+						modal.off('reveal:open');
+					}); 	
+
+					//Closing Animation
+					modal.bind('reveal:close', function () {
+					  if(!locked) {
+							lockModal();
+							if(options.animation == "fadeAndPop") {
+								$('.content').css({'overflowY':'auto'});
+								modalBG.delay(options.animationspeed).fadeOut(options.animationspeed);
+								modal.animate({
+									"top":  $(document).scrollTop()-topOffset + 'px',
+									"opacity" : 0
+								}, options.animationspeed/2, function() {
+									modal.css({'top':topMeasure, 'opacity' : 1, 'visibility' : 'hidden'});
+									unlockModal();
+								});					
+							}  	
+							if(options.animation == "fade") {
+								$('.content').css({'overflowY':'auto'});
+								modalBG.delay(options.animationspeed).fadeOut(options.animationspeed);
+								modal.animate({
+									"opacity" : 0
+								}, options.animationspeed, function() {
+									modal.css({'opacity' : 1, 'visibility' : 'hidden', 'top' : topMeasure});
+									unlockModal();
+								});					
+							}  	
+							if(options.animation == "none") {
+								$('.content').css({'overflowY':'auto'});
+								modal.css({'visibility' : 'hidden', 'top' : topMeasure});
+								modalBG.css({'display' : 'none'});	
+							}		
+						}
+						modal.off('reveal:close');
+					});     
+		   	
+		    		modal.trigger('reveal:open')
+					
+					
+					//添加点请假内容关闭
+					$('.' + options.dismissmodalclass).on('click', function () 
+					{
+					  modal.trigger('reveal:close');
+					});
+					
+					$('.remo_text div').on('click', function () 
+					{
+					  modal.trigger('reveal:close');
+//					  $('.body').css({'overflow':'auto'});
+					  $('.date_type1').html($(this).text());
+					  if($('.date_type1').html()=='')
+					  {
+						  
+					  }
+					  $('.date_type1').html()
+					  
+					  $('.content').css({'overflowY':'auto'});
+					});
+					
+					if(options.closeonbackgroundclick) {
+						modalBG.css({"cursor":"pointer"})
+						modalBG.on('click', function () {
+						  modal.trigger('reveal:close');
+//						  $('.body').css({'overflow':'auto'});
+						});
+					}
+					
+					$('body').keyup(function(e) {
+		        		if(e.which===27){ modal.trigger('reveal:close'); } // 27 is the keycode for the Escape key
+					});
+					
+					function unlockModal() { 
+						locked = false;
+					}
+					function lockModal() {
+						locked = true;
+					}	
+					
+		        });//each call
+		    }//orbit plugin call
+		    
+		    $('.remo_text div').on('click',function()
+		    {
+		    	$(this).addClass('active');
+		    	$(this).siblings().removeClass('active');
+		    });
+		    
+		    //点击加号跳转
+		    $('.addtop').on('click',function()
+			{
+				//点击加载头像
+
+				$('.content').css({'display':'none'});
+				$('.attention').css({'display':'block'});
+			});
+			//点击确定跳转
+			$('.sure').on('click',function()
+			{
+				$('.content').css({'display':'block'});
+				$('.attention').css({'display':'none'});
+				$('.choice_people').remove();
+				$('.wrapper_li').remove();
+				$('.search_input').val("");
+				$('.choice_peoples').css({'display':'none'});
+				$('.atte_bg').css({'display':'block'});
+			})
+			
+//			取消按钮直接回到主页面
+			
+			$('.at_cancle').on('click',function()
+			{	
+				if($('.wrapper_li').length>=1)
+				{
+					for(var i=0;i<$('.wrapper_li').length;i++)
+					{
+						var wrapper= $('.wrapper_li')[i];
+						var class1 ='.'+ wrapper.classList[1];
+						$(class1).not('.wrapper_li').remove();
+					}
+				}
+
+				$('.content').css({'display':'block'});
+				$('.attention').css({'display':'none'});
+				$('.choice_people').remove();
+				$('.wrapper_li').remove();
+				$('.search_input').val("");
+				$('.choice_peoples').css({'display':'none'});
+				$('.atte_bg').css({'display':'block'});	
+			})
+			
+			//点击搜索跳转
+			$('.search_man').on('click',function()
+			{
+				$('.choice_people').remove();
+				$('.choice_peoples').css({'display':'block'});
+				$('.atte_bg').css({'display':'none'});
+				
+				if($('.search_input').val()=="")
+				{
+					
+				}
+				else
+				{
+					GetAbsenceNotifyUser($('.search_input').val());				
+				}	
+			})
+			
+			//设置body,content,choice_peoples的高度
+			$('body').css({'height':document.body.scrollHeight});
+			$('.content').css({'height':document.body.scrollHeight-60});
+			$('.choice_peoples').css({'height':document.body.scrollHeight-175,'overflowY':'auto'});
+
+
+			$('.faqi').on('click',function()
+			{
+				if(!$(this).hasClass('blue'))
+				{
+					$(this).addClass('blue');
+				}
+				$('.launch').removeClass('display_none');
+				$('.jilu').removeClass('blue');
+				$('.history').addClass('display_none');
+			})
+			
+			$('.jilu').on('click',function()
+			{
+				if(!$(this).hasClass('blue'))
+				{
+					$(this).addClass('blue');
+				}
+				$('.history').removeClass('display_none');
+				$('.faqi').removeClass('blue');
+				$('.launch').addClass('display_none');
+				
+			})
+			
+			//旋转动画手机端不能正常显示
+			$('.submit').on('click',function(event)
+			{
+				panduan();
+			})
+			//loading界面点击后小时可删除
+			$('.loading').on('click',function(event)
+			{
+				cancle_submit_animation();
+			})
+			
+			$('.kong').on('click',function(event)
+			{
+				$('.kong').css({'display':'none'});
+			})
+			
+			
+			//显示浏览器版本号
+		//alert(window.navigator.userAgent.toLowerCase());
+
+		//type3点击输入框获取焦点
+			$('.type3').on('click',function()
+			{
+				$('.t_timelang').focus();
+			})
+			
+			fresh_loading();
+//			初始化时加载请假信息
+			GetAbsenceNow();
+			GetAbsence();
+			
+		});
+
+		//正在提交动画创建
+		function submit_animation()
+		{
+			$('.content').css({'overflowY':'hidden'});
+			$('.loading').css({'display':'block'});
+			$('.loading_pic').addClass('loading_picplay');
+		}
+
+		//提交成功动画创建
+		function submit_animation_suc()
+		{
+			setTimeout(function()
+			{
+				$('.loading_pic').removeClass('loading_picplay');
+				$('.tijiao_success').css({'display':'block'});
+				cancle_submit_animation();
+				setTimeout(function()
+				{
+					$('.tijiao_success').css({'display':'none'});
+				},1000)
+			},1000);
+		}
+
+		//取消当前请假动画
+		function cancle_animation()
+		{
+			$('.content').css({'overflowY':'hidden'});
+			$('.loading').css({'display':'block'});
+			$('.loading_pic').addClass('loading_picplay');
+		}
+
+		//取消当前请假动画成功
+		function cancle_animation_suc()
+		{
+			
+			setTimeout(function()
+			{
+				$('.loading_pic').removeClass('loading_picplay');
+				$('.tijiao_fail').css({'display':'block'});
+				cancle_submit_animation();
+				setTimeout(function()
+				{
+					$('.tijiao_fail').css({'display':'none'});
+				},1000)
+				
+			},1000);
+		}
+	
+		//提交动画消失
+		function cancle_submit_animation()
+		{
+			$('.content').css({'overflowY':'auto'});
+			$('.loading_pic').removeClass('loading_picplay');
+			$('.loading').css({'display':'none'});
+		}
+		function panduan()
+		{
+			if($('.date_type1').html()=='')
+			{
+				$('.ml5').addClass('redf66');
+			}
+			else
+			{
+				$('.ml5').removeClass('redf66');
+			}
+			if($('.starttime').html()=='')
+			{
+				$('.t_start_time').addClass('redf66');
+			}
+			else
+			{
+				$('.t_start_time').removeClass('redf66');
+			}
+			if($('.endtime').html()=='')
+			{
+				$('.t_end_time').addClass('redf66');
+			}
+			else
+			{
+				$('.t_end_time').removeClass('redf66');
+			}
+			
+			if($('.textarea').val()=='')
+			{
+				$('.textarea').addClass('bottomborder_red');
+			}
+			else
+			{
+				$('.textarea').removeClass('bottomborder_red');
+			}
+			if(!panduan_t_timelang($('.t_timelang').val()))
+			{
+				$('.t_time_long').addClass('redf66');
+			}
+			else
+			{
+				$('.t_time_long').removeClass('redf66');
+			}
+			if($('.linkman').length==0)
+			{
+				$('.kong').css({'display':'block'});
+				setTimeout(function()
+				{
+					$('.kong').css({'display':'none'});
+				},1500);	
+			}
+			if(!$('.date_type1').html()==''&&!$('.starttime').html()==''&&!$('.endtime').html()==''&&!$('.textarea').val()==''&&panduan_t_timelang($('.t_timelang').val())&&!$('.linkman').length==0)
+			{
+				if(time_long($('.starttime').html())>time_long($('.endtime').html()))
+				{
+					$('.t_start_time').addClass('redf66');
+					$('.t_end_time').addClass('redf66');
+				}
+				else
+				{
+					$('.t_start_time').removeClass('redf66');
+					$('.t_end_time').removeClass('redf66');
+					$('.h_count').remove();
+					CreateAbsence();
+					submit_animation();
+					
+				}
+			}
+			else
+			{
+				
+			}
+		}
+
+		function panduan_t_timelang(num)
+		{
+			var str=num;
+			var reg= /^[0-9]+$/
+			if(!reg.test(str))
+			{
+				return false;
+			}
+			else
+			{
+				return true
+			}
+		}
+
+		function CreateAbsence()
+		{
+			var type=$('.date_type1').html();
+			var start_time=time_long($('.starttime').html());
+			var end_time=time_long($('.endtime').html());
+			var desc=$('.textarea').val();
+			var user_id_list=new Array();
+			var days=$('.t_timelang').val();
+			
+			for(var i=0;i<$('.linkman').length;i++)
+			{
+				user_id_list.push($('.linkman')[i].classList[2]);
+			}
+			
+			$.ajax({
+				type: 'get',
+				url: '../api/absence/create_absence.json',
+				data: {
+					type:type,
+					start_time:start_time,
+					end_time:end_time,
+					desc:desc,
+					user_id_list:user_id_list.join(','),
+					days:days,
+				},
+				dataType: 'json',
+				timeout: '10000',
+				success: function(json)
+				{
+					
+					if(json.result=='FAIL_TIME_INVALID')
+					{
+						
+					}
+					else if(json.result=='SUCC')
+					{
+						submit_animation_suc();
+						$('.h_count').remove();
+						GetAbsenceNow();
+						$('.submit').addClass('display_none');
+						$('.cancle').removeClass('display_none');
+						GetAbsence();
+					
+					}
+					
+				},
+				error: function(json)
+				{
+					
+				}
+			});
+		}
+
+		function GetAbsenceNow()
+		{
+			$.ajax({
+				type: 'get',
+				url: '../api/absence/get_absence_now.json',
+				data: {
+					
+				},
+				dataType: 'json',
+				timeout: '1000',
+				success: function(msg)
+				{		
+					$('.date_type1').html('');
+					$('.starttime').html('');
+					$('.endtime').html('');
+					
+					$('.t_timelang').val('');
+					$('.linkman').remove();
+					
+					 //关于弹出框
+					$('.sss').off('click');
+				    $('.sss').on('click', function(e) 
+				    {
+				    	//不能滚动
+						//$('.body').css({'overflow':'hidden'});
+						e.preventDefault();
+						var modalLocation = $(this).attr('data-reveal-id');
+						$('#'+modalLocation).reveal($(this).data());
+						$('.content').css({'overflowY':'hidden'});
+					});
+					
+					if(msg.absence.fac_end_time=='')
+					{
+						$('.cancle').off('click');
+						$('.linkman1').show();
+					
+						$('.cancle').on('click',function(event)
+						{
+							$('.sure_asbence_lang').css({'display':'block'});
+							$('.sure_asbence_input').val(msg.absence.days);
+						});
+						
+						$('.sure_asbence_div').on('click',function()
+						{
+							$('.sure_asbence_input').focus();
+						})
+						$('.sa_sure').off('click');	
+						$('.sa_sure').on('click',function()
+						{
+							if(panduan_t_timelang($('.sure_asbence_input').val()))
+							{
+								$('.sure_asbence_lang').css({'display':'none'});
+								CancelAbsence(msg.absence.absence_id,$('.sure_asbence_input').val());
+								$('.cancle').addClass('display_none');
+								$('.submit').removeClass('display_none');
+								cancle_animation();	
+								$('.date_type1').html('');
+								$('.starttime').html('');
+								$('.endtime').html('');
+								$('.textarea').val('');
+								$('.word').html('50');
+								$('.t_timelang').val('');
+								$('.linkman').remove();
+
+								$('.starttime').attr("readonly",false);
+								$('.textarea').attr("readonly",false);
+								$('.t_timelang').attr("readonly",false);
+								$('.time_bg').css({'display':'none'});
+							}
+							else
+							{
+								$('.sure_asbence_input').css({'border-bottom':'1px solid #f66'});
+							}
+							
+						})
+						
+						$('.sa_cancle').on('click',function()
+						{
+							$('.sure_asbence_lang').css({'display':'none'});
+							$('.sure_asbence_input').css({'border-bottom':'1px solid #666'});
+						})
+						
+						$('.loading_bg').on('click',function()
+						{
+							$('.sure_asbence_lang').css({'display':'none'});
+							$('.sure_asbence_input').css({'border-bottom':'1px solid #666'});
+						})
+						
+						if(msg.absence.absence_id==0)
+						{
+							$('.submit').removeClass('display_none');
+							$('.cancle').addClass('display_none');
+						}
+						else
+						{
+							$('.submit').addClass('display_none');
+							$('.cancle').removeClass('display_none');
+							var type=msg.absence.type;
+							var timelong=msg.absence.days;
+							var starttime=msg.absence.start_time;
+							var endtime=msg.absence.pre_end_time;
+							var reason=msg.absence.desc;							
+							$('.date_type1').html(type);
+							$('.starttime').html(re_time_long_shi(starttime)); 
+							console.log(starttime) 
+							$('.endtime').html(re_time_long_shi(endtime));
+							$('.t_timelang').val(timelong);
+							$('.textarea').html(reason);	
+							for(var i=0;i<msg.absence.user_list.length;i++)
+							{
+								var image_url=msg.absence.user_list[i].image_url;
+								var image_name=msg.absence.user_list[i].image_name;
+								var user_id=msg.absence.user_list[i].user_id;
+							
+								var ht=image_url+image_name;
+								var user_image='';
+								
+								if(image_name=='')
+								{
+									user_image='';
+								}
+								else
+								{
+									user_image='url('+ht+')';
+								}
+								linkman1(user_id,user_image,msg.absence.user_list[i].user_name);
+							}
+							$('.linkman1').hide();
+							$('.sss').off('click');
+							$('.linkman').off('click');
+							$('.starttime').attr("readonly","readonly");
+							$('.textarea').attr("readonly","readonly");
+							$('.t_timelang').attr("readonly","readonly");
+							$('.time_bg').css({'display':'block'});
+						}
+					}
+				},
+				error: function()
+				{
+						
+				}
+			});
+		}
+
+		function fresh_loading()
+		{
+			var conHeight = $('.content').height();
+			$('.history').on('touchstart',function(e)
+			{
+				var moveType='-1';
+				var startX = event.changedTouches[0].pageX;
+				var startY = event.changedTouches[0].pageY;
+				var startTime=new Date().getTime();		
+				$('.history').on('touchmove',touchMove);
+				$('.history').on('touchend',touchEnd);
+				$('.history').on('touchcancle',touchEnd);
+				function touchMove(e)
+				{
+					var curX=event.changedTouches[0].pageX;
+					var curY=event.changedTouches[0].pageY;
+					if(moveType=='-1')
+					{
+						if(curY>startY && $('.content')[0].scrollTop == 0)
+						{
+							moveType = '3';
+						}
+						else
+						{
+							
+						}
+					}
+					
+					if(moveType=='3')
+					{
+						var top=-40+curY-startY;
+						var marginTop=120*Math.sin(Math.PI/2*top/conHeight)-40;
+						$('.fresh-loading').css({
+							'margin-top':marginTop,
+							'-webkit-transform': 'rotate(' + (top * 10) + 'deg)'
+						});
+						e.preventDefault();
+					}	
+				}
+				function touchEnd(e)
+				{
+					var $this=$('body');
+					var curX=event.changedTouches[0].pageX;
+					var curY=event.changedTouches[0].pageY;
+					var endTime=new Date().getTime();
+					if(moveType=='3')
+					{
+						var top=-40+curY-startY;
+						var marginTop=120*Math.sin(Math.PI/2*top/conHeight)-40;
+					 	if(marginTop<40)
+						{
+							$('.fresh-loading').addClass('fresh-transition');
+							$('.fresh-loading').css({
+								'margin-top':-40,
+								'-webkit-transform':'rotate(0deg)'
+							});
+							setTimeout(function()
+							{
+								$('.fresh-loading').removeClass('fresh-transition');
+								$('.fresh-loading').removeClass('goaround');
+							},500);	
+						}
+						else
+						{
+							$('.fresh-loading').addClass('goaround').hide().show();
+							var length=$('.h_count').length;
+							if(length>4)
+							{
+								GetAbsence($('.h_count')[length-1].classList[1]);
+								$('.fresh-loading').addClass('goaround').hide().show();
+							}
+							else if(length<=4)
+							{
+								$('.fresh-loading').addClass('fresh-transition');
+								$('.fresh-loading').css({
+									'margin-top':-40,
+									'-webkit-transform':'rotate(0deg)'
+								});
+								setTimeout(function()
+								{
+									$('.fresh-loading').removeClass('fresh-transition');
+									$('.fresh-loading').removeClass('goaround');
+								},500)
+							}
+						}
+					}
+					$(this).off('touchmove',touchMove);
+					$(this).off('touchend',touchEnd);
+					$(this).off('touchcancle',touchEnd);
+				}
+			})
+		}
+
+		function GetAbsence(num)
+		{
+			$.ajax({
+				type: 'get',
+				url: '../api/absence/get_absence_list.json',
+				data: {
+					size:'5',
+					last_absence_id:num,
+				},
+				dataType: 'json',
+				timeout: '1000',
+				success: function(msg)
+				{
+					for(var i=0;i<msg.absence_list.length;i++)
+					{
+						var type=msg.absence_list[i].type;
+						var starttime=msg.absence_list[i].start_time;
+						var endtime=msg.absence_list[i].pre_end_time;
+						var reason=msg.absence_list[i].desc;
+						var timelong=msg.absence_list[i].days;
+						var num=msg.absence_list[i].absence_id;
+						chuangjian_result(type,timelong,re_time_long(starttime),re_time_long(endtime),reason,num);
+					}
+					$('.fresh-loading').addClass('fresh-transition');
+					$('.fresh-loading').css({
+						'margin-top':-40,
+						'-webkit-transform':'rotate(0deg)'
+					});
+					setTimeout(function()
+					{
+						$('.fresh-loading').removeClass('fresh-transition');
+						$('.fresh-loading').removeClass('goaround');
+					},500)
+				},
+				error: function()
+				{  
+					
+				}
+			});
+		}
+
+		function CancelAbsence(id,day)
+		{
+			$.ajax({
+				type: 'get',
+				url: '../api/absence/cancel_absence.json',
+				data: {
+					absence_id:id,
+					days:day,
+				},
+				dataType: 'json',
+				timeout: '1000',
+				success: function(msg)
+				{
+					GetAbsenceNow();
+					cancle_animation_suc();
+					$('.linkman1').show();
+				},
+				error: function()
+				{
+					
+				}
+			});
+		}
+
+		function GetAbsenceNotifyUser(name)
+		{
+			$.ajax({
+				type: 'get',
+				url: '../api/absence/get_absence_notify_user.json',
+				data: {
+					user_name:name
+				},
+				dataType: 'json',
+				timeout: '1000',
+				success: function(msg)
+				{	
+					for(var i=0;i<msg.user_list.length;i++)
+					{
+						var mobile_no=msg.user_list[i].mobile_no;
+						var image_name=msg.user_list[i].image_name;
+						var image_url=msg.user_list[i].image_url;
+						var ht=image_url+image_name;
+						var user_image='url)'+ht+')';
+				
+						if(image_name=='')
+						{
+							user_image='';
+						}
+						else
+						{
+							user_image='url('+ht+')';
+						}
+						var user_name=msg.user_list[i].user_name;
+						var user_position=msg.user_list[i].user_position;
+						var user_id=msg.user_list[i].user_id;
+						create_peo(user_id,user_image,user_name,user_position);
+					}
+					jiaohu();
+				},
+				error: function()
+				{
+					
+				}
+			});
+		}
+
+		//联系人点击后状态
+		function jiaohu()
+		{
+			$('.choice_people').on('click',function()
+			{
+				var Q_Id=this.classList[1];
+				var user_image=this.childNodes[0].childNodes[0].style.backgroundImage;
+				var user_name=this.childNodes[0].childNodes[1].childNodes[0].innerHTML;
+				
+				if($(this).hasClass('choice2_people')) 
+				{
+					var sdaa='.'+Q_Id;
+					$(this).removeClass('choice2_people');
+					$(sdaa).not(this).remove();
+				}
+				else
+				{
+					if(!$('.wrapper_li').hasClass(Q_Id))
+					{
+						chuangjian(Q_Id,user_image);
+					}
+					
+					if(!$('.linkman').hasClass(Q_Id)&&$('.linkman').length<8)
+					{
+						linkman(Q_Id,user_image,user_name);
+					}
+					$(this).addClass('choice2_people');
+				}
+			})
+		}
+
+		
+		//获取当前请假
+		function chuangjian_result(type,timelong,starttime,endtime,reason,num)
+		{
+			var history=document.querySelector('.history');	
+			var h_count=document.createElement('div');
+			var h_type=document.createElement('div');
+			var h_type_1=document.createElement('span');
+			var h_totletime=document.createElement('div');
+			var h_totletime_1=document.createElement('span');
+			var h_time=document.createElement('div');
+			var h_time_1=document.createElement('span');
+			var h_time_2=document.createElement('span');
+			var h_time_4=document.createElement('span');
+			var h_time_5=document.createElement('span');
+			var h_time_6=document.createElement('span');
+			var h_time_3=document.createElement('div');
+			var h_resion=document.createElement('div');
+			var h_resion_2=document.createElement('div');
+			var h_resion_1=document.createElement('div');
+			
+			h_count.classList.add('h_count');
+			h_count.classList.add(num);
+			h_type.classList.add('h_type');
+			h_type.classList.add('left');
+			h_totletime.classList.add('h_totletime');
+			h_totletime.classList.add('left');
+			h_time.classList.add('h_time');
+			h_resion.classList.add('h_resion');
+			
+			h_resion_1.classList.add('h_resion_1');
+			h_resion_2.classList.add('h_resion_2');
+			
+
+			h_time_3.classList.add('h_time_3');
+			
+			h_type.innerHTML='类'+'&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp'+'型:'+'&nbsp&nbsp&nbsp&nbsp&nbsp';
+			h_type_1.innerHTML=type;
+			
+			h_totletime.innerHTML='实际请假时间:';
+			h_totletime_1.innerHTML=timelong+'  '+'天';
+				
+			h_time_3.innerHTML='开始时间:';
+			h_time_1.innerHTML=starttime;
+			h_time_5.innerHTML='00时';
+			h_time_6.innerHTML='00时';
+			h_time_4.innerHTML='~至~';
+			h_time_2.innerHTML=endtime;
+			
+			
+			h_resion_2.innerHTML='理 '+'&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp'+'由:';
+			h_resion_1.innerHTML=reason;
+			
+			h_type.appendChild(h_type_1);
+			h_totletime.appendChild(h_totletime_1);
+			h_time.appendChild(h_time_1);
+			h_time.appendChild(h_time_5);
+			h_time.appendChild(h_time_4);
+			h_time.appendChild(h_time_2);
+			h_time.appendChild(h_time_6);
+			h_time.appendChild(h_time_3);
+			h_resion.appendChild(h_resion_2);
+			h_resion.appendChild(h_resion_1);
+			
+			h_count.appendChild(h_type);
+			h_count.appendChild(h_totletime);
+			h_count.appendChild(h_time);
+			h_count.appendChild(h_resion);
+			
+			history.appendChild(h_count);
+		}
+
+
+		//动态创建联系人
+		function create_peo(mobile_no,user_image,user_name,user_position)
+		{
+			var choice_peoples=document.querySelector('.choice_peoples');
+			var choice_people=document.createElement('div');
+			var tuming=document.createElement('div');
+			var tu=document.createElement('div');
+			var ming=document.createElement('div');
+			var c_name=document.createElement('div');
+			var c_job=document.createElement('div');
+			
+			var  Q_Id=mobile_no;
+			
+			choice_people.classList.add('choice_people');
+			choice_people.classList.add(Q_Id);
+			tuming.classList.add('tuming');
+			tu.classList.add('tu');
+			ming.classList.add('ming');
+			c_name.classList.add('c_name');
+			c_job.classList.add('c_job');
+			
+			c_name.innerHTML=user_name;
+			c_job.innerHTML=user_position;
+					
+			//能获取到地址，不好判断，只能css能设置默认图片      "javascript:this.src='../static/images/liaotianbug.jpg';"
+
+			if(user_image=='')
+			{
+				tu.classList.add('default_image');
+			}
+			else
+			{
+				tu.style.backgroundImage=user_image;
+			}
+
+			tu.style.backgroundImage=user_image;
+						
+			
+			ming.appendChild(c_name);
+			ming.appendChild(c_job);
+			tuming.appendChild(tu);
+			tuming.appendChild(ming);
+			choice_people.appendChild(tuming);
+			choice_peoples.appendChild(choice_people);
+		}	
+	
+		//给动态生成元素绑定点击事件
+		$(document).on('click','.wrapper_li',function() 
+		{
+		 	$(this).remove();
+		 	var goog='.'+this.classList[1];
+
+		 	if($(goog).hasClass('choice2_people'))
+		 	{
+		 		$(goog).removeClass('choice2_people')
+		 	}
+		});
+
+		function chuangjian(Q_Id,user_image)
+		{
+			var tupian=document.createElement('li');
+			tupian.classList.add('wrapper_li');
+			tupian.classList.add(Q_Id);
+			if(user_image=='')
+			{
+				tupian.classList.add('default_image');
+			}
+			else
+			{
+				tupian.style.backgroundImage=user_image;
+			}
+			var tu=document.querySelector('.wrapper_ul');
+			tu.appendChild(tupian);
+		}
+
+		//请假日期转化
+		function timerecord()
+		{	
+			var start=$('.start').val();
+			var end=$('.end').val();
+			$('.starttime').html(start);
+			$('.endtime').html(end);
+		}
+
+		function re_time_long(time)
+		{
+			var time = new Date(time*1000);
+			var y = time.getFullYear();
+			var m = time.getMonth()+1;
+			var d = time.getDate();
+			var h =time.getHours();
+			return y+'年'+add0(m)+'月'+add0(d)+'日';
+		}
+
+		//获取请假时间长度转换
+		function time_long(time)
+		{
+			var start=time;
+			var str_start='';
+			var year1='';
+			var month1='';
+			var day1='';
+			var hour1='';
+			var dt1=new Date();
+			
+			str_start=start.replace(/[\u4E00-\u9FA5]|\s+/ig,""); 
+			year1=str_start.substr(0,4);	
+			month1=str_start.substr(4,2);
+			day1=str_start.substr(6,2);
+			hour1=str_start.substr(8,2);
+			dt1.setFullYear(year1);
+			dt1.setMonth(month1-1);
+			dt1.setDate(day1);
+			dt1.setHours(hour1);
+			return Math.floor(dt1.getTime()/1000);
+		}
+
+		function getLocalTime(nS) 
+		{  
+			 return new Date(parseInt(nS) * 1000).toLocaleString().replace(/:\d{1,2}$/,' ');  
+		}
+
+		//时间戳转化为正常时间
+		function add0(m){return m<10?'0'+m:m }
+
+		function re_time_long_shi(time)
+		{
+			var timeArr = time.split(/[- :]/g);
+			return timeArr[0]+'年'+timeArr[1]+'月'+timeArr[2]+'日';
+		}
+
+		function count()
+		{
+		    var wordCount =$("#wordCount");
+		    var textArea = wordCount.find(".textarea");
+		    var word = wordCount.find(".word");
+		    statInputNum(textArea,word);
+		}
+
+		function statInputNum(textArea,numItem) 
+		{
+		    var max = numItem.text();
+		    var curLength;
+		    textArea[0].setAttribute("maxlength", max);
+		    curLength = textArea.val().length;
+		    numItem.text(max - curLength);
+		    textArea.on('input ', function () 
+		    {
+		        numItem.text(max - $(this).val().length);
+		    });
+		}
+
+		function linkman(mobile_no,user_image,user_name)
+		{	
+			var linkman=document.createElement('div');
+			var pic=document.createElement('div');
+			var name=document.createElement('p');
+			var addtop=document.querySelector('.addtop')
+			var r_bottom=document.querySelector('.r_bottom')
+			
+			linkman.classList.add('linkman');
+			linkman.classList.add('left');
+			if(user_image=='')
+			{
+				pic.classList.add('default_image');
+			}
+			else
+			{
+				pic.style.backgroundImage=user_image;
+			}
+			
+			pic.classList.add('pic');
+			pic.style.backgroundImage=user_image;
+			name.classList.add('name');
+			name.innerHTML=user_name;
+			linkman.appendChild(pic);
+			linkman.appendChild(name);
+			r_bottom.insertBefore(linkman,addtop);
+			linkman.classList.add(mobile_no);
+			$('.linkman').not('.addtop').on('click',function()
+			{
+				$(this).remove();
+			});
+		}
+
+		function linkman1(user_id,user_image,user_name)
+		{
+			var linkman=document.createElement('div');
+			var pic=document.createElement('div');
+			var name=document.createElement('p');
+			var addtop=document.querySelector('.addtop')
+			var r_bottom=document.querySelector('.r_bottom')
+			
+			linkman.classList.add('linkman');
+			linkman.classList.add('left');
+			linkman.classList.add(user_id);
+			pic.classList.add('pic');
+			if(user_image=='')
+			{
+				pic.classList.add('default_image');
+			}
+			else
+			{
+				pic.style.backgroundImage=user_image;
+			}
+			
+			name.classList.add('name');
+			name.innerHTML=user_name;
+			linkman.appendChild(pic);
+			linkman.appendChild(name);
+			r_bottom.insertBefore(linkman,addtop);
+
+			$('.linkman').not('.addtop').on('click',function()
+			{
+				$(this).remove();
+			});
+		}
+	
+</script>
+</html>

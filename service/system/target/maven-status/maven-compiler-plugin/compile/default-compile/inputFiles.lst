@@ -1,0 +1,6 @@
+/Users/york/git/weizhu_server3/service/system/src/main/java/com/weizhu/service/system/SystemServiceModule.java
+/Users/york/git/weizhu_server3/service/system/src/main/java/com/weizhu/service/system/authurl/AuthUrl.java
+/Users/york/git/weizhu_server3/service/system/src/main/java/com/weizhu/service/system/authurl/CompositeAuthUrl.java
+/Users/york/git/weizhu_server3/service/system/src/main/java/com/weizhu/service/system/SystemConfig.java
+/Users/york/git/weizhu_server3/service/system/src/main/java/com/weizhu/service/system/authurl/QiniuAuthUrl.java
+/Users/york/git/weizhu_server3/service/system/src/main/java/com/weizhu/service/system/SystemServiceImpl.java

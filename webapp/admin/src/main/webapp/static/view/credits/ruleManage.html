@@ -1,0 +1,27 @@
+<div id="credits-rule-wrap" data-options="region:'center',border:false" class="easyui-layout" style="width:100%;height:100%;">
+    <div data-options="region:'north',border:false" style="width: 100%;">
+        <div class="easyui-panel" data-options="border:false">
+            <div class="credits-rule-info-wrap" style="padding:10px 20px;">
+                <p>积分规则的内容将显示在手机APP上显示给用户查看，内容涉及积分的获取以及使用描述</p>
+            </div>
+        </div>
+    </div>
+    <div data-options="region:'center',border:false">
+        <div class="easyui-panel" data-options="border:false">
+            <div style="padding:10px 20px;">
+                <form id="credits-rule-edit-form" class="easyui-form form-layout-inline" method="get">
+                	<div class="form-item">
+                		<input type="text" name="credits_rule" class="easyui-textbox" data-options="prompt:'请务必在这里准确的描述出积分的获取规则，及使用规则，谢谢！',required:true,width:600,height:400,disabled:true,multiline:true"></input>
+                	</div>
+                	<%if(Wz.getPermission('credits/rule/update')){%>
+                	<div>
+                    	<a href="javascript:void(0)" class="easyui-linkbutton edit-btn" iconCls="icon-edit">编辑</a>
+                    	<a style="display:none;" href="javascript:void(0)" class="easyui-linkbutton save-btn" iconCls="icon-ok">保存</a>
+                    	<a style="display:none;" href="javascript:void(0)" class="easyui-linkbutton cancel-btn" iconCls="icon-cancel">取消</a>                	
+                	</div>
+                    <%}%>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

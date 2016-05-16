@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+	<appender name="SOCKET" class="ch.qos.logback.classic.net.SocketAppender">
+		<remoteHost>127.0.0.1</remoteHost>
+		<port>17890</port>
+		<reconnectionDelay>3000</reconnectionDelay>
+		<includeCallerData>false</includeCallerData>
+	</appender>
+
+	<root level="INFO">
+		<appender-ref ref="SOCKET" />
+	</root>
+</configuration>

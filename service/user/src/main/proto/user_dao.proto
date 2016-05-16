@@ -1,0 +1,31 @@
+
+import "user.proto";
+
+package weizhu.user.dao;
+
+option java_package = "com.weizhu.service.user";
+option java_outer_classname = "UserDAOProtos";
+
+message UserExperienceList {
+  repeated weizhu.user.UserExperience user_experience = 1;
+}
+
+message UserMarkList {
+  repeated weizhu.user.UserMark user_mark = 1;
+}
+
+message UserAbilityTagList {
+  repeated weizhu.user.UserAbilityTag user_ability_tag = 1;
+}
+
+message UserExtendsList {
+  repeated weizhu.user.UserExtends user_extends = 1;
+}
+
+message PositionList {
+  repeated weizhu.user.Position position = 1;
+}
+
+message LevelList {
+  repeated weizhu.user.Level level = 1;
+}

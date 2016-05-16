@@ -1,0 +1,67 @@
+<div class="system-home-wrap" style="width:100%;height:100%;">
+	<div id="system-home-portal">
+		<div style="width:66%">
+			<div id="system-home-admin-info" title="管理员登录信息" style="height:200px;">
+				<b style="margin:10px 15px;display:block;">您好，欢迎您使用微助后台管理系统！下边是您的账号信息：</b>
+				<div class="system-home-admin-info">
+					<div class="system-home-admin-info-item">
+						<label>用户名：</label>
+						<span><%=Wz.admin_info.admin_name%></span>
+					</div>
+					<div class="system-home-admin-info-item">
+						<label>邮&nbsp;&nbsp;&nbsp;箱：</label>
+						<span><%=Wz.admin_info.admin_email%></span>
+					</div>
+					<div class="system-home-admin-info-item">
+						<label>APP名称：</label>
+						<span><%=Wz.company_info.company_name%></span>
+					</div>
+					<div class="system-home-admin-info-item">
+						<a id="home-modify-password-btn" href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-edit'">修改密码</a>
+					</div>
+				</div>
+			</div>
+			<div id="system-home-version-info" title="版本更新信息" style="height:300px;">
+				<iframe src="./static/version-update.html?20160408" style="width:100%;height:100%;"></iframe>
+			</div>
+		</div>
+		<div style="width:33%">
+			<div id="system-home-clock" title="天气预报" style="height:500px;">
+				<iframe allowtransparency="true" style="margin:auto;display:block;" frameborder="0" width="140" height="428" scrolling="no" src="http://tianqi.2345.com/plugin/widget/index.htm?s=2&z=1&t=1&v=1&d=5&bd=0&k=&f=&q=1&e=1&a=1&c=54511&w=140&h=428&align=center"></iframe>
+			</div>
+		</div>
+	</div> 
+	<div id="system-home-password-edit" class="easyui-window" data-options="title:'修改密码',collapsible:false,maximizable:false,minimizable:false,closed: true,modal:true,width:500,height:280">
+        <div class="easyui-layout" style="width:100%;height:100%;">
+            <div region="center" border="false" style="padding:10px 12px;">
+                <form id="system-home-password-edit-form" class="easyui-form form-layout-column" method="post" data-options="novalidate:true" autocomplete="off">
+                	<input type="hidden" name="admin_id" />
+                    <div class="form-item">
+                        <label>用户名：</label>
+                        <input class="easyui-textbox form-item-box" type="text" name="admin_name" data-options="editable:false,width:'79.5%',validType:'length[0,20]'" />
+                    </div>
+                    <div class="form-item">
+                        <label>邮箱：</label>
+                        <input class="easyui-textbox form-item-box" type="text" name="admin_email" data-options="editable:false,width:'79.5%',validType:['email','length[0,191]']" />
+                    </div>
+                    <div class="form-item">
+                        <label>旧密码：</label>
+                        <input class="easyui-textbox form-item-box" type="password" name="old_password" data-options="required:true,width:'79.5%',validType:['length[6,22]','charNum']" />
+                    </div>
+                    <div class="form-item">
+                        <label>新密码：</label>
+                        <input id="edit-password" class="easyui-textbox form-item-box" type="password" name="new_password" data-options="required:true,width:'79.5%',validType:['length[6,22]','charNum']" />
+                    </div>
+                    <div class="form-item">
+                        <label>确认密码：</label>
+                        <input class="easyui-textbox form-item-box" type="password" name="rpassword" data-options="required:true,width:'79.5%',validType:'same[\'edit-password\']'" />
+                    </div>
+                </form>
+            </div>
+            <div region="south" border="false" style="text-align:right;padding:10px 12px;">
+                <a href="javascript:void(0)" class="easyui-linkbutton edit-save" onclick='Wz.system.home.savePwdEdit();' data-options="iconCls:'icon-ok'">保存</a>
+                <a href="javascript:void(0)" class="easyui-linkbutton edit-cancel" onclick="$(this).parents('.easyui-window').window('close');" data-options="iconCls:'icon-cancel'">取消</a>
+            </div>
+        </div>
+    </div>
+</div>

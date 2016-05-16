@@ -1,0 +1,395 @@
+import "weizhu.proto";
+import "company.proto";
+
+package weizhu.admin;
+
+option java_package = "com.weizhu.proto";
+option java_outer_classname = "AdminProtos";
+
+// 状态
+enum State {
+  NORMAL  = 0; // 用户 管理员 boss
+  DISABLE = 1; // 管理员 boss
+  DELETE  = 2; // boss
+}
+
+// 管理员会话信息
+message AdminSession {
+  required int64 admin_id   = 1; // 管理员id
+  required int64 session_id = 2; // 会话id
+}
+
+message AdminSessionData {
+  required AdminSession session     = 1;
+  required int32        login_time  = 2; // 登录时间戳(单位:秒)
+  required string       login_host  = 3;
+  required string       user_agent  = 4;
+  required int32        active_time = 5; // 最近访问服务器时间戳(单位:秒)
+  optional int32        logout_time = 6;
+}
+
+// 内部服务通用调用请求数据包头,匿名身份
+message AdminAnonymousHead {
+  optional int64  company_id  = 1; // 操作公司的id
+  required string request_uri = 2; // 请求web uri
+  required string user_agent  = 3; // 浏览器UA
+  required string remote_host = 4; // 调用客户端ip
+}
+
+// 管理员请求头
+message AdminHead {
+  optional int64        company_id  = 1; // 操作公司的id
+  required AdminSession session     = 2; // 会话信息
+  required string       request_uri = 3; // 请求web uri
+  required string       user_agent  = 4; // 浏览器UA
+  required string       remote_host = 5; // 调用客户端ip
+}
+
+// 管理员信息
+message Admin {
+  // 管理员所管理的公司信息
+  message Company {
+    required int64 company_id         = 1; // 所管理的公司id
+    repeated int32 role_id            = 2; // 所属角色id
+    required bool  enable_team_permit = 3; // 是否开启只允许操作部分部门的人员
+    repeated int32 permit_team_id     = 4; // 只允许操作部分部门id
+  }
+  
+  required int64   admin_id             = 1; // 管理员id
+  required string  admin_name           = 2; // 管理员名
+  required string  admin_email          = 3; // 管理员电子邮箱
+  required bool    force_reset_password = 4; // 是否强制该管理员下次登陆更新密码
+  repeated Company company              = 5; // 管理员所管理的公司
+  
+  optional State   state                = 95 [default = NORMAL];
+  optional int32   create_time          = 96; // 管理员创建时间
+  optional int64   create_admin_id      = 97; // 管理员创建者管理员id
+  optional int32   update_time          = 98; // 管理员修改时间
+  optional int64   update_admin_id      = 99; // 修改管理员id  
+}
+
+// 管理员角色信息
+message Role {
+  optional int64  company_id      = 1; // 角色隶属的公司id,不填此值代表所有公司共用的角色
+  required int32  role_id         = 2; // 角色id
+  required string role_name       = 3; // 管理员名
+  repeated string permission_id   = 4; // 管理员所拥有权限id
+  
+  optional State  state           = 95 [default = NORMAL];
+  optional int32  create_time     = 96; // 管理员创建时间
+  optional int64  create_admin_id = 97; // 管理员创建者管理员id
+  optional int32  update_time     = 98; // 管理员修改时间
+  optional int64  update_admin_id = 99; // 修改管理员id
+}
+
+message AdminVerifySessionRequest {
+  required string session_key = 1; // 会话Key
+}
+
+message AdminVerifySessionResponse {
+  // 验证会话Key返回结果
+  enum Result {
+    SUCC                    = 0; // 验证成功
+    FAIL_SESSION_DECRYPTION = 1; // 会话Key解码失败
+    FAIL_SESSION_EXPIRED    = 2; // 会话Key过期
+    FAIL_ADMIN_DISABLE      = 3; // 该管理员已被停用
+    
+    FAIL_UNKNOWN            = 99;
+  }
+  
+  optional Result                 result      = 1 [default = FAIL_UNKNOWN]; // 调用结果 
+  optional string                 fail_text   = 2; // 失败文本
+  optional AdminSession           session     = 3; // 会话信息
+  optional Admin                  admin       = 4; //
+  repeated weizhu.company.Company ref_company = 5;
+  repeated Role                   ref_role    = 6;
+}
+
+// 管理员登陆请求
+message AdminLoginRequest {
+  required string admin_email    = 1; // 管理员邮箱
+  required string admin_password = 2; // 管理员密码
+}
+
+// 管理员登陆返回
+message AdminLoginResponse {
+  enum Result {
+    SUCC                            = 0; // 调用成功
+    FAIL_EMAIL_INVALID              = 1; // 管理员邮箱格式错误
+    FAIL_PASSWORD_INVALID           = 2; // 管理员密码格式错误
+    FAIL_EMAIL_OR_PASSWORD_INVALID  = 3; // 管理员邮箱或密码错误
+    FAIL_ADMIN_DISABLE              = 4; // 该管理员已被停用
+    FAIL_ADMIN_FORCE_RESET_PASSWORD = 5; // 该管理员被强制更改密码
+    
+    FAIL_UNKNOWN                    = 99;
+  }
+  optional Result                 result      = 1 [default = FAIL_UNKNOWN]; // 调用结果 
+  optional string                 fail_text   = 2; // 错误文本, 供客户端展示
+  optional string                 session_key = 3; // 会话key
+  optional AdminSession           session     = 4;
+  optional Admin                  admin       = 5; // 管理员信息
+  repeated weizhu.company.Company ref_company = 6;
+  repeated Role                   ref_role    = 7;
+  optional bool                   first_login = 8; // 是否是初次登陆
+}
+
+// 管理员密码重置请求
+message AdminResetPasswordRequest {
+  required string admin_email  = 1; // 管理员邮箱 
+  required string old_password = 2; // 原有密码
+  required string new_password = 3; // 新密码
+}
+
+// 管理员密码重置响应
+message AdminResetPasswordResponse {
+  enum Result {
+    SUCC                      = 0;
+    FAIL_EMAIL_INVALID        = 1; // 管理员邮箱格式错误
+    FAIL_OLD_PASSWORD_INVALID = 2;
+    FAIL_NEW_PASSWORD_INVALID = 3;
+    FAIL_ADMIN_NOT_EXIST      = 4; // 管理员不存在
+    
+    FAIL_UNKNOWN              = 99;
+  }
+  optional Result result    = 1 [default = FAIL_UNKNOWN]; // 调用结果 
+  optional string fail_text = 2; // 错误文本, 供客户端展示
+}
+
+// 管理员密码找回请求
+message AdminForgotPasswordRequest {
+  required string admin_email = 1; // 管理员邮箱
+}
+
+// 管理员密码找回返回
+message AdminForgotPasswordResponse {
+  enum Result {
+    SUCC                     = 0; // 调用成功
+    FAIL_EMAIL_INVALID       = 1; // 管理员邮箱错误
+    FAIL_ADMIN_NOT_EXIST     = 2; // 管理员不存在
+    FAIL_SEND_LIMIT_EXCEEDED = 3; // 发送邮件频率超过限制，每分钟发送一封
+    
+    FAIL_UNKNOWN             = 99;
+  }
+  optional Result result    = 1 [default = FAIL_UNKNOWN]; // 调用结果 
+  optional string fail_text = 2; // 错误文本, 供客户端展示
+}
+
+message AdminForgotPasswordResetRequest {
+  required string admin_email  = 1; // 管理员邮箱
+  required string new_password = 2; // 新密码
+  required int64  forgot_token = 3; // 忘记密码重置token
+}
+
+message AdminForgotPasswordResetResponse {
+  enum Result {
+    SUCC                      = 0;
+    FAIL_EMAIL_INVALID        = 1; // 管理员邮箱错误
+    FAIL_FORGOT_TOKEN_EXPIRE  = 2;
+    FAIL_NEW_PASSWORD_INVALID = 3;
+    
+    FAIL_UNKNOWN              = 99;
+  }
+  optional Result result    = 1 [default = FAIL_UNKNOWN]; // 调用结果 
+  optional string fail_text = 2; // 错误文本, 供客户端展示
+}
+
+message GetAdminByIdRequest {
+  repeated int64 admin_id = 1;
+}
+
+message GetAdminByIdResponse {
+  repeated Admin admin    = 1;
+  repeated Role  ref_role = 2;
+}
+
+message GetAdminListRequest {
+  required int32  start        = 1;
+  required int32  length       = 2;
+  optional State  state        = 3;
+  optional string name_keyword = 4;
+}
+
+message GetAdminListResponse {
+  repeated Admin admin         = 1;
+  required int32 total_size    = 2;
+  required int32 filtered_size = 3;
+  repeated Role  ref_role      = 4;
+}
+
+message CreateAdminRequest {
+  required string admin_name         = 1;
+  required string admin_email        = 2;
+  required string admin_password     = 3;
+  repeated int32  role_id            = 4;
+  required bool   enable_team_permit = 5; // 是否开启只允许操作部分部门的人员
+  repeated int32  permit_team_id     = 6; // 只允许操作部分部门id
+}
+
+message CreateAdminResponse {
+  enum Result {
+    SUCC                   = 0;
+    FAIL_NAME_INVALID      = 1;
+    FAIL_EMAIL_INVALID     = 2;
+    FAIL_PASSWORD_INVALID  = 3;
+    FAIL_ROLE_NOT_EXIST    = 4; // 角色不存在
+    
+    FAIL_UNKNOWN           = 99;
+  }
+  optional Result result    = 1 [default = FAIL_UNKNOWN]; // 调用结果 
+  optional string fail_text = 2; // 错误文本, 供客户端展示
+  optional int64  admin_id  = 3; // 创建成功后，返回管理员
+}
+
+message UpdateAdminRequest {
+  required int64  admin_id             = 1;
+  required string admin_name           = 2;
+  required string admin_email          = 3;
+  required bool   force_reset_password = 4; // 是否强制更新密码
+  repeated int32  role_id              = 5;
+  required bool   enable_team_permit   = 6; // 是否开启只允许操作部分部门的人员
+  repeated int32  permit_team_id       = 7; // 只允许操作部分部门id
+}
+
+message UpdateAdminResponse {
+  enum Result {
+    SUCC                 = 0;
+    FAIL_ADMIN_NOT_EXIST = 1; // 管理员不存在
+    FAIL_NAME_INVALID    = 2;
+    FAIL_EMAIL_INVALID   = 3;
+    FAIL_ROLE_NOT_EXIST  = 4; // 角色不存在
+    FAIL_UPDATE_SELF     = 5; // 管理员不能修改自己的的信息
+    
+    FAIL_UNKNOWN         = 99;
+  }
+  optional Result result    = 1 [default = FAIL_UNKNOWN]; // 调用结果 
+  optional string fail_text = 2; // 错误文本, 供客户端展示
+}
+
+message UpdateAdminStateRequest {
+  repeated int64 admin_id = 1;
+  required State state    = 2;
+}
+
+message UpdateAdminStateResponse {
+  enum Result {
+    SUCC                 = 0;
+    FAIL_ADMIN_NOT_EXIST = 1; // 管理员不存在
+    FAIL_UPDATE_SELF     = 2; // 管理员不能修改自己的状态
+    
+    FAIL_UNKNOWN         = 99;
+  }
+  optional Result result    = 1 [default = FAIL_UNKNOWN]; // 调用结果 
+  optional string fail_text = 2; // 错误文本, 供客户端展示
+}
+
+message GetRoleByIdRequest {
+  repeated int32 role_id = 1;
+}
+
+message GetRoleByIdResponse {
+  repeated Role role = 1;
+}
+
+message GetRoleListRequest {
+  required int32 start  = 1;
+  required int32 length = 2;
+}
+
+message GetRoleListResponse {
+  repeated Role  role          = 1;
+  required int32 total_size    = 2;
+  required int32 filtered_size = 3;
+}
+
+message CreateRoleRequest {
+  required string role_name     = 1;
+  repeated string permission_id = 2;
+}
+
+message CreateRoleResponse {
+  enum Result {
+    SUCC                    = 0;
+    FAIL_NAME_INVALID       = 1;
+    FAIL_PERMISSION_INVALID = 2;
+    
+    FAIL_UNKNOWN            = 99;
+  }
+  optional Result result    = 1 [default = FAIL_UNKNOWN]; // 调用结果 
+  optional string fail_text = 2; // 错误文本, 供客户端展示
+  optional int32  role_id   = 3; // 创建成功后，返回角色id
+}
+
+message UpdateRoleRequest {
+  required int32  role_id       = 1;
+  required string role_name     = 2;
+  repeated string permission_id = 3;
+}
+
+message UpdateRoleResponse {
+  enum Result {
+    SUCC                    = 0;
+    FAIL_NAME_INVALID       = 1;
+    FAIL_PERMISSION_INVALID = 2;
+    FAIL_ROLE_NOT_EXIST     = 3;
+    
+    FAIL_UNKNOWN            = 99;
+  }
+  optional Result result    = 1 [default = FAIL_UNKNOWN]; // 调用结果 
+  optional string fail_text = 2; // 错误文本, 供客户端展示
+}
+
+message UpdateRoleStateRequest {
+  repeated int32 role_id = 1;
+  required State state   = 2;
+}
+
+message UpdateRoleStateResponse {
+  enum Result {
+    SUCC                = 0;
+    FAIL_ROLE_NOT_EXIST = 1;
+    
+    FAIL_UNKNOWN        = 99;
+  }
+  optional Result result    = 1 [default = FAIL_UNKNOWN]; // 调用结果 
+  optional string fail_text = 2; // 错误文本, 供客户端展示
+}
+
+service AdminService {
+
+  rpc AdminVerifySession (AdminVerifySessionRequest) returns (AdminVerifySessionResponse);
+
+  /* 登陆相关 */
+
+  rpc AdminLogin (AdminLoginRequest) returns (AdminLoginResponse);
+  
+  rpc AdminLogout (weizhu.EmptyRequest) returns (weizhu.EmptyResponse);
+  
+  rpc AdminResetPassword (AdminResetPasswordRequest) returns (AdminResetPasswordResponse);
+  
+  rpc AdminForgotPassword (AdminForgotPasswordRequest) returns (AdminForgotPasswordResponse);
+  
+  rpc AdminForgotPasswordReset (AdminForgotPasswordResetRequest) returns (AdminForgotPasswordResetResponse);
+
+  /* 管理员账号管理 */
+  
+  rpc GetAdminById (GetAdminByIdRequest) returns (GetAdminByIdResponse);
+  
+  rpc GetAdminList (GetAdminListRequest) returns (GetAdminListResponse);
+
+  rpc CreateAdmin (CreateAdminRequest) returns (CreateAdminResponse);
+  
+  rpc UpdateAdmin (UpdateAdminRequest) returns (UpdateAdminResponse);
+  
+  rpc UpdateAdminState (UpdateAdminStateRequest) returns (UpdateAdminStateResponse);
+  
+  rpc GetRoleById (GetRoleByIdRequest) returns (GetRoleByIdResponse);
+  
+  rpc GetRoleList (GetRoleListRequest) returns (GetRoleListResponse);
+  
+  rpc CreateRole (CreateRoleRequest) returns (CreateRoleResponse);
+    
+  rpc UpdateRole (UpdateRoleRequest) returns (UpdateRoleResponse);
+  
+  rpc UpdateRoleState (UpdateRoleStateRequest) returns (UpdateRoleStateResponse);
+  
+}

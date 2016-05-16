@@ -1,0 +1,29 @@
+
+import "tools.proto";
+
+package weizhu.tools.dao;
+
+option java_package = "com.weizhu.service.tools";
+option java_outer_classname = "ToolsDAOProtos";
+
+message ProductclockCustomerListIndex {
+  required int32 customer_id = 1;
+  required int32 create_time = 2;
+}
+
+message ProductclockProductListIndex {
+  required int32 product_id  = 1;
+  required int32 create_time = 2;
+}
+
+message ProductclockCustomerProduct {
+  required int32 customer_id       = 1;
+  required int32 product_id        = 2;
+  required int32 buy_time          = 3;
+  required int32 remind_period_day = 4; // 提醒天数周期
+}
+
+message ProductclockCommunicateRecordIndex {
+  required int32 record_id   = 1;
+  required int32 create_time = 2;
+}

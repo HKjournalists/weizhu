@@ -1,0 +1,160 @@
+<div id="comm-allowmodel-wrap" data-options="region:'center',border:false" class="easyui-layout" style="width:100%;height:100%;">
+    <div id="comm-allowmodel-edit" class="easyui-window" data-options="title:'选择对象',collapsible:false,maximizable:false,minimizable:false,closed: true,modal:true,width:700,height:500">
+        <div class="easyui-layout" style="width:100%;height:100%;">
+            <div region="center" border="false" style="padding:10px 12px;">
+                <form id="comm-allowmodel-edit-form" class="easyui-form form-layout-column" method="post" data-options="novalidate:true">
+                	<input type="hidden" name="model_id"/>
+                    <div class="form-item">
+                        <label>对象名称：</label>
+                        <input class="easyui-textbox form-item-box" type="text" name="model_name" data-options="required:true,width:350,prompt:'请输模型名称，1~50个字符',validType:'length[1,50]'" />
+                    </div>
+                    <div class="form-item">
+                        <label>选择方式：</label>
+                        <input class="easyui-combobox form-item-box" type="text" name="model_type" data-options="required:true,width:350,valueField:'value',textField:'name',value:'0',data:[{name:'手动选择',value:'0'},{name:'批量录入',value:'1'}],editable:false,panelHeight:'auto'" />
+                    </div>
+                    <div class="form-item" style="display:none;">
+                        <label>员工手机号：</label>
+                        <textarea class="easyui-textbox form-item-box" type="text" name="mobile_no" data-options="required:true,width:350,height:180,multiline:true,prompt:'请输入员工手机号码，多个手机号码换行输入',validType:'multiline_mobile'"></textarea>
+                    </div>
+                    <div class="form-item" style="wdith: 450px;height:290px;">
+                        <table id="allow-model-rule-list"></table>
+                    	<input type="hidden" name="rule_list" />
+                    </div>
+					<div class="form-item">
+                        <label style="width:200px;">除此之外的人员是否允许参加：</label>
+                        <input class="easyui-combobox form-item-box" type="text" name="default_action" data-options="required:true,width:350,valueField:'value',textField:'name',value:'DENY',data:[{name:'允许',value:'ALLOW'},{name:'禁止',value:'DENY'}],editable:false,panelHeight:'auto'" />
+                    </div>
+                </form>
+            </div>
+            <div region="south" border="false" style="text-align:right;padding:10px 12px;">
+                <a href="javascript:void(0)" class="easyui-linkbutton edit-save" data-options="iconCls:'icon-ok'">保存</a>
+                <a href="javascript:void(0)" class="easyui-linkbutton edit-cancel" onclick="$(this).parents('.easyui-window').window('close');" data-options="iconCls:'icon-cancel'">取消</a>
+            </div>
+        </div>
+    </div>
+    <div id="comm-allowmodel-userrule" class="easyui-window" data-options="title:'按姓名选择',collapsible:false,maximizable:false,minimizable:false,closed: true,modal:true,width:900,height:600">
+        <div class="easyui-layout" style="width:100%;height:100%;">
+            <div region="center" border="false" style="padding:10px 12px;">
+                <form id="comm-allowmodel-userrule-form" class="easyui-form form-layout-column" method="post" data-options="novalidate:true">
+                	<input type="hidden" name="model_id"/>
+                	<input type="hidden" name="rule_id"/>
+                	<input type="hidden" name="row_index"/>
+                    <div class="form-item">
+                        <label>选择名称：</label>
+                        <input class="easyui-textbox form-item-box" type="text" name="rule_name" data-options="required:true,width:350,prompt:'请输模型名称，1~50个字符',validType:'length[1,50]'" />
+                    </div>
+                    <div class="form-item">
+                    	<div style="width: 850px;height:200px;">
+	                        <table id="comm-allowmodel-user"></table>
+	                        <div id="comm-allowmodel-user-tb" style="padding:2px 5px;">
+					        	姓名: <input class="easyui-textbox" type="text" name="keyword" data-options="width:110" />
+					        	职务: <input name="position_id" style="width:110px">
+				        		电话: <input class="easyui-textbox" type="text" name="mobile_no" data-options="width:110" />
+				        		部门: <input name="team_id" style="width:110px">
+						        <a href="javascript:void(0)" class="easyui-linkbutton search-btn" iconCls="icon-search">搜索</a>
+						    </div>                    	
+                    	</div>
+                    	<div style="width: 850px;height:200px;">
+                       		<table id="comm-allowmodel-selecteduser"></table>
+                    	</div>
+                    </div>
+					<div class="form-item">
+                        <label style="width: 130px;">以上人员是否允许参加：</label>
+                        <input class="easyui-combobox form-item-box" type="text" name="rule_action" data-options="required:true,width:350,valueField:'value',textField:'name',value:'ALLOW',data:[{name:'允许',value:'ALLOW'},{name:'禁止',value:'DENY'}],editable:false,panelHeight:'auto'" />
+                    </div>
+                </form>
+            </div>
+            <div region="south" border="false" style="text-align:right;padding:10px 12px;">
+                <a href="javascript:void(0)" class="easyui-linkbutton edit-save" data-options="iconCls:'icon-ok'">保存</a>
+                <a href="javascript:void(0)" class="easyui-linkbutton edit-cancel" onclick="$(this).parents('.easyui-window').window('close');" data-options="iconCls:'icon-cancel'">取消</a>
+            </div>
+        </div>
+    </div>
+    <div id="comm-allowmodel-positionrule" class="easyui-window" data-options="title:'按职务选择',collapsible:false,maximizable:false,minimizable:false,closed: true,modal:true,width:600,height:600">
+        <div class="easyui-layout" style="width:100%;height:100%;">
+            <div region="center" border="false" style="padding:10px 12px;">
+                <form id="comm-allowmodel-positionrule-form" class="easyui-form form-layout-column" method="post" data-options="novalidate:true">
+                	<input type="hidden" name="model_id"/>
+                	<input type="hidden" name="rule_id"/>
+                	<input type="hidden" name="row_index"/>
+                    <div class="form-item">
+                        <label>选择名称：</label>
+                        <input class="easyui-textbox form-item-box" type="text" name="rule_name" data-options="required:true,width:350,prompt:'请输模型名称，1~50个字符',validType:'length[1,50]'" />
+                    </div>
+                    <div class="form-item">
+                    	<div style="width: 550px;height:200px;">
+	                        <table id="comm-allowmodel-position"></table>
+	                        <div id="comm-allowmodel-position-tb" style="padding:2px 5px;">
+					        	职务名称: <input class="easyui-textbox" type="text" name="keyword" data-options="width:110" />
+						        <a href="javascript:void(0)" class="easyui-linkbutton search-btn" iconCls="icon-search">搜索</a>
+						    </div>                    	
+                    	</div>
+                    	<div style="width: 550px;height:200px;">
+                       		<table id="comm-allowmodel-selectedposition"></table>
+                    	</div>
+                    </div>
+					<div class="form-item">
+                        <label style="width: 130px;">以上职务是否允许参加：</label>
+                        <input class="easyui-combobox form-item-box" type="text" name="rule_action" data-options="required:true,width:350,valueField:'value',textField:'name',value:'ALLOW',data:[{name:'允许',value:'ALLOW'},{name:'禁止',value:'DENY'}],editable:false,panelHeight:'auto'" />
+                    </div>
+                </form>
+            </div>
+            <div region="south" border="false" style="text-align:right;padding:10px 12px;">
+                <a href="javascript:void(0)" class="easyui-linkbutton edit-save" data-options="iconCls:'icon-ok'">保存</a>
+                <a href="javascript:void(0)" class="easyui-linkbutton edit-cancel" onclick="$(this).parents('.easyui-window').window('close');" data-options="iconCls:'icon-cancel'">取消</a>
+            </div>
+        </div>
+    </div>
+    <div id="comm-allowmodel-teamrule" class="easyui-window" data-options="title:'按部门选择',collapsible:false,maximizable:false,minimizable:false,closed: true,modal:true,width:600,height:600">
+        <div class="easyui-layout" style="width:100%;height:100%;">
+            <div region="center" border="false" style="padding:10px 12px;">
+                <form id="comm-allowmodel-teamrule-form" class="easyui-form form-layout-column" method="post" data-options="novalidate:true">
+                	<input type="hidden" name="model_id"/>
+                	<input type="hidden" name="rule_id"/>
+                	<input type="hidden" name="row_index"/>
+                    <div class="form-item">
+                        <label>选择名称：</label>
+                        <input class="easyui-textbox form-item-box" type="text" name="rule_name" data-options="required:true,width:350,prompt:'请输模型名称，1~50个字符',validType:'length[1,50]'" />
+                    </div>
+                    <div class="form-item">
+                    	<div style="width: 550px;height:200px;">
+	                        <table id="comm-allowmodel-team"></table>                 	
+                    	</div>
+                    	<div style="width: 550px;height:200px;">
+                       		<table id="comm-allowmodel-selectedteam"></table>
+                    	</div>
+                    </div>
+					<div class="form-item">
+                        <label style="width: 130px;">以上部门是否允许参加：</label>
+                        <input class="easyui-combobox form-item-box" type="text" name="rule_action" data-options="required:true,width:350,valueField:'value',textField:'name',value:'ALLOW',data:[{name:'允许',value:'ALLOW'},{name:'禁止',value:'DENY'}],editable:false,panelHeight:'auto'" />
+                    </div>
+                </form>
+            </div>
+            <div region="south" border="false" style="text-align:right;padding:10px 12px;">
+                <a href="javascript:void(0)" class="easyui-linkbutton edit-save" data-options="iconCls:'icon-ok'">保存</a>
+                <a href="javascript:void(0)" class="easyui-linkbutton edit-cancel" onclick="$(this).parents('.easyui-window').window('close');" data-options="iconCls:'icon-cancel'">取消</a>
+            </div>
+        </div>
+    </div>
+    <div id="comm-allowmodel-copy" class="easyui-window" data-options="title:'复制选择对象',collapsible:false,maximizable:false,minimizable:false,closed: true,modal:true,width:600,height:500">
+        <div class="easyui-layout" style="width:100%;height:100%;">
+            <div region="center" border="false" style="padding:10px 12px;">
+                <form id="comm-allowmodel-copy-form" class="easyui-form form-layout-column" method="post" data-options="novalidate:true">
+                    <div class="form-item">
+                    	<div style="width: 550px;height:380px;">
+	                        <table id="comm-allowmodel-copy-table"></table>
+	                        <div id="comm-allowmodel-copy-tb" style="padding:2px 5px;">
+					        	考试名称: <input class="easyui-textbox" type="text" name="condition" data-options="width:110" />
+						        <a href="javascript:void(0)" class="easyui-linkbutton search-btn" iconCls="icon-search">搜索</a>
+						    </div>                    	
+                    	</div>
+                    </div>
+                </form>
+            </div>
+            <div region="south" border="false" style="text-align:right;padding:10px 12px;">
+                <a href="javascript:void(0)" class="easyui-linkbutton edit-save" data-options="iconCls:'icon-ok'">保存</a>
+                <a href="javascript:void(0)" class="easyui-linkbutton edit-cancel" onclick="$(this).parents('.easyui-window').window('close');" data-options="iconCls:'icon-cancel'">取消</a>
+            </div>
+        </div>
+    </div>
+</div>

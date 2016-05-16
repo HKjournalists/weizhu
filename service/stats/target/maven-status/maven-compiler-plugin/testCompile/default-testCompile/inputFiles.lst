@@ -1,0 +1,6 @@
+/Users/york/git/weizhu_server3/service/stats/src/test/java/com/weizhu/service/stats/test/log/LogCollector.java
+/Users/york/git/weizhu_server3/service/stats/src/test/java/com/weizhu/service/stats/test/DumpLogToStats.java
+/Users/york/git/weizhu_server3/service/stats/src/test/java/com/weizhu/service/stats/test/log/LogCreator.java
+/Users/york/git/weizhu_server3/service/stats/src/test/java/com/weizhu/service/stats/test/StatsServiceTest.java
+/Users/york/git/weizhu_server3/service/stats/src/test/java/com/weizhu/service/stats/test/kafka/ConsumerTest.java
+/Users/york/git/weizhu_server3/service/stats/src/test/java/com/weizhu/service/stats/test/kafka/ProducerTest.java

@@ -1,0 +1,104 @@
+<div id="training-auth-wrap" data-options="region:'center',border:false" class="easyui-layout" style="width:100%;height:100%;">
+    <div data-options="region:'north',border:false" style="width: 100%;">
+        <div class="easyui-panel" data-options="border:false">
+            <div style="padding:10px 20px;">
+                <form id="training-search-form" class="easyui-form form-layout-inline" method="get">
+                	<div class="form-item">
+                		<label>认证名称：</label>
+                		<input name="auth_name" type="text" class="easyui-textbox">
+                	</div>
+                	<div class="form-item">
+                		<label>认证状态：</label>
+                		<input class="easyui-combobox" type="text" name="state" data-options="valueField:'value',textField:'name',data:[{name:'全部',value:''},{name:'进行中',value:'AUTH_RUNING'},{name:'已结束',value:'AUTH_END'}],editable:false,panelHeight:'auto'"></input>
+                    </div>
+                    <a href="javascript:void(0)" class="easyui-linkbutton search-btn" iconCls="icon-search"><%=lang.common.search_btn%></a>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div data-options="region:'center',border:false">
+        <table id="training-auth-table" style="width:100%;height: 100%;"></table>
+    </div>
+    <div id="training-auth-edit-win" class="easyui-window" data-options="title:'新建认证',collapsible:false,maximizable:false,minimizable:false,closed: true,modal:true,width:550,height:330">
+        <div class="easyui-layout" style="width:100%;height:100%;">
+            <div region="center" border="false" style="padding:10px 12px;">
+                <form id="training-auth-edit-form" class="easyui-form form-layout-column form-label-100" method="post" data-options="novalidate:true">
+                	<input type="hidden" name="train_id"/>
+                    <div class="form-item">
+                        <label>认证名称：</label>
+                        <input class="easyui-textbox form-item-box" type="text" name="auth_name" data-options="required:true,width:375,prompt:'您可以在这里输入认证名称，1~190个字符',validType:'length[1,190]'" />
+                    </div>
+                    <div class="form-item">
+                        <label>认证课程：</label>
+                        <input class="form-item-box" type="text" name="course_id"/>
+                        <div id="training-auth-course-tb" style="padding:2px 5px;">
+				        	课程名称: <input class="easyui-textbox" type="text" name="keyword" data-options="width:110" />
+					        <a href="javascript:void(0)" class="easyui-linkbutton search-btn" iconCls="icon-search">搜索</a>
+					    </div> 
+                    </div>
+                    <div class="form-item">
+                        <label>认证截止时间：</label>
+                        <input name="end_time"/>
+                    </div>
+                    <div class="form-item">
+                        <label>认证对象：</label>
+                        <input name="allow_model_id" />
+                    </div>
+                    <div class="form-item">
+                        <label>备注：</label>
+                        <input class="easyui-textbox form-item-box" type="text" name="auth_desc" data-options="width:375,height:80,multiline:true,prompt:'您可以在这里输入认证备注信息，1~1000个字符',validType:'length[1,1000]'" />
+                    </div>
+                </form>
+            </div>
+            <div region="south" border="false" style="text-align:right;padding:10px 12px;">
+                <a href="javascript:void(0)" class="easyui-linkbutton edit-save" onclick='Wz.offlineTraining.authManage.saveAuth();' data-options="iconCls:'icon-ok'">保存</a>
+                <a href="javascript:void(0)" class="easyui-linkbutton edit-cancel" onclick="$(this).parents('.easyui-window').window('close');" data-options="iconCls:'icon-cancel'">取消</a>
+            </div>
+        </div>
+    </div>
+    <div id="training-auth-user-win" class="easyui-window" data-options="title:'查看结果',collapsible:false,maximizable:false,minimizable:false,closed: true,modal:true,width:800,height:500">
+        <div class="easyui-layout" style="width:100%;height:100%;">
+        	<div region="north" border="false" style="padding:10px 12px;">
+              	<form id="business-user-search-form" class="easyui-form form-layout-inline" method="get">
+                	<div class="form-item">
+                		<label>部门名称：</label>
+                		<input name="team_id"></input>
+                	</div>
+                	<div class="form-item">
+                		<label>姓名：</label>
+                		<input class="easyui-textbox" type="text" name="keyword"></input>
+                	</div>
+                	<div class="form-item">
+                		<label>状态：</label>
+                		<input class="easyui-combobox" type="text" name="state" data-options="valueField:'value',textField:'name',data:[{name:'全部',value:''},{name:'待认证',value:'AUTH_WAIT'},{name:'已通过',value:'AUTH_PASS'},{name:'未通过',value:'AUTH_FAIL'}],editable:false,panelHeight:'auto'"></input>
+                    </div>
+                	<a href="javascript:void(0)" class="easyui-linkbutton reset-btn" iconCls="icon-reset">重置</a>
+                    <a href="javascript:void(0)" class="easyui-linkbutton search-btn" iconCls="icon-search"><%=lang.common.search_btn%></a>
+                </form>
+            </div>
+            <div region="center" border="false">
+            	<table id="training-auth-user-table" style="width:100%;height: 100%;"></table>
+            </div>
+            <div region="south" border="false" style="text-align:right;padding:5px 12px;height:42px;" data-options="split:true">
+                <a href="javascript:void(0)" class="easyui-linkbutton edit-cancel" onclick="$(this).parents('.easyui-window').window('close');" data-options="iconCls:'icon-cancel'">关闭</a>
+            </div>
+        </div>
+    </div>
+    <div id="training-auth-notice-win" class="easyui-window" data-options="title:'发送通知',collapsible:false,maximizable:false,minimizable:false,closed: true,modal:true,width:550,height:280">
+        <div class="easyui-layout" style="width:100%;height:100%;">
+            <div region="center" border="false" style="padding:10px 12px;">
+                <form id="training-auth-notice-form" class="easyui-form form-layout-column form-label-100" method="post" data-options="novalidate:true">
+                	<input type="hidden" name="auth_id"/>
+                    <div class="form-item">
+                        <label>通知内容：</label>
+                        <input class="easyui-textbox form-item-box" type="text" name="notice_text" data-options="required:true,width:375,height:150,multiline:true,prompt:'填写模板：请各位老师于2015-10-05 13:300 ~ 2015-10-6 15:00(时段)，在第一会议室（地点）上课。',validType:'length[1,191]'" />
+                    </div>
+                </form>
+            </div>
+            <div region="south" border="false" style="text-align:right;padding:10px 12px;">
+                <a href="javascript:void(0)" class="easyui-linkbutton edit-save" onclick='Wz.offlineTraining.authManage.sendNotice();' data-options="iconCls:'icon-ok'">发送</a>
+                <a href="javascript:void(0)" class="easyui-linkbutton edit-cancel" onclick="$(this).parents('.easyui-window').window('close');" data-options="iconCls:'icon-cancel'">取消</a>
+            </div>
+        </div>
+    </div>
+</div>

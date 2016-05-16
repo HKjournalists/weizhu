@@ -1,0 +1,4 @@
+com/weizhu/service/settings/SettingsServiceImpl.class
+com/weizhu/service/settings/SettingsCache.class
+com/weizhu/service/settings/SettingsDB.class
+com/weizhu/service/settings/SettingsServiceModule.class

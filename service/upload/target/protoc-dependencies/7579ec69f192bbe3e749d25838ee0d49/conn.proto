@@ -1,0 +1,55 @@
+import "weizhu.proto";
+import "push.proto";
+
+package weizhu.conn;
+
+option java_package = "com.weizhu.proto";
+option java_outer_classname = "ConnProtos";
+
+message SendMessageRequest {
+  repeated weizhu.push.PushPacket push_packet = 1;
+}
+
+message SendMessageResponse {
+  repeated weizhu.push.PushSession push_session = 1;
+}
+
+message GetOnlineStatusRequest {
+  repeated int64 user_id = 1;
+}
+
+message GetOnlineStatusResponse {
+  repeated weizhu.Session online_session = 1;
+}
+
+message CloseConnectionRequest {
+  repeated int64          user_id = 1;
+  repeated weizhu.Session session = 2;
+}
+
+message CloseConnectionExpireRequest {
+  repeated int64 expire_session_id = 1;
+}
+
+message CloseConnectionResponse {
+  repeated weizhu.Session close_session = 1;
+}
+
+service ConnService {
+
+  // 发送推送消息
+  rpc SendMessage (SendMessageRequest) returns (SendMessageResponse);
+  
+  // 获取用户在线状态
+  rpc GetOnlineStatus (GetOnlineStatusRequest) returns (GetOnlineStatusResponse);
+  
+  // 管理员关闭用户连接
+  rpc CloseConnection (CloseConnectionRequest) returns (CloseConnectionResponse);
+  
+  // 用户会话过期导致连接关闭
+  rpc CloseConnectionExpire (CloseConnectionExpireRequest) returns (weizhu.EmptyResponse);
+  
+  // 退出登录关闭连接
+  rpc CloseConnectionLogout (weizhu.EmptyRequest) returns (weizhu.EmptyResponse);
+  
+}

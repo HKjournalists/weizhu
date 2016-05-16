@@ -1,0 +1,177 @@
+<div id="auth-map-wrap" data-options="region:'center',border:false" class="easyui-layout" style="width:100%;height:100%;">
+    <div data-options="region:'north',border:false" style="width: 100%;">
+        <div class="easyui-panel" data-options="border:false">
+            <div style="padding:10px 20px;">
+                <form id="auth-map-search-form" class="easyui-form form-layout-inline" method="get">
+                	<div class="form-item">
+                		<label>标题：</label>
+                		<input class="easyui-textbox" type="text" name="map_name"></input>
+                	</div>
+                	<div class="form-item">
+                		<label>状态：</label>
+                		<input class="easyui-combobox" type="text" name="state" data-options="valueField:'value',textField:'name',data:[{name:'全部',value:''},{name:'禁用',value:'DISABLE'},{name:'启用',value:'NORMAL'}],editable:false,panelHeight:'auto'"></input>
+                    </div>
+                    <a href="javascript:void(0)" class="easyui-linkbutton reset-btn" iconCls="icon-reset">重置</a>
+                    <a href="javascript:void(0)" class="easyui-linkbutton search-btn" iconCls="icon-search"><%=lang.common.search_btn%></a>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div data-options="region:'center',border:false">
+        <table id="auth-map-table" style="width:100%;height: 100%;"></table>
+    </div>
+    <div id="auth-map-edit" class="easyui-window" data-options="title:'新建调研',collapsible:false,maximizable:false,minimizable:false,closed: true,modal:true,width:800,height:600">
+        <div class="easyui-layout" style="width:100%;height:100%;">
+            <div id="auth-map-edit-steps" style="width:100%;height:100%;">
+            	<div title="1.调研信息" id="auth-map-firststep-tab">
+            		<div class="easyui-layout" style="width:100%;height:100%;">
+			            <div region="center" border="false" style="padding:10px 12px;">
+			                <form id="auth-map-firststep-form" class="easyui-form form-layout-column" method="post" data-options="novalidate:true">
+			                    <input type="hidden" name="map_id" />
+			                    <div class="form-item">
+			                        <label>调研图标：</label>
+			                        <input name="image_name" />
+			                    </div>
+			                    <div class="form-item">
+			                        <label>调研名称：</label>
+			                        <input class="easyui-textbox form-item-box" type="text" name="map_name" data-options="required:true,width:350,prompt:'请输入职级名称，1~50个字符',validType:'length[1,50]'" />
+			                    </div>
+			                    <div class="form-item">
+			                        <label>调研时间：</label>
+			                        <input name="start_time"/>&nbsp;&nbsp;至&nbsp;&nbsp;<input name="end_time"/>
+			                    </div>
+			                    <div class="form-item">
+			                        <label>结果展示时间：</label>
+			                        <input class="easyui-combobox" type="text" name="show_result_type" data-options="width:350,valueField:'value',value:'ALWAYS_COUNT',textField:'name',data:[{name:'一直展示',value:'ALWAYS_COUNT'},{name:'提交之后展示',value:'AFTER_SUBMIT_COUNT'},{name:'不展示',value:'NONE'}],editable:false,panelHeight:'auto'"></input>
+			                    </div>
+			                    <div class="form-item">
+			                        <label>描述：</label>
+			                        <textarea name="auth-map_desc" style="width:350px;height:200px;"></textarea>
+			                    </div>
+			                    <div class="form-item">
+			                        <label>调研对象：</label>
+			                        <input name="allow_model_id" />
+			                    </div>
+			                </form>
+			            </div>
+			            <div region="south" border="false" style="text-align:right;padding:10px 12px;">
+			                <a href="javascript:void(0)" class="easyui-linkbutton next-btn">下一步</a>
+			            </div>
+			        </div>
+            	</div>
+            	<div title="2.添加问题" id="auth-map-secondstep-tab">
+            		<div class="easyui-layout" style="width:100%;height:100%;">
+			            <div region="center" border="false" style="padding:10px 12px;">
+			                <table id="auth-map-question-talbe"></table>
+			            </div>
+			            <div region="south" border="false" style="text-align:right;padding:10px 12px;">
+		            		<a href="javascript:void(0)" class="easyui-linkbutton prev-btn">上一步</a>
+			                <a href="javascript:void(0)" class="easyui-linkbutton next-btn">下一步</a>
+			            </div>
+			        </div>
+            	</div>
+            	<div title="3.问卷预览" id="auth-map-thirdstep-tab">
+            		<div class="easyui-layout" style="width:100%;height:100%;">
+            			<div region="west" border="false" style="padding:5px;width:150px;">
+			                <h5>新员工调研</h5>
+			                <div class="auth-map-info">
+			                	<span>问题数：5</span>
+			                	<span>调研时间：2016-01-29 10:34:24 至 2016-01-30 10:34:24</span>
+			                </div>
+			                <div class="auth-map-desc"></div>
+			            </div>
+			            <div region="center" border="false" style="padding:10px 12px;">
+			                <table id="auth-map-showauth-map"></table>
+			            </div>
+			            <div region="south" border="false" style="text-align:right;padding:10px 12px;">
+		            		<a href="javascript:void(0)" class="easyui-linkbutton prev-btn">上一步</a>
+			                <a href="javascript:void(0)" class="easyui-linkbutton next-btn">完成</a>
+			            </div>
+			        </div>
+            	</div>
+            </div>
+        </div>
+    </div>
+    <div id="auth-map-view" class="easyui-window" data-options="title:'调研预览',collapsible:false,maximizable:false,minimizable:false,closed: true,modal:true,width:600,height:600">
+        <div class="easyui-layout" style="width:100%;height:100%;">
+         	<div region="north" border="false" style="padding:10px 12px;text-align:center">
+                <h5>xxxx</h5>
+                <div class="auth-map-info">
+                	<span>总分：100分</span>
+                	<span>通过分数：60分</span>
+                	<span>题目数：5</span>
+                	<span>调研时间：2016-01-29 10:34:24 至 2016-01-30 10:34:24</span>
+                </div>
+            </div>
+            <div region="center" border="false" style="padding:0px 12px;margin:auto">
+                <table id="auth-map-showexam-view"></table>
+            </div>
+            <div region="south" border="false" style="text-align:right;padding:10px 12px;">
+                <a href="javascript:void(0)" class="easyui-linkbutton next-btn" onclick="$(this).parents('.easyui-window').window('close');">关闭</a>
+            </div>
+		</div>
+    </div>
+    <div id="auth-map-result-win" class="easyui-window" data-options="title:'调研结果',collapsible:false,maximizable:false,minimizable:false,closed: true,modal:true,width:900,height:600">
+        <div class="easyui-layout" style="width:100%;height:100%;">
+            <div region="center" border="false">
+                <table id="auth-map-result-byuser-table"></table>
+            </div>
+            <div region="east" border="false" style="width:250px;">
+                <table id="auth-map-result-answer-table"></table>
+            </div>
+            <div region="south" border="false" style="text-align:right;padding:10px 12px;">
+                <a href="javascript:void(0)" class="easyui-linkbutton next-btn" onclick="$(this).parents('.easyui-window').window('close');">关闭</a>
+            </div>
+		</div>
+    </div>
+    <div id="auth-map-question-import-win" class="easyui-window" data-options="title:'导入问题',collapsible:false,maximizable:false,minimizable:false,closed: true,modal:true,width:400,height:180">
+        <div class="easyui-layout" style="width:100%;height:100%;">
+            <div region="center" border="false" style="padding:10px 12px;">
+            	<input type="hidden" name="auth-map_id" />
+                <form id="auth-map-question-import-form" class="easyui-form form-layout-column" method="post" data-options="novalidate:true" enctype="multipart/form-data">
+                    <div class="form-item">
+                        <p>请按照<a href="javascript:void(0)" class="download-btn" src_url="">问题导入模板</a>填写您要导入的考题信息后上传。<i class="important-info">填写时请勿修改、挪动表单内项目，请勿修改文件名。</i></p>
+                    </div>
+                    <div class="form-item">
+                        <input class="easyui-filebox" name="import_question_file" style="width:350px" data-options="buttonText:'选择文件'">
+                    </div>
+                </form>
+            </div>
+            <div region="south" border="false" style="text-align:right;padding:10px 12px;">
+                <a href="javascript:void(0)" class="easyui-linkbutton edit-save" onclick='Wz.auth-map.auth-mapManage.importQuestion();' data-options="iconCls:'icon-ok'">上传</a>
+                <a href="javascript:void(0)" class="easyui-linkbutton edit-cancel" onclick="$(this).parents('.easyui-window').window('close');" data-options="iconCls:'icon-cancel'">取消</a>
+            </div>
+        </div>
+    </div>
+    <div id="auth-map-question-edit-win" class="easyui-window" data-options="title:'新建问题',collapsible:false,maximizable:false,minimizable:false,closed: true,modal:true,width:550,height:400">
+        <div class="easyui-layout" style="width:100%;height:100%;">
+            <div region="center" border="false" style="padding:10px 12px;">
+                <form id="auth-map-question-edit-form" class="easyui-form form-layout-column" method="post" data-options="novalidate:true">
+                    <input type="hidden" name="question_id" />
+                    <input type="hidden" name="question_category_id" />
+                    <div class="form-item">
+                        <label>问题题目：</label>
+                        <input class="easyui-textbox form-item-box" type="text" name="question_name" data-options="required:true,width:350,multiline:true,height:50,prompt:'请输入题目内容，1~190个字符',validType:'length[1,190]'" />
+                    </div>
+                    <div class="form-item">
+                        <label>问题类型：</label>
+                        <input type="text" name="question_type" />
+                    </div>
+                    <div class="form-item easyui-panel" style="height:200px;width:100%;">
+                    	<table id="auth-map-question-option-table"></table>
+                    	<input type="hidden" name="option" />
+                    	<input type="hidden" name="type" />
+                    </div>
+                    <div class="form-item">
+                        <label>是否必填：</label>
+                        <input type="checkbox" name="is_optional" checked />
+                    </div>
+                </form>
+            </div>
+            <div region="south" border="false" style="text-align:right;padding:10px 12px;">
+                <a href="javascript:void(0)" class="easyui-linkbutton edit-save" onclick='Wz.auth.mapManage.saveQuestion();' data-options="iconCls:'icon-ok'">保存</a>
+                <a href="javascript:void(0)" class="easyui-linkbutton edit-cancel" onclick="$(this).parents('.easyui-window').window('close');" data-options="iconCls:'icon-cancel'">取消</a>
+            </div>
+        </div>
+    </div>
+</div>

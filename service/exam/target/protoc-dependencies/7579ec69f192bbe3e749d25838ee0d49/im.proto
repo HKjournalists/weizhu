@@ -1,0 +1,330 @@
+package weizhu.im;
+
+option java_package = "com.weizhu.proto";
+option java_outer_classname = "IMProtos";
+// option optimize_for = LITE_RUNTIME;
+
+// 通用即时消息结构
+message InstantMessage {
+  // 文本消息内容
+  message Text {
+    required string content = 1; // 消息内容，长度必须小于 64 * 1024
+  }
+  // 语音消息内容
+  message Voice {
+    required bytes data     = 1; // 语音消息内容，2进制数据. 长度必须小于 64 * 1024
+    optional int32 duration = 2; // 语音信息时间长度，单位：秒
+  }
+  // 图片消息内容
+  message Image {
+    required string name = 1; // 带后缀名图片名称，格式(md5.jpg). 根据im image服务地址可以拼接为完整访问url
+  }
+  // 名片内容
+  message User {
+    required int64 user_id = 1; // 名片对应用户id
+  }
+  // 视频内容
+  message Video {
+    required string name       = 1;
+    required string type       = 2;
+    required int32  size       = 3;
+    required int32  time       = 4;
+    required string image_name = 5;
+  }
+  // 文件消息内容
+  message File {
+    required string name         = 1; // 带后缀名文件名称，格式(md5.doc). 根据im file服务地址可以拼接为完整访问url
+    required string orginal_name = 2; // 原始文件名
+  }
+  // 群组更新消息，名称更改，成员加入，成员离开
+  message Group {
+    optional string group_name    = 1;
+    repeated int64  join_user_id  = 2;
+    repeated int64  leave_user_id = 3;
+  }
+  // 发现条目
+  message DiscoverItem {
+    required int64 item_id = 1; // 发现条目id
+  }
+
+  required int64 msg_seq      = 1; // 消息序列，从1开始，严格保证递增
+  required int32 msg_time     = 2; // 消息发送unix时间戳，单位秒
+  required int64 from_user_id = 3; // 消息发送者用户id
+  
+  // 消息有且只能有一种类型的内容
+  oneof msg_type {
+    Text         text          = 5;
+    Voice        voice         = 6;
+    Image        image         = 7;
+    User         user          = 8;
+    Video        video         = 9;
+    File         file          = 10;
+    Group        group         = 11;
+    DiscoverItem discover_item = 12;
+  }
+}
+
+// 点对点聊天结构
+message P2PChat {
+  required int64          user_id    = 1; // 点对点聊天对方用户id
+  required InstantMessage latest_msg = 2; // 聊天最后一条消息
+}
+
+// 群组聊天结构
+message GroupChat {
+  message Member {
+    required int64 user_id      = 1;
+    required int64 join_msg_seq = 2;
+  }
+  required int64          group_id   = 1; // 群组id
+  optional string         group_name = 2; // 群组名称
+  repeated Member         member     = 3; // 群组成员用户id，最多100个用户
+  optional InstantMessage latest_msg = 4; // 群组最后一条消息
+}
+
+// IM点对点新消息push结构
+message IMP2PMessagePush {
+  required int64          user_id = 1; // 点对点聊天对方用户id
+  required InstantMessage msg     = 2; // 消息内容
+}
+
+// IM点对点新状态push结构
+message IMP2PStatePush {
+  required int64 user_id = 1;
+}
+
+// IM群组新状态push结构
+message IMGroupStatePush {
+  required int64 group_id = 1;
+}
+
+// 获取点对点聊天信息记录请求
+message GetP2PMessageRequest {
+  required int64 user_id       = 1; // 点对点聊天对方用户id
+  optional int64 msg_seq_begin = 2; // 获取消息开始seq，不包含此seq消息。 not include
+  optional int64 msg_seq_end   = 3; // 获取消息结束seq，不包含此seq消息。 not include
+  required int32 msg_size      = 4; // 获取消息数目，小于等于50
+}
+
+// 获取群组聊天信息记录请求
+message GetGroupMessageRequest {
+  required int64 group_id      = 1; // 群组id
+  optional int64 msg_seq_begin = 2; // 获取消息开始seq，不包含此seq消息。 not include
+  optional int64 msg_seq_end   = 3; // 获取消息结束seq，不包含此seq消息。 not include
+  required int32 msg_size      = 4; // 获取消息数目，小于等于50
+}
+
+// 获取聊天信息记录响应
+message GetMessageResponse {
+  repeated InstantMessage msg      = 1; // 消息内容
+  required bool           has_more = 2; // 是否还有更多
+}
+
+// 发送点对点聊天信息请求
+message SendP2PMessageRequest {
+  required int64          to_user_id = 1; // 点对点聊天对方用户id
+  required InstantMessage msg        = 2; // 消息内容
+}
+
+// 发送点对点聊天信息响应
+message SendP2PMessageResponse {
+  enum Result {
+    SUCC = 0;                // 发送成功 
+    FAIL_USER_NOT_EXIST = 1; // 点对点聊天对方用户不存在
+    FAIL_MSG_INVALID    = 2; // 发送消息不正确
+    
+    FAIL_UNKNOWN        = 99;
+  }
+  optional Result result    = 1 [default = FAIL_UNKNOWN];
+  optional string fail_text = 2;
+  optional int64  msg_seq   = 3; // 消息发送成功后，该条消息的 seq
+  optional int32  msg_time  = 4; // 消息发送成功后，该条消息的 发送unix时间戳,单位秒
+}
+
+// 获取点对点聊天列表请求
+message GetP2PChatListRequest {
+  optional int64 last_user_id  = 1; // 上一次获取数据中最后一条数据的用户id, 第一次获取不填此字段
+  optional int32 last_msg_time = 2; // 上一次获取数据中最后一条数据的消息时间戳, 第一次获取不填此字段
+  required int32 chat_size     = 3; // 获取列表数据数目，小于等于50
+}
+
+// 获取点对点聊天列表响应
+message GetP2PChatListResponse {
+  repeated P2PChat chat     = 1; // 点对点聊天数据
+  required bool    has_more = 2; // 是否有更多
+}
+
+// 根据id获取群组聊天信息请求
+message GetGroupChatByIdRequest {
+  repeated int64 group_id = 1; // 群组id，最多50
+}
+
+// 根据id获取群组聊天信息响应
+message GetGroupChatByIdResponse {
+  repeated GroupChat group_chat = 1;
+}
+
+// 新建群组聊天请求
+message CreateGroupChatRequest {
+  required string group_name     = 1; // 群组名称
+  repeated int64  member_user_id = 2; // 成员用户id，最少2人(不包含自己)最多99人(包含自己最多100人)
+}
+
+// 新建群组聊天响应
+message CreateGroupChatResponse {
+  enum Result {
+    SUCC = 0;                    // 创建成功
+    FAIL_NAME_INVALID       = 1; // 群组名称不正确
+    FAIL_MEMBER_EMPTY       = 2; // 群组成员为空
+    FAIL_MEMBER_INVALID     = 3; // 群组成员不正确
+    FAIL_MEMBER_NUM_LIMITED = 4; // 群组用户超人数上限，不能创建
+    
+    FAIL_UNKNOWN            = 99;
+  }
+  optional Result    result     = 1 [default = FAIL_UNKNOWN];
+  optional string    fail_text  = 2;
+  optional GroupChat group_chat = 3; // 群组创建成功后, 返回群组
+}
+
+// 设置群组聊天名称请求
+message SetGroupNameRequest {
+  required int64  group_id   = 1; // 群组id
+  required string group_name = 2; // 群组名称
+}
+
+// 设置群组聊天名称响应
+message SetGroupNameResponse {
+  enum Result {
+    SUCC = 0;                 // 设置成功
+    FAIL_GROUP_NOT_EXIST = 1; // 该群组不存在
+    FAIL_GROUP_NOT_JOIN  = 2; // 没有加入该群组聊天，设置动作失败
+    FAIL_NAME_INVALID    = 3; // 群名称不正确
+    
+    FAIL_UNKNOWN         = 99;
+  }
+  optional Result         result     = 1 [default = FAIL_UNKNOWN];
+  optional string         fail_text  = 2;
+  optional InstantMessage group_msg  = 3; // 群组更新消息(msg_type为Group)
+  optional GroupChat      group_chat = 4; // 群组更新成功后, 返回群组
+}
+
+// 邀请用户加入群组聊天请求
+message JoinGroupChatRequest {
+  required int64 group_id     = 1; // 群组id
+  repeated int64 join_user_id = 2; // 被邀请用户id，最多99人 (包含自己最多100人)
+}
+
+// 邀请用户加入群组聊天响应
+message JoinGroupChatResponse {
+  enum Result {
+    SUCC = 0;                    // 加入成功
+    FAIL_GROUP_NOT_EXIST    = 1; // 群组不存在
+    FAIL_GROUP_NOT_JOIN     = 2; // 没有加入该群组聊天,不能邀请其他人加入
+    FAIL_USER_EMPTY         = 3; // 被邀请用户为空
+    FAIL_USER_INVALID       = 4; // 被邀请用户不正确
+    FAIL_MEMBER_NUM_LIMITED = 5; // 改群用户已超人数上限(100人)，不能再加入
+    
+    FAIL_UNKNOWN            = 99;
+  }
+  optional Result         result     = 1 [default = FAIL_UNKNOWN];
+  optional string         fail_text  = 2;
+  optional InstantMessage group_msg  = 3; // 群组更新消息(msg_type为Group)
+  optional GroupChat      group_chat = 4; // 群组更新成功后, 返回群组
+}
+
+// 离开群组聊天请求
+message LeaveGroupChatRequest {
+  required int64 group_id = 1; // 离开群组id
+}
+
+// 离开群组聊天响应
+message LeaveGroupChatResponse {
+  enum Result {
+    SUCC = 0;                    // 离开成功
+    FAIL_GROUP_NOT_EXIST    = 1; // 该群组不存在
+    FAIL_GROUP_NOT_JOIN     = 2; // 没有加入该群组聊天，离开动作失败
+    
+    FAIL_UNKNOWN            = 99;
+  }
+  optional Result         result     = 1 [default = FAIL_UNKNOWN];
+  optional string         fail_text  = 2;
+  optional InstantMessage group_msg  = 3; // 群组更新消息(msg_type为Group)
+  optional GroupChat      group_chat = 4; // 群组更新成功后, 返回群组
+}
+
+// 发送群组聊天信息请求
+message SendGroupMessageRequest {
+  required int64          group_id = 1; // 群组id
+  required InstantMessage msg      = 2; // 消息内容
+}
+
+// 发送群组聊天信息响应
+message SendGroupMessageResponse {
+  enum Result {
+    SUCC = 0;                 // 发送成功
+    FAIL_GROUP_NOT_EXIST = 1; // 群组不存在
+    FAIL_GROUP_NOT_JOIN  = 2; // 没有加入该群组聊天,不能发送信息
+    FAIL_MSG_INVALID     = 3; // 发送消息不正确
+    
+    FAIL_UNKNOWN         = 99;
+  }
+  optional Result result    = 1 [default = FAIL_UNKNOWN];
+  optional string fail_text = 2;
+  optional int64  msg_seq   = 3; // 发送成功后, 对应消息seq
+  optional int32  msg_time  = 4; // 发送成功后, 对应消息unix时间戳，单位秒
+}
+
+// 获取群组聊天列表请求
+message GetGroupChatListRequest {
+  optional int64 last_group_id = 1; // 上一次获取数据中最后一条数据的群组id, 第一次获取不填此字段
+  optional int32 last_msg_time = 2; // 上一次获取数据中最后一条数据的消息时间戳, 第一次获取不填此字段
+  required int32 chat_size     = 3; // 获取列表数据数目，小于等于50
+}
+
+// 获取群组聊天列表响应
+message GetGroupChatListResponse {
+  repeated GroupChat chat     = 1; // 群组聊天数据
+  required bool      has_more = 2; // 是否有更多
+}
+
+// 即时通讯服务
+service IMService {
+
+  /* 点对点聊天 */
+
+  // 获取点对点聊天信息记录
+  rpc GetP2PMessage (GetP2PMessageRequest) returns (GetMessageResponse);
+  
+  // 发送点对点信息
+  rpc SendP2PMessage (SendP2PMessageRequest) returns (SendP2PMessageResponse);
+  
+  // 获取点对点聊天列表
+  rpc GetP2PChatList (GetP2PChatListRequest) returns (GetP2PChatListResponse);
+  
+  /* 群组聊天 */
+  
+  // 根据id获取群组聊天信息
+  rpc GetGroupChatById (GetGroupChatByIdRequest) returns (GetGroupChatByIdResponse);
+  
+  // 获取群组聊天信息记录
+  rpc GetGroupMessage (GetGroupMessageRequest) returns (GetMessageResponse);
+  
+  // 新建群组聊天
+  rpc CreateGroupChat (CreateGroupChatRequest) returns (CreateGroupChatResponse);
+  
+  // 设置群组聊天名称
+  rpc SetGroupName (SetGroupNameRequest) returns (SetGroupNameResponse);
+  
+  // 邀请用户加入群组聊天
+  rpc JoinGroupChat (JoinGroupChatRequest) returns (JoinGroupChatResponse);
+  
+  // 离开群组聊天
+  rpc LeaveGroupChat (LeaveGroupChatRequest) returns (LeaveGroupChatResponse);
+  
+  // 发送群组聊天信息
+  rpc SendGroupMessage (SendGroupMessageRequest) returns (SendGroupMessageResponse);
+  
+  // 获取群组聊天列表
+  rpc GetGroupChatList (GetGroupChatListRequest) returns (GetGroupChatListResponse);
+  
+}

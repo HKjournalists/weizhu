@@ -1,0 +1,9 @@
+package weizhu.credits.dao;
+
+option java_package = "com.weizhu.service.credits";
+option java_outer_classname = "CreditsDAOProtos";
+
+message CreditsOrderListIndex {
+  required int32 order_id = 1;
+  required int32 time     = 2;
+}

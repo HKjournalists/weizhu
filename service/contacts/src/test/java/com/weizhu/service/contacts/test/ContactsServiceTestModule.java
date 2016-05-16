@@ -1,0 +1,15 @@
+package com.weizhu.service.contacts.test;
+
+import com.google.inject.AbstractModule;
+import com.google.inject.multibindings.Multibinder;
+import com.google.inject.name.Names;
+
+public class ContactsServiceTestModule extends AbstractModule {
+
+	@Override
+	protected void configure() {
+		Multibinder<String> testDataSQLBinder = Multibinder.newSetBinder(binder(), String.class, Names.named("db_test_data.sql"));
+		testDataSQLBinder.addBinding().toInstance("com/weizhu/service/contacts/test/db_test_data.sql");
+	}
+
+}

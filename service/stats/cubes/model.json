@@ -1,0 +1,665 @@
+{
+	"dimensions": [
+		{
+			"name": "log_date",
+			"label": "记录日期",
+			"cardinality": "medium",
+			"levels": [ 
+				{
+					"name": "year",
+					"label": "年"
+				},
+				{
+					"name": "quarter",
+					"label": "季度"
+				},
+				{
+					"name": "month",
+					"label": "月"
+				},
+				{
+					"name": "day",
+					"label": "日"
+				},
+				{
+					"name": "week",
+					"label": "周"
+				}
+			],
+			"hierarchies": [
+				{
+					"name": "daily",
+					"label": "按日期划分",
+					"levels": ["year", "quarter", "month", "day"]
+				},
+				{
+					"name": "weekly",
+					"label": "按周划分",
+					"levels": ["week"]
+				}
+			],
+			"role": "time"
+		},
+		{
+			"name": "company",
+			"label": "公司",
+			"levels": [ 
+				{
+					"name": "company",
+					"label": "公司",
+					"attributes": [ "company_id", "company_name" ],
+					"key": "company_id",
+					"label_attribute": "company_name"
+				}
+			]
+		},
+		{
+			"name": "user",
+			"label": "用户",
+			"attributes": [ "user_id", "user_name"],
+			"key": "user_id",
+			"label_attribute": "user_name",
+			"cardinality": "medium"
+		},
+		{
+			"name": "user_state",
+			"label": "用户状态"
+		},
+		{
+			"name": "user_gender",
+			"label": "用户性别"
+		},
+		{
+			"name": "user_level",
+			"label": "用户职级",
+			"attributes": [ "level_id", "level_name" ],
+			"key": "level_id",
+			"label_attribute": "level_name",
+			"cardinality": "medium"
+		},
+		{
+			"name": "user_team",
+			"label": "用户部门",
+			"levels": [ 
+				{
+					"name": "team_1",
+					"label": "一级部门",
+					"attributes": [ "team_id_1", "team_name_1" ],
+					"key": "team_id_1",
+					"label_attribute": "team_name_1",
+					"cardinality": "medium"
+				},
+				{
+					"name": "team_2",
+					"label": "二级部门",
+					"attributes": [ "team_id_2", "team_name_2" ],
+					"key": "team_id_2",
+					"label_attribute": "team_name_2",
+					"cardinality": "medium"
+				},
+				{
+					"name": "team_3",
+					"label": "三级部门",
+					"attributes": [ "team_id_3", "team_name_3" ],
+					"key": "team_id_3",
+					"label_attribute": "team_name_3",
+					"cardinality": "medium"
+				},
+				{
+					"name": "team_4",
+					"label": "四级部门",
+					"attributes": [ "team_id_4", "team_name_4" ],
+					"key": "team_id_4",
+					"label_attribute": "team_name_4",
+					"cardinality": "medium"
+				},
+				{
+					"name": "team_5",
+					"label": "五级部门",
+					"attributes": [ "team_id_5", "team_name_5" ],
+					"key": "team_id_5",
+					"label_attribute": "team_name_5",
+					"cardinality": "medium"
+				},
+				{
+					"name": "team_6",
+					"label": "六级部门",
+					"attributes": [ "team_id_6", "team_name_6" ],
+					"key": "team_id_6",
+					"label_attribute": "team_name_6",
+					"cardinality": "medium"
+				}
+			]
+		}, 
+		{
+			"name": "user_position",
+			"label": "用户职位",
+			"attributes": [ "position_id", "position_name" ],
+			"key": "position_id",
+			"label_attribute": "position_name",
+			"cardinality": "medium"
+		},
+		{
+			"name": "server",
+			"label": "server",
+			"cardinality": "medium"
+		},
+		{
+			"name": "api",
+			"label": "调用接口",
+			"levels": [ 
+				{
+					"name": "service",
+					"label": "service",
+					"cardinality": "medium"
+				},
+				{
+					"name": "function",
+					"label": "function",
+					"cardinality": "medium"
+				}
+			]
+		},
+		{
+			"name": "result",
+			"label": "结果",
+			"cardinality": "medium"
+		},
+		{
+			"name": "discover_item",
+			"label": "发现条目",
+			"attributes": [ "item_id", "item_name" ],
+			"key": "item_id",
+			"label_attribute": "item_name",
+			"cardinality": "medium"
+		},
+		{
+			"name": "discover_item_state",
+			"label": "发现条目状态",
+			"cardinality": "medium"
+		},
+		{
+			"name": "discover_module",
+			"label": "发现模块",
+			"levels": [ 
+				{
+					"name": "module",
+					"label": "模块",
+					"attributes": [ "module_id", "module_name" ],
+					"key": "module_id",
+					"label_attribute": "module_name",
+					"cardinality": "medium"
+				},
+				{
+					"name": "category",
+					"label": "分类",
+					"attributes": [ "category_id", "category_name" ],
+					"key": "category_id",
+					"label_attribute": "category_name",
+					"cardinality": "medium"
+				}
+			]
+		},
+		{
+			"name": "function",
+			"label": "操作",
+			"cardinality": "medium"
+		},
+		{
+			"name": "admin_id",
+			"label": "管理员id",
+			"cardinality": "medium"
+		},
+		{
+			"name": "platform",
+			"label": "微助平台",
+			"cardinality": "medium"
+		},
+		{
+			"name": "version_name",
+			"label": "版本名",
+			"cardinality": "medium"
+		},
+		{
+			"name": "version_code",
+			"label": "版本号",
+			"cardinality": "medium"
+		},
+		{
+			"name": "company_key",
+			"label": "公司key",
+			"cardinality": "medium"
+		},
+		{
+			"name": "mobile_no",
+			"label": "手机号",
+			"cardinality": "medium"
+		}
+	],
+	
+	"cubes": [
+		{
+			"name": "weizhu_version",
+			"label": "微助版本",
+			"dimensions": [ "log_date", "platform", "version_name", "version_code", "company", "user", "user_state", "user_gender", "user_level", "user_team", "user_position" ],
+			"measures": [ 
+				{
+					"name": "user_id", 
+					"aggregates": [ "count_distinct" ]
+				},
+				{
+					"name": "log_cnt", 
+					"aggregates": [ "sum" ]
+				}
+			],
+			"aggregates": [
+				{
+					"name": "user_id_count_distinct",
+					"label": "用户数",
+					"measure": "user_id",
+					"function": "count_distinct"
+				},
+				{
+					"name": "log_cnt_sum",
+					"label": "记录总数",
+					"measure": "log_cnt",
+					"function": "sum"
+				}
+			],
+			"joins": [
+				{
+					"master": "weizhu_stats_fact_weizhu_version.log_date",
+					"detail": "weizhu_stats_dim_date.date"
+				},
+				{
+					"master": "weizhu_stats_fact_weizhu_version.company_id",
+					"detail": "weizhu_stats_dim_company.company_id"
+				},
+				{
+					"master": "weizhu_stats_fact_weizhu_version.user_id",
+					"detail": "weizhu_stats_dim_user.user_id"
+				}
+			],
+			"mappings": {
+				"log_date.day": "weizhu_stats_fact_weizhu_version.log_date",
+				"log_date.year": "weizhu_stats_dim_date.year",
+				"log_date.quarter": "weizhu_stats_dim_date.quarter",
+				"log_date.month": "weizhu_stats_dim_date.month",
+				"log_date.week": "weizhu_stats_dim_date.week",
+				"user_state": "weizhu_stats_dim_user.state",
+				"user_gender": "weizhu_stats_dim_user.gender",
+				"user_level.level_id": "weizhu_stats_dim_user.level_id",
+				"user_level.level_name": "weizhu_stats_dim_user.level_name",
+				"user_team.team_id_1": "weizhu_stats_dim_user.team_id_1",
+				"user_team.team_name_1": "weizhu_stats_dim_user.team_name_1",
+				"user_team.team_id_2": "weizhu_stats_dim_user.team_id_2",
+				"user_team.team_name_2": "weizhu_stats_dim_user.team_name_2",
+				"user_team.team_id_3": "weizhu_stats_dim_user.team_id_3",
+				"user_team.team_name_3": "weizhu_stats_dim_user.team_name_3",
+				"user_team.team_id_4": "weizhu_stats_dim_user.team_id_4",
+				"user_team.team_name_4": "weizhu_stats_dim_user.team_name_4",
+				"user_team.team_id_5": "weizhu_stats_dim_user.team_id_5",
+				"user_team.team_name_5": "weizhu_stats_dim_user.team_name_5",
+				"user_team.team_id_6": "weizhu_stats_dim_user.team_id_6",
+				"user_team.team_name_6": "weizhu_stats_dim_user.team_name_6",
+				"user_position.position_id": "weizhu_stats_dim_user.position_id",
+				"user_position.position_name": "weizhu_stats_dim_user.position_name"
+			}
+		},
+		{
+			"name": "user_access",
+			"label": "每日用户访问",
+			"dimensions": [ "log_date", "company", "user", "user_state", "user_gender", "user_level", "user_team", "user_position" ],
+			"measures": [ 
+				{
+					"name": "user_id", 
+					"aggregates": [ "count_distinct" ]
+				},
+				{
+					"name": "log_cnt", 
+					"aggregates": [ "sum" ]
+				}
+			],
+			"aggregates": [
+				{
+					"name": "user_id_count_distinct",
+					"label": "用户数",
+					"measure": "user_id",
+					"function": "count_distinct"
+				},
+				{
+					"name": "log_cnt_sum",
+					"label": "记录访问总数",
+					"measure": "log_cnt",
+					"function": "sum"
+				}
+			],
+			"joins": [
+				{
+					"master": "weizhu_stats_fact_user_access.log_date",
+					"detail": "weizhu_stats_dim_date.date"
+				},
+				{
+					"master": "weizhu_stats_fact_user_access.company_id",
+					"detail": "weizhu_stats_dim_company.company_id"
+				},
+				{
+					"master": "weizhu_stats_fact_user_access.user_id",
+					"detail": "weizhu_stats_dim_user.user_id"
+				}
+			],
+			"mappings": {
+				"log_date.day": "weizhu_stats_fact_user_access.log_date",
+				"log_date.year": "weizhu_stats_dim_date.year",
+				"log_date.quarter": "weizhu_stats_dim_date.quarter",
+				"log_date.month": "weizhu_stats_dim_date.month",
+				"log_date.week": "weizhu_stats_dim_date.week",
+				"user_state": "weizhu_stats_dim_user.state",
+				"user_gender": "weizhu_stats_dim_user.gender",
+				"user_level.level_id": "weizhu_stats_dim_user.level_id",
+				"user_level.level_name": "weizhu_stats_dim_user.level_name",
+				"user_team.team_id_1": "weizhu_stats_dim_user.team_id_1",
+				"user_team.team_name_1": "weizhu_stats_dim_user.team_name_1",
+				"user_team.team_id_2": "weizhu_stats_dim_user.team_id_2",
+				"user_team.team_name_2": "weizhu_stats_dim_user.team_name_2",
+				"user_team.team_id_3": "weizhu_stats_dim_user.team_id_3",
+				"user_team.team_name_3": "weizhu_stats_dim_user.team_name_3",
+				"user_team.team_id_4": "weizhu_stats_dim_user.team_id_4",
+				"user_team.team_name_4": "weizhu_stats_dim_user.team_name_4",
+				"user_team.team_id_5": "weizhu_stats_dim_user.team_id_5",
+				"user_team.team_name_5": "weizhu_stats_dim_user.team_name_5",
+				"user_team.team_id_6": "weizhu_stats_dim_user.team_id_6",
+				"user_team.team_name_6": "weizhu_stats_dim_user.team_name_6",
+				"user_position.position_id": "weizhu_stats_dim_user.position_id",
+				"user_position.position_name": "weizhu_stats_dim_user.position_name"
+			}
+		}, 
+		{
+			"name": "user_action",
+			"label": "用户写操作",
+			"dimensions": [ "log_date", "server", "api", "result", "company", "user", "user_state", "user_gender", "user_level", "user_team", "user_position"],
+			"measures": [ 
+				{
+					"name": "log_id", 
+					"aggregates": [ "count" ]
+				},
+				{
+					"name": "duration", 
+					"aggregates": [ "avg" ]
+				}
+			],
+			"aggregates": [
+				{
+					"name": "log_id_count",
+					"label": "调用数",
+					"measure": "log_id",
+					"function": "count"
+				},
+				{
+					"name": "duration_avg",
+					"label": "平均耗时",
+					"measure": "duration",
+					"function": "avg"
+				}
+			],
+			"details" : [ "session_id", "log_time" ],
+			
+			"joins": [
+				{
+					"master": "weizhu_stats_fact_user_action.log_date",
+					"detail": "weizhu_stats_dim_date.date"
+				},
+				{
+					"master": "weizhu_stats_fact_user_action.company_id",
+					"detail": "weizhu_stats_dim_company.company_id"
+				},
+				{
+					"master": "weizhu_stats_fact_user_action.user_id",
+					"detail": "weizhu_stats_dim_user.user_id"
+				}
+			],
+			"mappings": {
+				"log_date.day": "weizhu_stats_fact_user_action.log_date",
+				"log_date.year": "weizhu_stats_dim_date.year",
+				"log_date.quarter": "weizhu_stats_dim_date.quarter",
+				"log_date.month": "weizhu_stats_dim_date.month",
+				"log_date.week": "weizhu_stats_dim_date.week",
+				"user_state": "weizhu_stats_dim_user.state",
+				"user_gender": "weizhu_stats_dim_user.gender",
+				"user_level.level_id": "weizhu_stats_dim_user.level_id",
+				"user_level.level_name": "weizhu_stats_dim_user.level_name",
+				"user_team.team_id_1": "weizhu_stats_dim_user.team_id_1",
+				"user_team.team_name_1": "weizhu_stats_dim_user.team_name_1",
+				"user_team.team_id_2": "weizhu_stats_dim_user.team_id_2",
+				"user_team.team_name_2": "weizhu_stats_dim_user.team_name_2",
+				"user_team.team_id_3": "weizhu_stats_dim_user.team_id_3",
+				"user_team.team_name_3": "weizhu_stats_dim_user.team_name_3",
+				"user_team.team_id_4": "weizhu_stats_dim_user.team_id_4",
+				"user_team.team_name_4": "weizhu_stats_dim_user.team_name_4",
+				"user_team.team_id_5": "weizhu_stats_dim_user.team_id_5",
+				"user_team.team_name_5": "weizhu_stats_dim_user.team_name_5",
+				"user_team.team_id_6": "weizhu_stats_dim_user.team_id_6",
+				"user_team.team_name_6": "weizhu_stats_dim_user.team_name_6",
+				"user_position.position_id": "weizhu_stats_dim_user.position_id",
+				"user_position.position_name": "weizhu_stats_dim_user.position_name",
+				"api.service": "weizhu_stats_fact_user_action.service",
+				"api.function": "weizhu_stats_fact_user_action.function"
+			},
+			"key" : "log_id"
+		}, 
+		{
+			"name": "user_discover",
+			"label": "用户发现操作",
+			"dimensions": [ "log_date", "company", "user", "user_state", "user_gender", "user_level", "user_team", "user_position", "discover_item", "discover_item_state", "discover_module", "function", "result"],
+			"measures": [ 
+				{
+					"name": "log_id", 
+					"aggregates": [ "count" ]
+				},
+				{
+					"name": "user_id", 
+					"aggregates": [ "count_distinct" ]
+				},
+				{
+					"name": "item_id", 
+					"aggregates": [ "count_distinct" ]
+				}
+			],
+			"aggregates": [
+				{
+					"name": "log_id_count",
+					"label": "操作数",
+					"measure": "log_id",
+					"function": "count"
+				},
+				{
+					"name": "user_id_count_distinct",
+					"label": "用户数",
+					"measure": "user_id",
+					"function": "count_distinct"
+				},
+				{
+					"name": "item_id_count_distinct",
+					"label": "课件数",
+					"measure": "item_id",
+					"function": "count_distinct"
+				}
+			],
+			"details" : [ "session_id", "log_time" ],
+			
+			"joins": [
+				{
+					"master": "weizhu_stats_fact_user_discover.log_date",
+					"detail": "weizhu_stats_dim_date.date"
+				},
+				{
+					"master": "weizhu_stats_fact_user_discover.company_id",
+					"detail": "weizhu_stats_dim_company.company_id"
+				},
+				{
+					"master": "weizhu_stats_fact_user_discover.user_id",
+					"detail": "weizhu_stats_dim_user.user_id"
+				},
+				{
+					"master": "weizhu_stats_fact_user_discover.item_id",
+					"detail": "weizhu_stats_dim_discover_item.item_id"
+				}
+			],
+			"mappings": {
+				"log_date.day": "weizhu_stats_fact_user_discover.log_date",
+				"log_date.year": "weizhu_stats_dim_date.year",
+				"log_date.quarter": "weizhu_stats_dim_date.quarter",
+				"log_date.month": "weizhu_stats_dim_date.month",
+				"log_date.week": "weizhu_stats_dim_date.week",
+				"user_state": "weizhu_stats_dim_user.state",
+				"user_gender": "weizhu_stats_dim_user.gender",
+				"user_level.level_id": "weizhu_stats_dim_user.level_id",
+				"user_level.level_name": "weizhu_stats_dim_user.level_name",
+				"user_team.team_id_1": "weizhu_stats_dim_user.team_id_1",
+				"user_team.team_name_1": "weizhu_stats_dim_user.team_name_1",
+				"user_team.team_id_2": "weizhu_stats_dim_user.team_id_2",
+				"user_team.team_name_2": "weizhu_stats_dim_user.team_name_2",
+				"user_team.team_id_3": "weizhu_stats_dim_user.team_id_3",
+				"user_team.team_name_3": "weizhu_stats_dim_user.team_name_3",
+				"user_team.team_id_4": "weizhu_stats_dim_user.team_id_4",
+				"user_team.team_name_4": "weizhu_stats_dim_user.team_name_4",
+				"user_team.team_id_5": "weizhu_stats_dim_user.team_id_5",
+				"user_team.team_name_5": "weizhu_stats_dim_user.team_name_5",
+				"user_team.team_id_6": "weizhu_stats_dim_user.team_id_6",
+				"user_team.team_name_6": "weizhu_stats_dim_user.team_name_6",
+				"user_position.position_id": "weizhu_stats_dim_user.position_id",
+				"user_position.position_name": "weizhu_stats_dim_user.position_name",
+				"discover_item.item_id": "weizhu_stats_dim_discover_item.item_id",
+				"discover_item.item_name": "weizhu_stats_dim_discover_item.item_name",
+				"discover_item_state": "weizhu_stats_dim_discover_item.state",
+				"discover_module.module_id": "weizhu_stats_dim_discover_item.module_id",
+				"discover_module.module_name": "weizhu_stats_dim_discover_item.module_name",
+				"discover_module.category_id": "weizhu_stats_dim_discover_item.category_id",
+				"discover_module.category_name": "weizhu_stats_dim_discover_item.category_name"
+			},
+			"key": "log_id"
+		}, 
+		{
+			"name": "user_login",
+			"label": "用户登录操作",
+			"dimensions": [ "log_date", "company", "user", "user_state", "user_gender", "user_level", "user_team", "user_position", "function", "company_key", "mobile_no", "result"],
+			"measures": [ 
+				{
+					"name": "log_id", 
+					"aggregates": [ "count" ]
+				},
+				{
+					"name": "user_id", 
+					"aggregates": [ "count_distinct" ]
+				}
+			],
+			"aggregates": [
+				{
+					"name": "log_id_count",
+					"label": "操作数",
+					"measure": "log_id",
+					"function": "count"
+				},
+				{
+					"name": "user_id_count_distinct",
+					"label": "用户数",
+					"measure": "user_id",
+					"function": "count_distinct"
+				}
+			],
+			"details" : [ "session_id", "log_time"],
+			
+			"joins": [
+				{
+					"master": "weizhu_stats_fact_user_login.log_date",
+					"detail": "weizhu_stats_dim_date.date"
+				},
+				{
+					"master": "weizhu_stats_fact_user_login.company_id",
+					"detail": "weizhu_stats_dim_company.company_id"
+				},
+				{
+					"master": "weizhu_stats_fact_user_login.user_id",
+					"detail": "weizhu_stats_dim_user.user_id"
+				}
+			],
+			"mappings": {
+				"log_date.day": "weizhu_stats_fact_user_login.log_date",
+				"log_date.year": "weizhu_stats_dim_date.year",
+				"log_date.quarter": "weizhu_stats_dim_date.quarter",
+				"log_date.month": "weizhu_stats_dim_date.month",
+				"log_date.week": "weizhu_stats_dim_date.week",
+				"user_state": "weizhu_stats_dim_user.state",
+				"user_gender": "weizhu_stats_dim_user.gender",
+				"user_level.level_id": "weizhu_stats_dim_user.level_id",
+				"user_level.level_name": "weizhu_stats_dim_user.level_name",
+				"user_team.team_id_1": "weizhu_stats_dim_user.team_id_1",
+				"user_team.team_name_1": "weizhu_stats_dim_user.team_name_1",
+				"user_team.team_id_2": "weizhu_stats_dim_user.team_id_2",
+				"user_team.team_name_2": "weizhu_stats_dim_user.team_name_2",
+				"user_team.team_id_3": "weizhu_stats_dim_user.team_id_3",
+				"user_team.team_name_3": "weizhu_stats_dim_user.team_name_3",
+				"user_team.team_id_4": "weizhu_stats_dim_user.team_id_4",
+				"user_team.team_name_4": "weizhu_stats_dim_user.team_name_4",
+				"user_team.team_id_5": "weizhu_stats_dim_user.team_id_5",
+				"user_team.team_name_5": "weizhu_stats_dim_user.team_name_5",
+				"user_team.team_id_6": "weizhu_stats_dim_user.team_id_6",
+				"user_team.team_name_6": "weizhu_stats_dim_user.team_name_6",
+				"user_position.position_id": "weizhu_stats_dim_user.position_id",
+				"user_position.position_name": "weizhu_stats_dim_user.position_name"
+			},
+			"key": "log_id"
+		}, 
+		{
+			"name": "admin_action",
+			"label": "管理员写操作",
+			"dimensions": [ "log_date", "server", "api", "result", "company", "admin_id"],
+			"measures": [ 
+				{
+					"name": "log_id", 
+					"aggregates": [ "count" ]
+				},
+				{
+					"name": "duration", 
+					"aggregates": [ "avg" ]
+				}
+			],
+			"aggregates": [
+				{
+					"name": "log_id_count",
+					"label": "调用数",
+					"measure": "log_id",
+					"function": "count"
+				},
+				{
+					"name": "duration_avg",
+					"label": "平均耗时",
+					"measure": "duration",
+					"function": "avg"
+				}
+			],
+			"details" : [ "session_id", "log_time" ],
+			
+			"joins": [
+				{
+					"master": "weizhu_stats_fact_admin_action.log_date",
+					"detail": "weizhu_stats_dim_date.date"
+				},
+				{
+					"master": "weizhu_stats_fact_admin_action.company_id",
+					"detail": "weizhu_stats_dim_company.company_id"
+				}
+			],
+			"mappings": {
+				"log_date.day": "weizhu_stats_fact_admin_action.log_date",
+				"log_date.year": "weizhu_stats_dim_date.year",
+				"log_date.quarter": "weizhu_stats_dim_date.quarter",
+				"log_date.month": "weizhu_stats_dim_date.month",
+				"log_date.week": "weizhu_stats_dim_date.week",
+				"api.service": "weizhu_stats_fact_admin_action.service",
+				"api.function": "weizhu_stats_fact_admin_action.function"
+			},
+			"key" : "log_id"
+		}
+	]
+}

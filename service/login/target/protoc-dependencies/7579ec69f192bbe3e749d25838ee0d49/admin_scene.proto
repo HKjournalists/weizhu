@@ -1,0 +1,692 @@
+import "weizhu.proto";
+import "community.proto";
+import "discover_v2.proto";
+import "scene.proto";
+package weizhu.admin.scene;
+
+option java_package         = "com.weizhu.proto";
+option java_outer_classname = "AdminSceneProtos";
+// option optimize_for = LITE_RUNTIME;
+
+
+// 设置场景主页信息
+message SetSceneHomeRequest {
+  required string   scene_id_order_str          = 1; // 场景序列字符串 
+}
+
+// 设置场景主页信息
+message SetSceneHomeResponse {
+  enum Result {
+    SUCC                                 = 0;
+    FAIL_PERMISSION_DENIED               = 1; // 无此操作权限    
+    FAIL_SCENE_ORDER_STR_INVALID         = 2; // scene_order_str错误
+     
+    FAIL_UNKNOWN                         = 99;
+  }
+  
+  optional Result result          = 1 [default = FAIL_UNKNOWN]; // 返回结果
+  optional string fail_text       = 2; // 错误文本
+}
+
+message GetSceneResponse {
+  repeated weizhu.scene.Scene scene       = 1; // 场景
+}
+
+message CreateSceneRequest {
+  required string scene_name        = 1; // 场景名称
+  required string image_name        = 2; // 场景图标. 带后缀名图片名称，格式(md5.jpg). 根据scene image服务地址可以拼接为完整访问url
+  required string scene_desc        = 3; // 场景介绍描述，最多10个字
+  optional int32  parent_scene_id   = 4; // 父场景id，不填该字段表示为根场景
+}
+
+message CreateSceneResponse {
+   enum Result {
+    SUCC                                 = 0;
+    FAIL_PERMISSION_DENIED               = 1; // 无此操作权限    
+    FAIL_SCENE_NAME_INVALID              = 2; // 场景名称错误
+    FAIL_IMAGE_NAME_INVALID              = 3; // 图片名称错误
+    FAIL_SCENE_DESC_INVALID              = 4; // 场景描述错误
+    FAIL_PARENT_SCENE_ID_NOT_EXIST       = 5; // 父场景id不存在
+  
+    FAIL_UNKNOWN                         = 99;
+  }
+  
+  optional Result result          = 1 [default = FAIL_UNKNOWN]; // 返回结果
+  optional string fail_text       = 2; // 错误文本
+  optional int32  scene_id        = 3; // 创建成功后的场景id
+}
+
+message UpdateSceneRequest {
+  required int32  scene_id          = 1; // 场景id
+  required string scene_name        = 2; // 场景名称
+  required string image_name        = 3; // 场景图标. 带后缀名图片名称，格式(md5.jpg). 根据scene image服务地址可以拼接为完整访问url
+  required string scene_desc        = 4; // 场景介绍描述，最多10个字
+  optional int32  parent_scene_id   = 5; // 父场景id，不填该字段表示为根场景
+}
+
+message UpdateSceneResponse {
+   enum Result {
+    SUCC                                 = 0;
+    FAIL_PERMISSION_DENIED               = 1; // 无此操作权限    
+    FAIL_SCENE_NAME_INVALID              = 2; // 场景name错误
+    FAIL_IMAGE_NAME_INVALID              = 3; // 图片名称错误
+    FAIL_SCENE_DESC_INVALID              = 4; // 场景描述错误
+    FAIL_PARENT_SCENE_ID_NOT_EXIST       = 5; // 父场景id不存在
+    FAIL_SCENE_ID_NOT_EXIST              = 6; // 场景id不存在
+  
+    FAIL_UNKNOWN                         = 99;
+  }
+  
+  optional Result result          = 1 [default = FAIL_UNKNOWN]; // 返回结果
+  optional string fail_text       = 2; // 错误文本
+}
+
+message UpdateSceneStateRequest {
+  required int32               scene_id          = 1; // 场景id
+  required weizhu.scene.State  state             = 2; // 场景状态，删除，作废和正常显示三个状态
+
+}
+
+message UpdateSceneStateResponse {
+   enum Result {
+    SUCC                                 = 0;
+    FAIL_PERMISSION_DENIED               = 1; // 无此操作权限    
+    FAIL_SCENE_ID_NOT_EXIST              = 2; // 场景id不存在
+    FAIL_SCENE_EXIST_CHILDREN_SCENE      = 3; // 场景下存在子场景时，不能删除
+    
+    FAIL_UNKNOWN                         = 99;
+  }
+  
+  optional Result result          = 1 [default = FAIL_UNKNOWN]; // 返回结果
+  optional string fail_text       = 2; // 错误文本
+}
+
+message CreateSceneItemRequest {
+  // 创建条目所需要的参数
+  message CreateItemParameter {
+    oneof source_item_id {
+     int64  discover_item_id   = 1; // 发现中的条目id
+     int32  community_post_id  = 2; // 社区中的帖子id
+    }
+    required int32    scene_id     = 3; // 场景id
+  }
+  
+  repeated CreateItemParameter create_item_parameter = 1; // 创建条目所需参数实体的列表，用于批量创建
+}
+
+message CreateSceneItemResponse {
+   enum Result {
+    SUCC                                 = 0;
+    FAIL_PERMISSION_DENIED               = 1; // 无此操作权限    
+    FAIL_DISCOVER_ITEM_ID_NOT_EXIST      = 2; // 发现中的条目id不存在
+    FAIL_COMMUNITY_POST_ID_NOT_EXIST     = 3; // 社区中的帖子id不存在
+    FAIL_SCENE_ID_NOT_EXIST              = 4; // 该场景不存在
+  
+    FAIL_UNKNOWN                         = 99;
+  }
+  
+  optional Result result          = 1 [default = FAIL_UNKNOWN]; // 返回结果
+  optional string fail_text       = 2; // 错误文本
+}
+
+message UpdateSceneItemStateRequest {
+
+  repeated int32              item_id  = 1; // 条目ID
+  required weizhu.scene.State state    = 2; // 条目状态：删除，作废和正常显示三个状态
+}
+
+message UpdateSceneItemStateResponse {
+   enum Result {
+    SUCC                                 = 0;
+    FAIL_PERMISSION_DENIED               = 1; // 无此操作权限    
+    FAIL_ITEM_ID_NOT_EXIST               = 2; // 条目id不存在
+  
+    FAIL_UNKNOWN                         = 99;
+  }
+  
+  optional Result result          = 1 [default = FAIL_UNKNOWN]; // 返回结果
+  optional string fail_text       = 2; // 错误文本
+}
+
+message MigrateSceneItemRequest {
+
+  repeated int32    item_id      = 1; // 条目ID
+  required int32    scene_id     = 2; // 场景id
+}
+
+message MigrateSceneItemResponse {
+   enum Result {
+    SUCC                                 = 0;
+    FAIL_PERMISSION_DENIED               = 1; // 无此操作权限    
+    FAIL_ITEM_ID_NOT_EXIST               = 2; // 条目id不存在
+    FAIL_SCENE_ID_NOT_EXIST              = 3; // 该场景不存在
+  
+    FAIL_UNKNOWN                         = 99;
+  }
+  
+  optional Result result          = 1 [default = FAIL_UNKNOWN]; // 返回结果
+  optional string fail_text       = 2; // 错误文本
+}
+
+message GetSceneItemRequest {
+  optional int32  scene_id       = 1; // 场景id
+  optional int32  start          = 2; // 获取数据开始位置
+  optional int32  length         = 3; // 获取数据长度
+  optional string item_title     = 4; // 条目的标题，模糊查询的关键字
+}
+
+message GetSceneItemResponse {
+  repeated weizhu.scene.Item   item            = 1; // 条目列表
+  required int32               total_size      = 2; // 总数
+  required int32               filtered_size   = 3; // 过滤后的个数
+  repeated weizhu.scene.Scene  ref_scene       = 4; // 依赖的场景
+  
+}
+
+// 更新条目的排列顺序
+message UpdateSceneItemOrderRequest {
+
+  required int32    scene_id            = 1; // 场景id
+  required string   item_id_order_str   = 2; // 条目ID顺序字符串
+}
+
+message UpdateSceneItemOrderResponse {
+   enum Result {
+    SUCC                                 = 0;
+    FAIL_PERMISSION_DENIED               = 1; // 无此操作权限    
+    FAIL_SCENE_ID_NOT_EXIST              = 3; // 该场景不存在
+    FAIL_ITEM_ID_ORDER_STR_INVALID       = 4; // item_id_order_str错误
+  
+    FAIL_UNKNOWN                         = 99;
+  }
+  
+  optional Result result          = 1 [default = FAIL_UNKNOWN]; // 返回结果
+  optional string fail_text       = 2; // 错误文本
+}
+
+
+
+
+// 工具－－盖帽神器（超值推荐）
+  
+
+// 产品价格的web页面url创建条件
+message PriceWebUrlCreateCondition {
+  required string url_name              = 1; // url名称
+  required string url_content           = 2; // url地址内容
+  required string image_name            = 3; // web页面地址图片
+  required bool   is_weizhu             = 4; // 是否是微助自己的url。true: 微助的url，需要带上身份cookie。 false: 外部url，不要带上身份cookie
+}
+
+// 获取超值推荐的所有分类
+message GetRecommenderHomeResponse {
+  repeated weizhu.scene.RecommenderCategory   category   = 1; // 分类列表
+}
+
+// 新增分类
+message CreateRecommenderCategoryRequest {
+  required string category_name       = 1; // 分类名称
+  optional string image_name          = 2; // 图片名称
+  optional string category_desc       = 3; // 分类描述
+  optional int32  parent_category_id  = 4; // 父分类id
+}
+message CreateRecommenderCategoryResponse {
+  enum Result {
+    SUCC                         = 0;
+    FAIL_PERMISSION_DENIED       = 1; //无此操作权限     
+    FAIL_CATEGORY_NAME_INVALID   = 2; // 分类名称错误。
+    FAIL_CATEGORY_IMAGE_INVALID  = 3; // 分类图标错误
+    FAIL_CATEGORY_DESC_INVALID   = 4; // 分类介绍描述错误
+    FAIL_CATEGORY_ID_NOT_EXIST   = 5; // 分类不存在
+    
+    FAIL_UNKNOWN              = 99;
+  }
+  
+  optional Result result       = 1 [default = FAIL_UNKNOWN]; // 返回结果
+  optional string fail_text    = 2; // 错误文本
+  optional int32  category_id  = 3; // 创建成功后的分类id
+}
+
+// 修改分类
+message UpdateRecommenderCategoryRequest {
+  required int32  category_id         = 1; // 分类id
+  required string category_name       = 2; // 分类名称
+  optional string image_name          = 3; // 图片名称
+  optional string category_desc       = 4; // 分类描述
+}
+message UpdateRecommenderCategoryResponse {
+  enum Result {
+    SUCC                         = 0;
+    FAIL_PERMISSION_DENIED       = 1; //无此操作权限     
+    FAIL_CATEGORY_NAME_INVALID   = 2; // 分类名称错误。
+    FAIL_CATEGORY_IMAGE_INVALID  = 3; // 分类图标错误
+    FAIL_CATEGORY_DESC_INVALID   = 4; // 分类介绍描述错误
+    FAIL_CATEGORY_ID_NOT_EXIST   = 5; // 分类不存在
+    
+    FAIL_UNKNOWN              = 99;
+  }
+  
+  optional Result result     = 1 [default = FAIL_UNKNOWN]; // 返回结果
+  optional string fail_text  = 2; // 错误文本
+}
+
+// 修改分类状态，状态分别为：DELETE,DISABLE,NORMAL
+message UpdateRecommenderCategoryStateRequest {
+  required int32               category_id    = 1; // 分类id
+  required weizhu.scene.State  state          = 2; // 分类状态
+}
+message UpdateRecommenderCategoryStateResponse {
+  enum Result {
+    SUCC                               = 0;
+    FAIL_PERMISSION_DENIED             = 1; //无此操作权限     
+    FAIL_CATEGORY_ID_NOT_EXIST         = 2; // 分类不存在
+    FAIL_CATEGORY_EXISTED_PRODUCT      = 3; // 分类下存在产品，不能删除
+    FAIL_CATEGORY_IS_NOT_LEAF_CATEGORY = 4; // 分类不是叶子分类，不能删除
+    
+    FAIL_UNKNOWN              = 99;
+  }
+  
+  optional Result result     = 1 [default = FAIL_UNKNOWN]; // 返回结果
+  optional string fail_text  = 2; // 错误文本
+}
+
+message MigrateRecommenderCompetitorProductRequest {
+
+  repeated int32    competitor_product_id     = 1; // 竞争对手的产品id
+  required int32    category_id               = 2; // 分类id
+}
+
+message MigrateRecommenderCompetitorProductResponse {
+   enum Result {
+    SUCC                                 = 0;
+    FAIL_PERMISSION_DENIED               = 1; // 无此操作权限    
+    FAIL_COMPETITOR_PRODUCT_ID_NOT_EXIST = 2; // 竞争对手产品id不存在
+    FAIL_CATEGORY_ID_NOT_EXIST           = 3; // 该分类不存在
+  
+    FAIL_UNKNOWN                         = 99;
+  }
+  
+  optional Result result          = 1 [default = FAIL_UNKNOWN]; // 返回结果
+  optional string fail_text       = 2; // 错误文本
+}
+
+// 获取竞争对手的产品请求
+// competitor_product_name有值时为全量搜索
+message GetRecommenderCompetitorProductRequest {
+  optional int32  category_id               = 1; // 分类id
+  optional string competitor_product_name   = 2; // 用于模糊搜索
+  optional int32  start                     = 3; // 翻页开始位置
+  required int32  length                    = 4; // 获取数目，必须小于等于100
+}
+message GetRecommenderCompetitorProductResponse {
+  repeated weizhu.scene.RecommenderCompetitorProduct   competitor_product  = 1; // 竞品列表
+  required int32                                       total_size          = 2; // 总数
+  required int32                                       filtered_size       = 3; // 过滤后的总数
+  repeated weizhu.scene.RecommenderCategory            ref_category        = 4; // 分类列表
+}
+
+// 新增竞争对手的产品
+message CreateRecommenderCompetitorProductRequest {
+  required string competitor_product_name     = 1; // 竞争对手的产品名称
+  required string image_name                  = 2; // 图片名称
+  required int32  category_id                 = 3; // 分类id
+  optional int32  allow_model_id              = 4; // 
+  repeated int32  recommend_product_id        = 5; // 推荐产品的id列表
+}
+message CreateRecommenderCompetitorProductResponse {
+  enum Result {
+    SUCC                                 = 0;
+    FAIL_PERMISSION_DENIED               = 1; //无此操作权限     
+    FAIL_COMPETITOR_PRODUCT_NAME_INVALID = 2; // 竞争对手的产品名称错误。
+    FAIL_PRODUCT_IMAGE_INVALID           = 3; // 竞争对手的产品图标错误
+    FAIL_CATEGORY_ID_NOT_EXIST           = 4; // 分类不存在
+    
+    FAIL_UNKNOWN              = 99;
+  }
+  
+  optional Result result                 = 1 [default = FAIL_UNKNOWN]; // 返回结果
+  optional string fail_text              = 2; // 错误文本
+  optional int32  competitor_product_id  = 3; // 创建成功后的产品id
+}
+
+// 更新竞争对手的产品
+message UpdateRecommenderCompetitorProductRequest {
+  required int32 competitor_product_id        = 1; // 竞争对手的产品id
+  required string competitor_product_name     = 2; // 竞争对手的产品名称
+  required string image_name                  = 3; // 图片名称
+  required int32  category_id                 = 4; // 分类id
+  optional int32  allow_model_id              = 5; // 
+  repeated int32  recommend_product_id        = 6; // 推荐产品的id列表
+}
+message UpdateRecommenderCompetitorProductResponse {
+  enum Result {
+    SUCC                                 = 0;
+    FAIL_PERMISSION_DENIED               = 1; //无此操作权限     
+    FAIL_COMPETITOR_PRODUCT_NAME_INVALID = 2; // 竞争对手的产品名称错误。
+    FAIL_PRODUCT_IMAGE_INVALID           = 3; // 竞争对手的产品图标错误
+    FAIL_COMPETITOR_PRODUCT_ID_INVALID   = 4; // 竞争对手的产品id不存在
+    FAIL_CATEGORY_ID_NOT_EXIST           = 5; // 分类不存在
+    
+    FAIL_UNKNOWN              = 99;
+  }
+  
+  optional Result result                 = 1 [default = FAIL_UNKNOWN]; // 返回结果
+  optional string fail_text              = 2; // 错误文本
+}
+
+// 更新竞争对手的产品状态，状态分别为：DELETE,DISABLE,NORMAL
+message UpdateRecommenderCompetitorProductStateRequest {
+  repeated int32              competitor_product_id   = 1; // 竞争对手的产品id
+  required weizhu.scene.State  state                   = 2; // 产品状态
+}
+message UpdateRecommenderCompetitorProductStateResponse {
+  enum Result {
+    SUCC                                 = 0;
+    FAIL_PERMISSION_DENIED               = 1; //无此操作权限     
+    FAIL_COMPETITOR_PRODUCT_ID_NOT_EXIST = 2; // 竞争对手的产品id不存在
+    
+    FAIL_UNKNOWN              = 99;
+  }
+  
+  optional Result result                 = 1 [default = FAIL_UNKNOWN]; // 返回结果
+  optional string fail_text              = 2; // 错误文本
+}
+
+// 获取推荐的产品请求
+message GetRecommenderRecommendProductRequest {
+  optional int32  competitor_product_id   = 1; // 竞争对手的产品id
+  optional string recommend_product_name  = 2; // 用于产品名称模糊搜索
+  optional int32  start                   = 3;
+  required int32  length                  = 4; 
+}
+message GetRecommenderRecommendProductResponse {
+  repeated weizhu.scene.RecommenderRecommendProduct  recommend_product  = 1; // 分类列表
+  required int32                                     filtered_size      = 2;
+  required int32                                     total_size         = 3;   
+}
+
+// 新增推荐的产品请求
+message CreateRecommenderRecommendProductRequest {
+  required string                       recommend_product_name           = 1; // 推荐的产品名称
+  required string                       image_name                       = 2; // 图片名称
+  required string                       recommend_product_desc           = 3; // 推荐的产品描述
+  optional weizhu.discover_v2.WebUrl    web_url                          = 4; // web链接
+  optional weizhu.discover_v2.Document  document                         = 5; // 文档类型课件
+  optional weizhu.discover_v2.Video     video                            = 6; // 视频类型课件
+  optional weizhu.discover_v2.Audio     audio                            = 7; // 音频类型课件
+  optional weizhu.discover_v2.AppUri    app_uri                          = 8; // app内部跳转uri        
+  optional int32                        allow_model_id                   = 9; // 
+  repeated PriceWebUrlCreateCondition   price_web_url_create_condition   = 10; // 产品价格页面的url列表     
+  
+}
+message CreateRecommenderRecommendProductResponse {
+  enum Result {
+    SUCC                                 = 0;
+    FAIL_PERMISSION_DENIED               = 1; //无此操作权限     
+    FAIL_RECOMMEND_PRODUCT_NAME_INVALID  = 2; // 推荐的产品名称错误。
+    FAIL_PRODUCT_IMAGE_INVALID           = 3; // 推荐的产品图标错误
+    FAIL_RECOMMEND_PRODUCT_DESC_INVALID  = 4; // 推荐的产品描述错误。
+    FAIL_WEB_URL_INVALID                 = 5; // web链接错误
+    FAIL_DOCUMENT_INVALID                = 6; // 文档类型课件错误
+    FAIL_VIDEO_INVALID                   = 7; // 视频类型课件错误
+    FAIL_AUDIO_INVALID                   = 8; // 音频类型课件错误
+    FAIL_APP_URI_INVALID                 = 9; // app内部跳转uri错误    
+    
+    FAIL_UNKNOWN              = 99;
+  }
+  
+  optional Result result                 = 1 [default = FAIL_UNKNOWN]; // 返回结果
+  optional string fail_text              = 2; // 错误文本
+  optional int32  recommend_product_id   = 3; // 创建成功后的产品id
+}
+
+// 更新推荐的产品请求
+message UpdateRecommenderRecommendProductRequest {
+  required int32                        recommend_product_id             = 1; // 推荐的产品id
+  required string                       recommend_product_name           = 2; // 推荐的产品名称
+  required string                       image_name                       = 3; // 图片名称
+  required string                       recommend_product_desc           = 4; // 推荐的产品描述
+  optional weizhu.discover_v2.WebUrl    web_url                          = 5; // web链接
+  optional weizhu.discover_v2.Document  document                         = 6; // 文档类型课件
+  optional weizhu.discover_v2.Video     video                            = 7; // 视频类型课件
+  optional weizhu.discover_v2.Audio     audio                            = 8; // 音频类型课件
+  optional weizhu.discover_v2.AppUri    app_uri                          = 9; // app内部跳转uri   
+  optional int32                        allow_model_id                   = 10; // 
+  repeated PriceWebUrlCreateCondition   price_web_url_create_condition   = 11; // 产品价格页面的url列表     
+  
+}
+message UpdateRecommenderRecommendProductResponse {
+  enum Result {
+    SUCC                                 = 0;
+    FAIL_PERMISSION_DENIED               = 1; //无此操作权限     
+    FAIL_RECOMMEND_PRODUCT_NAME_INVALID  = 2; // 推荐的产品名称错误。
+    FAIL_PRODUCT_IMAGE_INVALID           = 3; // 推荐的产品图标错误
+    FAIL_RECOMMEND_PRODUCT_DESC_INVALID  = 4; // 推荐的产品描述错误。
+    FAIL_WEB_URL_INVALID                 = 5; // web链接错误
+    FAIL_DOCUMENT_INVALID                = 6; // 文档类型课件错误
+    FAIL_VIDEO_INVALID                   = 7; // 视频类型课件错误
+    FAIL_AUDIO_INVALID                   = 8; // 音频类型课件错误
+    FAIL_APP_URI_INVALID                 = 9; // app内部跳转uri错误    
+    FAIL_RECOMMEND_PRODUCT_ID_INVALID    = 10; // 推荐的产品id不存在
+    
+    FAIL_UNKNOWN              = 99;
+  }
+  
+  optional Result result                 = 1 [default = FAIL_UNKNOWN]; // 返回结果
+  optional string fail_text              = 2; // 错误文本
+}
+
+// 更新推荐的产品状态请求，状态分别为：DELETE,DISABLE,NORMAL
+message UpdateRecommenderRecommendProductStateRequest {
+  repeated int32              recommend_product_id = 1; // 推荐的产品id
+  required weizhu.scene.State state                = 2; // 产品状态
+}
+message UpdateRecommenderRecommendProductStateResponse {
+  enum Result {
+    SUCC                                 = 0;
+    FAIL_PERMISSION_DENIED               = 1; //无此操作权限     
+    FAIL_RECOMMEND_PRODUCT_ID_INVALID    = 2; // 推荐的产品id不存在
+    
+    FAIL_UNKNOWN              = 99;
+  }
+  
+  optional Result result                 = 1 [default = FAIL_UNKNOWN]; // 返回结果
+  optional string fail_text              = 2; // 错误文本
+}
+
+// 推荐产品，将需要推荐的产品和竞争对手的产品关联起来，点击竞手产品时显示需要推荐的产品列表
+message AddRecommendProdToCompetitorProdRequest {
+  required int32  competitor_product_id   = 1; // 竞争对手的产品id
+  repeated int32  recommend_product_id    = 2; // 推荐的产品id
+}
+message AddRecommendProdToCompetitorProdResponse {
+  enum Result {
+    SUCC                                 = 0;
+    FAIL_PERMISSION_DENIED               = 1; //无此操作权限     
+    FAIL_RECOMMEND_PRODUCT_ID_NOT_EXIST  = 2; // 推荐的产品id不存在。
+    FAIL_COMPETITOR_PRODUCT_ID_NOT_EXIST = 3; // 竞争对手的产品id不存在。
+    
+    FAIL_UNKNOWN              = 99;
+  }
+  
+  optional Result result                 = 1 [default = FAIL_UNKNOWN]; // 返回结果
+  optional string fail_text              = 2; // 错误文本
+}
+
+// 推荐产品，取消推荐的产品和竞争对手的产品的关联关系
+message DeleteRecommendProdFromCompetitorProdRequest {
+  required int32  competitor_product_id   = 1; // 竞争对手的产品id
+  repeated int32  recommend_product_id    = 2; // 推荐的产品id
+}
+message DeleteRecommendProdFromCompetitorProdResponse {
+  enum Result {
+    SUCC                                 = 0;
+    FAIL_PERMISSION_DENIED               = 1; //无此操作权限     
+    FAIL_RECOMMEND_PRODUCT_ID_NOT_EXIST  = 2; // 推荐的产品id不存在。
+    FAIL_COMPETITOR_PRODUCT_ID_NOT_EXIST = 3; // 竞争对手的产品id不存在。   
+    
+    FAIL_UNKNOWN              = 99;
+  }
+  
+  optional Result result                 = 1 [default = FAIL_UNKNOWN]; // 返回结果
+  optional string fail_text              = 2; // 错误文本
+}
+
+// 获取推荐的产品请求
+message GetRecommenderRecommendProductPriceWebUrlRequest {
+  required int32  recommend_product_id     = 1; // 推荐的产品id
+}
+message GetRecommenderRecommendProductPriceWebUrlResponse {
+  repeated weizhu.scene.RecommenderPriceWebUrl price_web_url = 1; // 产品价格页面的url列表  
+}
+
+// 添加推荐产品价格查看页面的url
+message CreateRecommenderRecommendProductPriceWebUrlRequest {
+  required int32                        recommend_product_id             = 1; // 推荐的产品id
+  repeated PriceWebUrlCreateCondition   price_web_url_create_condition   = 2; // 产品价格页面的url列表     
+}
+message CreateRecommenderRecommendProductPriceWebUrlResponse {
+  enum Result {
+    SUCC                                 = 0;
+    FAIL_PERMISSION_DENIED               = 1; //无此操作权限     
+    FAIL_RECOMMEND_PRODUCT_ID_NOT_EXIST  = 2; // 推荐的产品id不存在
+    FAIL_PRICE_WEB_URL_ID_NOT_EXIST      = 3; // 产品价格页面的url的id不存在
+    FAIL_PRICE_WEB_URL_INVALID           = 4; // 产品价格页面的url错误   
+    
+    FAIL_UNKNOWN              = 99;
+  }
+  
+  optional Result result                 = 1 [default = FAIL_UNKNOWN]; // 返回结果
+  optional string fail_text              = 2; // 错误文本
+}
+
+// 更新推荐产品价格查看页面的url
+message UpdateRecommenderRecommendProductPriceWebUrlRequest {
+  required weizhu.scene.RecommenderPriceWebUrl price_web_url        = 1; // 产品价格页面的url列表     
+}
+message UpdateRecommenderRecommendProductPriceWebUrlResponse {
+  enum Result {
+    SUCC                                 = 0;
+    FAIL_PERMISSION_DENIED               = 1; //无此操作权限     
+    FAIL_PRICE_WEB_URL_INVALID           = 2; // 产品价格页面的url错误    
+    
+    FAIL_UNKNOWN              = 99;
+  }
+  
+  optional Result result                 = 1 [default = FAIL_UNKNOWN]; // 返回结果
+  optional string fail_text              = 2; // 错误文本
+}
+
+// 删除推荐产品价格查看页面的url
+message DeleteRecommenderRecommendProductPriceWebUrlRequest {
+  repeated int32    url_id                  = 1; // 推荐产品价格查看页面的urlid
+}
+message DeleteRecommenderRecommendProductPriceWebUrlResponse {
+  enum Result {
+    SUCC                                 = 0;
+    FAIL_PERMISSION_DENIED               = 1; //无此操作权限     
+    FAIL_PRODUCT_PRICE_URL_ID_NOT_EXIST  = 2; // 产品价格页面的url的id不存在
+    
+    FAIL_UNKNOWN              = 99;
+  }
+  
+  optional Result result                 = 1 [default = FAIL_UNKNOWN]; // 返回结果
+  optional string fail_text              = 2; // 错误文本
+}
+
+
+service AdminSceneService {
+  
+  // 设置场景基本信息
+  rpc SetSceneHome (SetSceneHomeRequest) returns (SetSceneHomeResponse);
+  
+  // 获取场景
+  rpc GetScene (weizhu.EmptyRequest) returns (GetSceneResponse);
+  
+  // 创建场景
+  rpc CreateScene (CreateSceneRequest) returns (CreateSceneResponse);
+  
+  // 更新场景
+  rpc UpdateScene (UpdateSceneRequest) returns (UpdateSceneResponse);
+  
+  // 更新场景状态
+  rpc UpdateSceneState (UpdateSceneStateRequest) returns (UpdateSceneStateResponse);
+  
+  // 创建场景条目
+  rpc CreateSceneItem (CreateSceneItemRequest) returns (CreateSceneItemResponse);
+  
+  // 创建场景条目状态
+  rpc UpdateSceneItemState (UpdateSceneItemStateRequest) returns (UpdateSceneItemStateResponse);
+ 
+  // 迁移场景条目
+  rpc MigrateSceneItem (MigrateSceneItemRequest) returns (MigrateSceneItemResponse);
+  
+  // 获取场景条目
+  rpc GetSceneItem (GetSceneItemRequest) returns (GetSceneItemResponse);
+  
+  // 更新条目的排列顺序
+  rpc UpdateSceneItemOrder (UpdateSceneItemOrderRequest) returns (UpdateSceneItemOrderResponse); 
+  
+  
+  
+  
+  // 工具－－盖帽神器（超值推荐） 
+  
+  // 获取超值推荐的所有分类
+  rpc GetRecommenderHome (weizhu.EmptyRequest) returns (GetRecommenderHomeResponse);
+  
+  // 新增分类
+  rpc CreateRecommenderCategory (CreateRecommenderCategoryRequest) returns (CreateRecommenderCategoryResponse);
+  
+  // 修改分类
+  rpc UpdateRecommenderCategory (UpdateRecommenderCategoryRequest) returns (UpdateRecommenderCategoryResponse);
+  
+  // 修改分类状态，状态分别为：DELETE,DISABLE,NORMAL
+  rpc UpdateRecommenderCategoryState (UpdateRecommenderCategoryStateRequest) returns (UpdateRecommenderCategoryStateResponse);
+   
+  // 迁移竞品
+  rpc MigrateRecommenderCompetitorProduct (MigrateRecommenderCompetitorProductRequest) returns (MigrateRecommenderCompetitorProductResponse);
+  
+  // 获取竞争对手的产品请求
+  rpc GetRecommenderCompetitorProduct (GetRecommenderCompetitorProductRequest) returns (GetRecommenderCompetitorProductResponse);
+
+  // 新增竞争对手的产品
+  rpc CreateRecommenderCompetitorProduct (CreateRecommenderCompetitorProductRequest) returns (CreateRecommenderCompetitorProductResponse);
+  
+  // 修改竞争对手的产品
+  rpc UpdateRecommenderCompetitorProduct (UpdateRecommenderCompetitorProductRequest) returns (UpdateRecommenderCompetitorProductResponse);
+  
+  // 修改竞争对手的产品状态，状态分别为：DELETE,DISABLE,NORMAL
+  rpc UpdateRecommenderCompetitorProductState (UpdateRecommenderCompetitorProductStateRequest) returns (UpdateRecommenderCompetitorProductStateResponse);
+   
+  // 获取推荐的产品请求
+  rpc GetRecommenderRecommendProduct (GetRecommenderRecommendProductRequest) returns (GetRecommenderRecommendProductResponse);
+ 
+  // 新增推荐的产品
+  rpc CreateRecommenderRecommendProduct (CreateRecommenderRecommendProductRequest) returns (CreateRecommenderRecommendProductResponse);
+  
+  // 修改推荐的产品
+  rpc UpdateRecommenderRecommendProduct (UpdateRecommenderRecommendProductRequest) returns (UpdateRecommenderRecommendProductResponse);
+  
+  // 修改推荐的产品状态，状态分别为：DELETE,DISABLE,NORMAL
+  rpc UpdateRecommenderRecommendProductState (UpdateRecommenderRecommendProductStateRequest) returns (UpdateRecommenderRecommendProductStateResponse);
+   
+  // 推荐产品，将需要推荐的产品和竞争对手的产品关联起来，点击竞手产品时显示需要推荐的产品列表
+  rpc AddRecommendProdToCompetitorProd (AddRecommendProdToCompetitorProdRequest) returns (AddRecommendProdToCompetitorProdResponse);
+  
+  // 推荐产品，取消推荐的产品和竞争对手的产品关联的关联关系
+  rpc DeleteRecommendProdFromCompetitorProd (DeleteRecommendProdFromCompetitorProdRequest) returns (DeleteRecommendProdFromCompetitorProdResponse);
+  
+  // 获取推荐产品的销售价格的url
+  rpc GetRecommenderRecommendProductPriceWebUrl (GetRecommenderRecommendProductPriceWebUrlRequest) returns (GetRecommenderRecommendProductPriceWebUrlResponse);
+
+  // 创建推荐产品的销售价格的url
+  rpc CreateRecommenderRecommendProductPriceWebUrl (CreateRecommenderRecommendProductPriceWebUrlRequest) returns (CreateRecommenderRecommendProductPriceWebUrlResponse);
+ 
+  // 修改推荐产品的销售价格的url
+  rpc UpdateRecommenderRecommendProductPriceWebUrl (UpdateRecommenderRecommendProductPriceWebUrlRequest) returns (UpdateRecommenderRecommendProductPriceWebUrlResponse);
+  
+  // 删除推荐产品的销售价格的url
+  rpc DeleteRecommenderRecommendProductPriceWebUrl (DeleteRecommenderRecommendProductPriceWebUrlRequest) returns (DeleteRecommenderRecommendProductPriceWebUrlResponse); 
+  
+}

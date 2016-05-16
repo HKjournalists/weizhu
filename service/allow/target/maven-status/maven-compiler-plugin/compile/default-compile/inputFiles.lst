@@ -1,0 +1,10 @@
+/Users/york/git/weizhu_server3/service/allow/src/main/java/com/weizhu/service/allow/AllowServiceImpl.java
+/Users/york/git/weizhu_server3/service/allow/src/main/java/com/weizhu/service/allow/AllowDB.java
+/Users/york/git/weizhu_server3/service/allow/src/main/java/com/weizhu/service/allow/rule/TeamRule.java
+/Users/york/git/weizhu_server3/service/allow/src/main/java/com/weizhu/service/allow/rule/PositionRule.java
+/Users/york/git/weizhu_server3/service/allow/src/main/java/com/weizhu/service/allow/AllowCache.java
+/Users/york/git/weizhu_server3/service/allow/src/main/java/com/weizhu/service/allow/rule/AbstractRule.java
+/Users/york/git/weizhu_server3/service/allow/src/main/java/com/weizhu/service/allow/rule/UserRule.java
+/Users/york/git/weizhu_server3/service/allow/target/generated-sources/protobuf/java/com/weizhu/service/allow/AllowDAOProtos.java
+/Users/york/git/weizhu_server3/service/allow/src/main/java/com/weizhu/service/allow/AllowServiceModule.java
+/Users/york/git/weizhu_server3/service/allow/src/main/java/com/weizhu/service/allow/rule/LevelRule.java

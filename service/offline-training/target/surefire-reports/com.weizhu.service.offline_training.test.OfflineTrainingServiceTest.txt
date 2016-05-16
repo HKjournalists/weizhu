@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: com.weizhu.service.offline_training.test.OfflineTrainingServiceTest
+-------------------------------------------------------------------------------
+Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 6.538 sec

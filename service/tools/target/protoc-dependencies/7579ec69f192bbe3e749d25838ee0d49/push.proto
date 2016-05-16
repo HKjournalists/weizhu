@@ -1,0 +1,79 @@
+import "weizhu.proto";
+
+package weizhu.push;
+
+option java_package = "com.weizhu.proto";
+option java_outer_classname = "PushProtos";
+// option optimize_for = LITE_RUNTIME;
+
+message PushTarget {
+  required int64 user_id            = 1; // 推送目标用户id
+  repeated int64 include_session_id = 2; // 包含的推送会话id (为空表示推送所有会话)
+  repeated int64 exclude_session_id = 3; // 排除的推送会话id
+  optional int64 push_seq           = 4; // 推送序列号
+  required bool  enable_offline     = 5; // 是否支持离线
+}
+
+message PushPacket {
+  repeated PushTarget push_target = 1;
+  required string     push_name   = 2;
+  required bytes      push_body   = 3;
+}
+
+message PushSession {
+  required int32          packet_idx = 1;
+  required int32          target_idx = 2;
+  required weizhu.Session session    = 3;
+}
+
+message PushMsgRequest {
+  repeated PushPacket push_packet = 1;
+}
+
+message PushStateRequest {
+  repeated PushPacket push_packet = 1;
+}
+
+message GetOfflineMsgRequest {
+  required int64 push_seq = 1; // 终端上的 push seq
+}
+
+message GetOfflineMsgResponse {
+  repeated weizhu.PushMessage offline_msg = 1; // 离线push msg
+  required int64              push_seq    = 2; // 最新的push seq
+}
+
+message PushUserDeleteRequest {
+  repeated int64          user_id = 1; // 被删除的用户id
+  repeated weizhu.Session session = 2; // 被删除的会话
+}
+
+message PushUserDisableRequest {
+  repeated int64 user_id = 1; // 被禁用的用户id
+}
+
+message PushUserExpireRequest {
+  repeated int64 expire_session_id = 1;
+}
+
+service PushService {
+
+  rpc PushMsg (PushMsgRequest) returns (weizhu.EmptyResponse);
+  
+  rpc PushState (PushStateRequest) returns (weizhu.EmptyResponse);
+
+  rpc GetOfflineMsg (GetOfflineMsgRequest) returns (GetOfflineMsgResponse);
+  
+  // 用户或者会话被管理员删除
+  rpc PushUserDelete (PushUserDeleteRequest) returns (weizhu.EmptyResponse);
+  
+  // 用户被管理员禁用
+  rpc PushUserDisable (PushUserDisableRequest) returns (weizhu.EmptyResponse);
+  
+  // 用户会话过期
+  rpc PushUserExpire (PushUserExpireRequest) returns (weizhu.EmptyResponse);
+  
+  // 用户退出登录
+  rpc PushUserLogout (weizhu.EmptyRequest) returns (weizhu.EmptyResponse);
+  
+}

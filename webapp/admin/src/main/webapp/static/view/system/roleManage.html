@@ -1,0 +1,25 @@
+<div id="system-role-wrap" data-options="region:'center',border:false" class="easyui-layout" style="width:100%;height:100%;">
+    <table id="system-role-table" style="width:100%;height: 100%;"></table>
+    <div id="system-role-edit" class="easyui-window" data-options="title:'新建角色',collapsible:false,maximizable:false,minimizable:false,closed: true,modal:true,width:500,height:400">
+        <div class="easyui-layout" style="width:100%;height:100%;">
+            <div region="center" border="false" style="padding:10px 12px;">
+                <form id="system-role-edit-form" class="easyui-form form-layout-column" method="post" data-options="novalidate:true">
+                    <div class="form-item">
+                        <label>角色名：</label>
+                        <input class="easyui-textbox form-item-box" type="text" name="role_name" data-options="required:true,width:'79.5%',validType:'length[0,20]'" />
+                    </div>
+                    <div class="form-item">
+                        <label>权限：</label>
+                        <div class="permission-tree"></div>
+                    </div>
+                    <input type="hidden" name='role_id'/>
+                    <input type="hidden" name='permission_id'/>
+                </form>
+            </div>
+            <div region="south" border="false" style="text-align:right;padding:10px 12px;">
+                <a href="javascript:void(0)" class="easyui-linkbutton edit-save" onclick='Wz.system.roleManage.saveEdit();' data-options="iconCls:'icon-ok'">保存</a>
+                <a href="javascript:void(0)" class="easyui-linkbutton edit-cancel" onclick="$(this).parents('.easyui-window').window('close');" data-options="iconCls:'icon-cancel'">取消</a>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: com.weizhu.service.exam.test.AdminExamServiceTest
+-------------------------------------------------------------------------------
+Tests run: 11, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 9.653 sec

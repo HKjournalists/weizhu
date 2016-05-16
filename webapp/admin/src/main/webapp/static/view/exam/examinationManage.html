@@ -1,0 +1,294 @@
+<div id="exam-examination-wrap" data-options="region:'center',border:false" class="easyui-layout" style="width:100%;height:100%;">
+    <div data-options="region:'north',border:false" style="width: 100%;">
+        <div class="easyui-panel" data-options="border:false">
+            <div style="padding:10px 20px;">
+                <form id="exam-examination-search-form" class="easyui-form form-layout-inline" method="get">
+                	<div class="form-item">
+                		<label>考试名称：</label>
+                		<input class="easyui-textbox" type="text" name="condition"></input>
+                	</div>
+                	<div class="form-item">
+                		<label>考试状态：</label>
+                		<input name="state" />
+                	</div>
+                	<a href="javascript:void(0)" class="easyui-linkbutton reset-btn" iconCls="icon-reset">重置</a>
+                    <a href="javascript:void(0)" class="easyui-linkbutton search-btn" iconCls="icon-search"><%=lang.common.search_btn%></a>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div data-options="region:'center',border:false">
+        <table id="exam-examination-table" style="width:100%;height: 100%;"></table>
+    </div>
+    <div id="exam-examination-edit" class="easyui-window" data-options="title:'新建考试',collapsible:false,maximizable:false,minimizable:false,closed: true,modal:true,width:800,height:600">
+        <div class="easyui-layout" style="width:100%;height:100%;">
+            <div id="exam-examination-edit-steps" style="width:100%;height:100%;">
+            	<div title="1.考试信息" id="exam-examination-firststep-tab">
+            		<div class="easyui-layout" style="width:100%;height:100%;">
+			            <div region="center" border="false" style="padding:10px 12px;">
+			                <form id="exam-examination-firststep-form" class="easyui-form form-layout-column" method="post" data-options="novalidate:true">
+			                    <input type="hidden" name="exam_id" />
+			                    <div class="form-item">
+			                        <label>考试图标：</label>
+			                        <input name="image_name" />
+			                    </div>
+			                    <div class="form-item">
+			                        <label>考试名称：</label>
+			                        <input class="easyui-textbox form-item-box" type="text" name="exam_name" data-options="required:true,width:350,prompt:'请输入考试名称，1~190个字符',validType:'length[1,190]'" />
+			                    </div>
+			                    <div class="form-item">
+			                        <label>考试时间：</label>
+			                        <input name="start_time"/>&nbsp;&nbsp;至&nbsp;&nbsp;<input name="end_time"/>
+			                    </div>
+			                    <div class="form-item">
+			                        <label>出题方式：</label>
+			                        <input class="easyui-combobox" type="text" name="type" data-options="width:350,valueField:'value',value:'MANUAL',textField:'name',data:[{name:'指定考题',value:'MANUAL'},{name:'随机抽取考题',value:'AUTO'}],editable:false,panelHeight:'auto'"></input>
+			                    </div>
+			                    <div class="form-item">
+			                        <label>考试总分：</label>
+			                        <span>100分</span>
+			                    </div>
+			                    <div class="form-item">
+			                        <label>通过分数：</label>
+			                        <input class="easyui-numberbox form-item-box" value="60" type="text" name="pass_mark" data-options="required:true,width:350,prompt:'请输及格分数，0~100之间的数字',min:0,max:100" />
+			                    </div>
+			                    <div class="form-item">
+			                        <label>答案展示时间：</label>
+			                        <input class="easyui-combobox" type="text" name="show_result" data-options="width:350,valueField:'value',value:'NONE',textField:'name',data:[{name:'不显示',value:'NONE'},{name:'交卷后显示',value:'AFTER_SUBMIT'},{name:'结束后显示',value:'AFTER_EXAM_END'}],editable:false,panelHeight:'auto'"></input>
+			                    </div>
+			                    <div class="form-item">
+			                        <label>考试对象：</label>
+			                        <input name="allow_model_id" />
+			                    </div>
+			                </form>
+			            </div>
+			            <div region="south" border="false" style="text-align:right;padding:10px 12px;">
+			                <a href="javascript:void(0)" class="easyui-linkbutton next-btn">下一步</a>
+			            </div>
+			        </div>
+            	</div>
+            	<div title="2.添加考题" id="exam-examination-secondstep-tab">
+            		<div id="exam-examination-manual-panel" class="easyui-layout" style="width:100%;height:100%;">
+            			<div region="north" border="false" style="padding:10px 12px;">
+			                <h5>已选考题分数：<i class="total-score">0/100</i></h5>
+			            </div>
+			            <div region="center" border="false" style="padding:10px 12px;">
+			                <table id="exam-examination-examquestion"></table>
+			            </div>
+			            <div region="south" border="false" style="text-align:right;padding:10px 12px;">
+		            		<a href="javascript:void(0)" class="easyui-linkbutton prev-btn">上一步</a>
+			                <a href="javascript:void(0)" class="easyui-linkbutton next-btn">下一步</a>
+			            </div>
+			        </div>
+			        <div id="exam-examination-auto-panel" class="easyui-layout" style="width:100%;height:100%;display:none;">
+			            <div region="center" border="false" style="padding:10px 12px;">
+			                <form id="exam-examination-auto-form" class="easyui-form form-layout-column" method="post" data-options="novalidate:true">
+			                    <div class="form-item">
+			                        <label>试卷题目数：</label>
+			                        <input class="easyui-combobox" type="text" name="question_num" data-options="width:350,valueField:'value',value:'5',textField:'name',data:[{name:'1',value:'1'},{name:'2',value:'2'},{name:'4',value:'4'},{name:'5',value:'5'},{name:'10',value:'10'},{name:'20',value:'20'},{name:'25',value:'25'},{name:'50',value:'50'},{name:'100',value:'100'}],editable:false,panelHeight:'auto'"></input>
+			                    </div>
+			                    <div class="form-item" style="height:300px;">
+			                        <table id="exam-examination-auto-category-table"></table> 
+			                    </div>
+			                    <div class="form-item">
+			                    	<div class="exam-examination-auto-questionnum" style="text-align:right;">试卷题目数/已选考题数：<em>5/0</em></div>
+			                    </div>
+			                </form>
+			            </div>
+			            <div region="south" border="false" style="text-align:right;padding:10px 12px;height:50px;">
+		            		<a href="javascript:void(0)" class="easyui-linkbutton prev-btn">上一步</a>
+			                <a href="javascript:void(0)" class="easyui-linkbutton next-btn">下一步</a>
+			            </div>
+			        </div>
+            	</div>
+            	<div title="3.试卷预览" id="exam-examination-thirdstep-tab">
+            		<div id="exam-examination-manual-view" class="easyui-layout" style="width:100%;height:100%;">
+            			<div region="north" border="false" style="padding:10px 12px;height:70px;">
+			                <h5>新员工考试</h5>
+			                <div class="exam-examination-info">
+			                	<span>总分：100分</span>
+			                	<span>通过分数：60分</span>
+			                	<span>题目数：5</span>
+			                	<span>考试时间：2016-01-29 10:34:24 至 2016-01-30 10:34:24</span>
+			                </div>
+			            </div>
+			            <div region="center" border="false" style="padding:10px 12px;">
+			                <table id="exam-examination-showexam"></table>
+			            </div>
+			            <div region="south" border="false" style="text-align:right;padding:10px 12px;">
+		            		<a href="javascript:void(0)" class="easyui-linkbutton prev-btn">上一步</a>
+			                <a href="javascript:void(0)" class="easyui-linkbutton next-btn">发布</a>
+			            </div>      		
+            		</div>
+            		<div id="exam-examination-auto-view" class="easyui-layout" style="width:100%;height:100%;display:none;">
+            			<div region="center" border="false" style="padding:10px 12px;height:70px;">
+			                <h5>新员工考试</h5>
+			                <div class="exam-examination-info2">
+			                	<span>总分：100分</span>
+			                	<span>通过分数：60分</span>
+			                	<span>题目数：5</span>
+			                	<span>考试时间：2016-01-29 10:34:24 至 2016-01-30 10:34:24</span>
+			                </div>
+			            </div>
+			            <div region="south" border="false" style="text-align:right;padding:10px 12px;height:50px;">
+		            		<a href="javascript:void(0)" class="easyui-linkbutton prev-btn">上一步</a>
+			                <a href="javascript:void(0)" class="easyui-linkbutton next-btn">发布</a>
+			            </div>
+            		</div>
+            	</div>
+            </div>
+        </div>
+    </div>
+    <div id="exam-examination-copy" class="easyui-window" data-options="title:'补考',collapsible:false,maximizable:false,minimizable:false,closed: true,modal:true,width:500,height:280">
+        <div class="easyui-layout" style="width:100%;height:100%;">
+            <div region="center" border="false" style="padding:10px 12px;">
+                <form id="exam-examination-copy-form" class="easyui-form form-layout-column" method="post" data-options="novalidate:true">
+                    <input type="hidden" name="exam_id" />
+                    <div class="form-item">
+                        <label>考试名称：</label>
+                        <input class="easyui-textbox form-item-box" type="text" name="exam_name" data-options="required:true,width:350,prompt:'请输入职级名称，1~50个字符',validType:'length[1,50]'" />
+                    </div>
+                    <div class="form-item">
+                        <label>考试时间：</label>
+                        <input name="start_time"/>&nbsp;&nbsp;至&nbsp;&nbsp;<input name="end_time"/>
+                    </div>
+                    <div class="form-item">
+                        <label>考试总分：</label>
+                        <span>100分</span>
+                    </div>
+                    <div class="form-item">
+                        <label>通过分数：</label>
+                        <input class="easyui-numberbox form-item-box" value="60" type="text" name="pass_mark" data-options="disabled:true,required:true,width:350,prompt:'请输及格分数，0~100之间的数字',min:0,max:100" />
+                    </div>
+                    <div class="form-item">
+                        <label>结果显示：</label>
+                        <input class="easyui-combobox" type="text" name="show_result" data-options="disabled:true,width:350,valueField:'value',value:'NONE',textField:'name',data:[{name:'不显示',value:'NONE'},{name:'交卷后显示',value:'AFTER_SUBMIT'},{name:'结束后显示',value:'AFTER_EXAM_END'}],editable:false,panelHeight:'auto'"></input>
+                    </div>
+                </form>
+            </div>
+            <div region="south" border="false" style="text-align:right;padding:10px 12px;">
+                <a href="javascript:void(0)" class="easyui-linkbutton edit-save" onclick='Wz.exam.examinationManage.saveCopy();' data-options="iconCls:'icon-ok'">保存</a>
+                <a href="javascript:void(0)" class="easyui-linkbutton edit-cancel" onclick="$(this).parents('.easyui-window').window('close');" data-options="iconCls:'icon-cancel'">取消</a>
+            </div>
+        </div>
+    </div>
+    <div id="exam-examination-selectquestion" class="easyui-window" data-options="title:'手动选考题',collapsible:false,maximizable:false,minimizable:false,closed: true,modal:true,width:500,height:600">
+        <div class="easyui-layout" style="width:100%;height:100%;">
+            <div region="center" border="false" style="padding:10px 12px;">
+            	<form id="exam-examination-selectquestion-form" class="easyui-form form-layout-column" method="post" data-options="novalidate:true">
+            		<div class="form-item">
+                        <label>单题分数：</label>
+                        <input class="easyui-combobox" type="text" name="score" data-options="width:350,textField:'name',valueField:'value',value:5,data:[{name:1,value:1},{name:1,value:1},{name:2,value:2},{name:3,value:3},{name:4,value:4},{name:5,value:5},{name:6,value:6},{name:7,value:7},{name:8,value:8},{name:9,value:9},{name:10,value:10},{name:15,value:15},{name:20,value:20},{name:25,value:25}],editable:false,panelHeight:'auto'"></input>
+                    </div>
+                    <div class="form-item">
+		              	<div style="width: 450px;height:250px;">
+		                    <table id="exam-examination-question-table"></table>
+		                    <div id="exam-examination-question-tb" style="padding:2px 5px;">
+					    		所属题库: <input name="category_id" style="width:110px">
+							</div>                  	
+		              	</div>
+		            	<div style="width: 450px;height:200px;">
+		               		<table id="exam-examination-selectedquestion-table"></table>
+		            	</div>                    
+                    </div>
+            	</form>
+            </div>
+            <div region="south" border="false" style="text-align:right;padding:10px 12px;">
+                <a href="javascript:void(0)" class="easyui-linkbutton edit-save" data-options="iconCls:'icon-ok'">保存</a>
+                <a href="javascript:void(0)" class="easyui-linkbutton edit-cancel" onclick="$(this).parents('.easyui-window').window('close');" data-options="iconCls:'icon-cancel'">取消</a>
+            </div>
+        </div>
+    </div>
+    <div id="exam-examination-autoquestion" class="easyui-window" data-options="title:'自动生成考题',collapsible:false,maximizable:false,minimizable:false,closed: true,modal:true,width:500,height:450">
+        <div class="easyui-layout" style="width:100%;height:100%;">
+            <div region="center" border="false" style="padding:10px 12px;">
+            	<form id="exam-examination-autoquestion-form" class="easyui-form form-layout-column" method="post" data-options="novalidate:true">
+            		<div class="form-item">
+                        <label>单题分数：</label>
+                        <input class="easyui-combobox" type="text" name="score" data-options="width:350,textField:'name',valueField:'value',value:5,data:[{name:1,value:1},{name:1,value:1},{name:2,value:2},{name:3,value:3},{name:4,value:4},{name:5,value:5},{name:6,value:6},{name:7,value:7},{name:8,value:8},{name:9,value:9},{name:10,value:10},{name:15,value:15},{name:20,value:20},{name:25,value:25}],editable:false,panelHeight:'auto'"></input>
+                    </div>
+                    <div class="form-item">
+		              	<div style="width: 450px;height:300px;">
+		                    <table id="exam-examination-category-table"></table>               	
+		              	</div>                  
+                    </div>
+            	</form>
+            </div>
+            <div region="south" border="false" style="text-align:right;padding:10px 12px;">
+                <a href="javascript:void(0)" class="easyui-linkbutton edit-save" data-options="iconCls:'icon-ok'">保存</a>
+                <a href="javascript:void(0)" class="easyui-linkbutton edit-cancel" onclick="$(this).parents('.easyui-window').window('close');" data-options="iconCls:'icon-cancel'">取消</a>
+            </div>
+        </div>
+    </div>
+    <div id="exam-examination-view" class="easyui-window" data-options="title:'试卷预览',collapsible:false,maximizable:false,minimizable:false,closed: true,modal:true,width:800,height:600">
+        <div class="easyui-layout" style="width:100%;height:100%;">
+         	<div region="north" border="false" style="padding:10px 12px;">
+                <h5>xxxx</h5>
+                <div class="exam-examination-info">
+                	<span>总分：100分</span>
+                	<span>通过分数：60分</span>
+                	<span>题目数：5</span>
+                	<span>考试时间：2016-01-29 10:34:24 至 2016-01-30 10:34:24</span>
+                </div>
+            </div>
+            <div region="center" border="false" style="padding:10px 12px;">
+                <table id="exam-examination-showexam-view"></table>
+            </div>
+            <div region="south" border="false" style="text-align:right;padding:10px 12px;">
+                <a href="javascript:void(0)" class="easyui-linkbutton next-btn" onclick="$(this).parents('.easyui-window').window('close');">关闭</a>
+            </div>
+		</div>
+    </div>
+    <div id="exam-examination-result-win" class="easyui-window" data-options="title:'考试结果',collapsible:false,maximizable:false,minimizable:false,closed: true,modal:true,width:900,height:600">
+        <div class="easyui-layout" style="width:100%;height:100%;">
+            <div region="center" border="false">
+            	<div id="exam-examination-result-tabs">
+            		<div title="整体概况" id="exam-examination-result-overview">
+		                <div class="exam-examination-statistics-wrap">
+		                </div>
+            		</div>
+            		<div title="按部门统计" id="exam-examination-result-team">
+		                <table id="exam-examination-result-team-table"></table>
+		                <div id="exam-examination-result-team-tb" style="padding:2px 5px;">
+			        		统计部门: <input name="team_id" style="width:110px">
+					        <a href="javascript:void(0)" class="easyui-linkbutton search-btn" iconCls="icon-search">搜索</a>
+					        <a href="javascript:void(0)" class="easyui-linkbutton export-btn" iconCls="icon-export">导出统计结果</a>
+					    </div>     		
+            		</div>
+            		<div title="按职务统计" id="exam-examination-result-position">
+		            	<table id="exam-examination-result-position-table"></table>       		
+            		</div>
+            		<div title="按考题统计" id="exam-examination-result-question">
+		           		<table id="exam-examination-result-question-table"></table>
+            		</div>
+            		<div title="考试详情" id="exam-examination-result-detail">
+						<table id="exam-examination-result-table"></table> 
+            		</div>
+            	</div>
+            </div>
+            <div region="south" border="false" style="text-align:right;padding:10px 12px;">
+                <a href="javascript:void(0)" class="easyui-linkbutton next-btn" onclick="$(this).parents('.easyui-window').window('close');">关闭</a>
+            </div>
+		</div>
+    </div>
+    <div id="exam-examination-result-user-view" class="easyui-window" data-options="title:'试卷查阅',collapsible:false,maximizable:false,minimizable:false,closed: true,modal:true,width:800,height:600">
+        <div class="easyui-layout" style="width:100%;height:100%;">
+         	<div region="north" border="false" style="padding:10px 12px;">
+                <h5>xxxx</h5>
+                <div class="exam-examination-info">
+                	<span>姓名：xxx</span>
+                	<span>部门：xxxx</span>
+                	<span>成绩：5</span>
+                	<span>参考情况：</span>
+                	<span>通过情况：</span>
+                </div>
+            </div>
+            <div region="center" border="false" style="padding:10px 12px;">
+                <table id="exam-examination-result-user-table"></table>
+            </div>
+            <div region="south" border="false" style="text-align:right;padding:10px 12px;">
+                <a href="javascript:void(0)" class="easyui-linkbutton next-btn" onclick="$(this).parents('.easyui-window').window('close');">关闭</a>
+            </div>
+		</div>
+    </div>
+</div>

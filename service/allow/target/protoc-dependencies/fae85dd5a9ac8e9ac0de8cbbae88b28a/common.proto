@@ -1,0 +1,76 @@
+import "weizhu.proto";
+import "admin.proto";
+import "boss.proto";
+
+package weizhu.common;
+
+option java_package = "com.weizhu.common";
+option java_outer_classname = "CommonProtos";
+
+message RpcRequestPacket {
+  required int32  invoke_id     = 1;
+  required string service_name  = 2;
+  required string function_name = 3;
+  required bytes  request_body  = 4;
+  
+  oneof head {
+    weizhu.SystemHead               system_head          = 5;
+    weizhu.RequestHead              request_head         = 6;
+    weizhu.AnonymousHead            anonymous_head       = 7;
+    weizhu.admin.AdminHead          admin_head           = 8;
+    weizhu.admin.AdminAnonymousHead admin_anonymous_head = 9;
+    weizhu.boss.BossHead            boss_head            = 10;
+    weizhu.boss.BossAnonymousHead   boss_anonymous_head  = 11;
+    // you can add another head here
+  }
+}
+
+message RpcResponsePacket {
+  enum Result {
+    SUCC = 0;
+    FAIL_INVOKE_UNKNOWN   = 1;
+    FAIL_HEAD_UNKNOWN     = 2;
+    FAIL_BODY_PARSE_FAIL  = 3;
+    
+    FAIL_SERVER_EXCEPTION = 99; // 服务器内部处理错误
+  }
+  
+  required int32  invoke_id     = 1;
+  optional Result result        = 2 [default = FAIL_SERVER_EXCEPTION];
+  optional string fail_text     = 3;
+  optional bytes  response_body = 4;
+}
+
+message UtilsTaskEvent {
+  message Execute {
+    required string type = 1;
+    optional bytes  data = 2;
+  }
+  
+  message Schedule {
+    required string type         = 1;
+    required string key          = 2;
+    optional bytes  data         = 3;
+    required int32  execute_time = 4;
+  }
+  
+  message SchedulePeriod {
+    required string type        = 1;
+    required string key         = 2;
+    optional bytes  data        = 3;
+    required int32  start_time  = 4;
+    required int32  period_time = 5;
+  }
+  
+  message CancelSchedule {
+    required string type = 1;
+    required string key  = 2;
+  }
+  
+  oneof EventType {
+    Execute        execute         = 1;
+    Schedule       schedule        = 2;
+    SchedulePeriod schedule_period = 3;
+    CancelSchedule cancel_schedule = 4;
+  }
+}

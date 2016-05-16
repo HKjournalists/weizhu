@@ -1,0 +1,26 @@
+
+import "offline_training.proto";
+
+package weizhu.offline_training.dao;
+
+option java_package = "com.weizhu.service.offline_training";
+option java_outer_classname = "OfflineTrainingDAOProtos";
+
+// 培训索引
+message TrainIndex {
+  required int32 train_id   = 1;
+  required int32 start_time = 2;
+  required int32 end_time   = 3;
+}
+
+// 培训索引列表，用于缓存
+message TrainIndexList {
+  repeated TrainIndex train_index  = 1; // 索引
+  optional int32      expired_time = 2; // 失效时间。该索引列表在此时间之前有效
+}
+
+message TrainApplyNotifyData {
+  required int64 company_id       = 1;
+  required int32 train_id         = 2;
+  required int32 apply_start_time = 3;
+}

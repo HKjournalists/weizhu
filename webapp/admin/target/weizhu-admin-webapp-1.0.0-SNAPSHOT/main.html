@@ -1,0 +1,78 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Frameset//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+	    <meta content="always" name="referrer">
+        <title>微助后台管理系统</title>
+    	<link href="./static/images/favicon.ico" mce_href="" rel="icon" type="image/x-icon" /> 
+        <link href="./static/css/style.css?20160505" rel="stylesheet" type="text/css" />
+        <link rel="stylesheet" type="text/css" href="./static/css/themes/gray/easyui.css">
+        <link rel="stylesheet" type="text/css" href="./static/css/themes/icon.css">
+        <script type="text/javascript" src="./static/js/jquery.min.js"></script>
+        <script type="text/javascript" src="./static/js/jquery.easyui.min.js?2016050301"></script>
+        <script type="text/javascript" src="./static/js/plugins/jquery.portal.js"></script>
+        <script type="text/javascript" src="./static/js/lang/easyui-lang-zh_CN.js"></script>
+        <script type="text/javascript" src="./static/js/template.js"></script>
+   		<script language="JavaScript" src="./static/js/jquery.cookie.js"></script>
+        <script type="text/javascript" src="./static/js/json2.js"></script>
+    </head>
+    <body class="easyui-layout" data-options="fit:true">
+        <div data-options="region:'north',border:false" style="height:88px;background:url(./static/images/topbg.gif) repeat-x;">
+            <div class="topleft">
+                <a href="main.html" target="_parent"><img src="./static/images/loginlogo.png" title="系统首页" /></a>
+            </div>
+
+            <ul class="nav">
+            </ul>
+
+            <div class="topright">
+                <ul>
+                	<li>
+                		<input id="main-company-list"/>
+                	</li>
+                    <li><span style="margin-top:5px;"><img src="./static/images/help.png" title="帮助"  class="helpimg"/></span><a href="javascript:void(0)" onclick="Wz.openHelp();">帮助</a></li>
+                    <li><a href="javascript:void(0)" onclick="Wz.logout();" target="_parent">退出</a></li>
+                </ul>
+
+                <div class="user">
+                    <span id="header-admin-user"></span>
+                </div>
+            </div>
+        </div>
+        <div data-options="region:'west',border:false,collapsible:false" style="width:187px;background:#f0f9fd;overflow-y: auto;overflow-x: hidden;">
+            <div class="lefttop"><span></span>功能菜单</div>
+            <dl class="leftmenu">
+
+            </dl>
+        </div>
+        <div data-options="region:'south',border:false" style="height:31px;">
+            <div class="footer">Copyright © 2015 www.wehelpu.cn All Rights Reserved.</div>
+        </div>
+        <div data-options="region:'center',border:false">
+        	<div class="easyui-layout"  data-options="fit:true">
+	            <div data-options="region:'north',border:false" style="height:40px;width: 100%;">
+	                <div class="place">
+	                    <span>位置：</span>
+	                    <ul class="placeul">
+	                        <li><a href="#">首页</a></li>
+	                    </ul>
+	                </div>
+	            </div>
+	            <div data-options="region:'center',border:false">
+	                <div id="main-contain">
+	
+	                </div>
+	            </div>        	
+        	</div>
+        </div>
+        <script type="text/javascript" src="./static/js/main.js?201604250505"></script>
+        <script type="text/javascript" src="./static/js/lang/main-lang-zh_CN.js"></script>
+        <script type="text/javascript" src="./static/js/conf/menu_conf.js?20160505"></script>
+        
+        <script type="text/javascript" src="./static/js/kindeditor/kindeditor-all-min.js"></script>
+        <script type="text/javascript" src="./static/js/kindeditor/lang/zh-CN.js"></script>
+        <link href="./static/js/kindeditor/themes/default/default.css" rel="stylesheet" type="text/css" />
+    </body>
+</html>

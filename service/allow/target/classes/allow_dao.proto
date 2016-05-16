@@ -1,0 +1,11 @@
+import "allow.proto";
+
+package weizhu.allow.dao;
+
+option java_package = "com.weizhu.service.allow";
+option java_outer_classname = "AllowDAOProtos";
+
+message ModelRule {
+  required weizhu.allow.Model model = 1;
+  repeated weizhu.allow.Rule  rule  = 2;
+}

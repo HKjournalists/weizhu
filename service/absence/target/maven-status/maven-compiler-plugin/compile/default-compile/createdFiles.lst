@@ -1,0 +1,6 @@
+com/weizhu/service/absence/AbsenceServiceImpl.class
+com/weizhu/service/absence/AbsenceServiceImpl$NotifyCancelAbsence.class
+com/weizhu/service/absence/AbsenceCache.class
+com/weizhu/service/absence/AbsenceUtil.class
+com/weizhu/service/absence/AbsenceServiceModule.class
+com/weizhu/service/absence/AbsenceDB.class

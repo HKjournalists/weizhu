@@ -1,0 +1,11 @@
+
+import "upload.proto";
+
+package weizhu.upload.dao;
+
+option java_package = "com.weizhu.service.upload";
+option java_outer_classname = "UploadDAOProtos";
+
+message ImageTagList {
+  repeated string tag = 1;
+}

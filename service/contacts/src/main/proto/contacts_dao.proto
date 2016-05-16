@@ -1,0 +1,9 @@
+
+import "weizhu.proto";
+import "contacts.proto";
+
+package weizhu.contacts.dao;
+
+option java_package = "com.weizhu.service.contacts";
+option java_outer_classname = "ContactsDAOProtos";
+

@@ -1,0 +1,16 @@
+
+package weizhu.admin.dao;
+
+option java_package = "com.weizhu.service.admin";
+option java_outer_classname = "AdminDAOProtos";
+
+message SessionKey {
+  required int64 admin_id   = 1;
+  required int64 session_id = 2;
+  required int32 login_time = 3;
+}
+
+message ForgotToken {
+  required int64 forgot_token = 1;
+  required int32 create_time  = 2;
+}

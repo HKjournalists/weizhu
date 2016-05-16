@@ -1,0 +1,476 @@
+import "weizhu.proto";
+
+package weizhu.tool.productclock;
+
+option java_package = "com.weizhu.proto";
+option java_outer_classname = "ProductclockProtos";
+
+enum State {
+  NORMAL  = 0; // 用户，管理员，超级管理员 可见
+  DISABLE = 1; // 管理员，超级管理员 可见
+  DELETE  = 2; // 超级管理员 可见
+}
+
+enum Gender {
+  MALE   = 0;
+  FEMALE = 1;
+}
+
+message Customer {
+  required int32  customer_id       = 1;
+  required string customer_name     = 2;
+  optional string mobile_no         = 3;
+  optional Gender gender            = 4;
+  optional int32  birthday_solar    = 5;
+  optional int32  birthday_lunar    = 6;
+  optional int32  wedding_solar     = 7;
+  optional int32  wedding_lunar     = 8;
+  optional string address           = 9;
+  optional string remark            = 10;
+  optional int64  belong_user       = 11;
+  required bool   is_remind         = 12;
+  optional int32  days_ago_remind   = 13; // 几天前提醒
+  optional bool   is_remind_today   = 14; // 今天是否提醒（红点）
+  
+  optional State  state             = 93;
+  optional int64  create_admin      = 94;
+  optional int64  create_user       = 95;
+  optional int32  create_time       = 96;
+  optional int64  update_admin      = 97;
+  optional int64  update_user       = 98;
+  optional int32  update_time       = 99;
+}
+
+message Product {
+  required int32  product_id         = 1;
+  required string product_name       = 2;
+  optional string product_desc       = 3;
+  optional string image_name         = 4;
+  required int32  default_remind_day = 5;
+
+  optional bool   is_remind          = 6; // 关联用户
+  optional int32  buy_time           = 7; // 关联用户，购买时间
+  
+  optional State  state              = 95;
+  optional int64  create_admin       = 96;
+  optional int32  create_time        = 97;
+  optional int64  update_admin       = 98;
+  optional int32  update_time        = 99;
+}
+
+message CommunicateRecord {
+  required int32  record_id    = 1;
+  required int64  user_id      = 2;
+  required int32  customer_id  = 3;
+  required string content_text = 4;
+  required int32  create_time  = 5;
+}
+
+message GetCustomerByIdRequest {
+  repeated int32 customer_id = 32;
+}
+message GetCustomerByIdResponse {
+  repeated Customer customer = 1;
+}
+
+message GetCustomerListRequest {
+  optional bytes offset_index = 1; // 翻页偏移索引,首次不传,之后传后台返回的值
+  required int32 size         = 2; // 请求数量
+  optional bool  has_product  = 3;
+}
+message GetCustomerListResponse {
+  repeated Customer customer     = 1;
+  required bytes    offset_index = 2;
+  required bool     has_more     = 3;
+}
+
+message CreateCustomerRequest {
+  required string customer_name   = 1;
+  optional string mobile_no       = 2;
+  optional Gender gender          = 3;
+  optional int32  birthday_solar  = 4;
+  optional int32  birthday_lunar  = 5;
+  optional int32  wedding_solar   = 6;
+  optional int32  wedding_lunar   = 7;
+  optional string address         = 8;
+  optional string remark          = 9;
+  required bool   is_remind       = 10;
+  optional int32  days_ago_remind = 11;
+}
+message CreateCustomerResponse {
+  enum Result {
+    SUCC = 0;
+    FAIL_CUSTOMER_NAME_INVALID     = 1;
+    FAIL_MOBILE_NO_INVALID         = 2;
+    FAIL_BIRTHDAY_SOLAR_INVALID    = 3;
+    FAIL_BIRTHDAY_LUNAR_INVALID    = 4;
+    FAIL_WEDDING_SOLAR_INVALID     = 5;
+    FAIL_WEDDING_LUNAR_INVALID     = 6;
+    FAIL_ADDRESS_INVALID           = 7;
+    FAIL_REMARK_INVALID            = 8;
+    FAIL_DAYS_AGO_REMIND           = 9;
+
+    FAIL_UNKNOWN                   = 99;  
+  }
+  optional Result result      = 1 [default = FAIL_UNKNOWN];
+  optional string fail_text   = 2;
+  optional int32  customer_id = 3;
+}
+
+message UpdateCustomerRequest {
+  required int32  customer_id     = 1;
+  optional string customer_name   = 2;
+  optional string mobile_no       = 3;
+  optional Gender gender          = 4;
+  optional int32  birthday_solar  = 5;
+  optional int32  birthday_lunar  = 6;
+  optional int32  wedding_solar   = 7;
+  optional int32  wedding_lunar   = 8;
+  optional string address         = 9;
+  optional string remark          = 10;
+  required bool   is_remind       = 11;
+  optional int32  days_ago_remind = 12;
+}
+message UpdateCustomerResponse {
+  enum Result {
+    SUCC = 0;
+    FAIL_CUSTOMER_ID_INVALID       = 1;
+    FAIL_CUSTOMER_NAME_INVALID     = 2;
+    FAIL_MOBILE_NO_INVALID         = 3;
+    FAIL_BIRTHDAY_SOLAR_INVALID    = 4;
+    FAIL_BIRTHDAY_LUNAR_INVALID    = 5;
+    FAIL_WEDDING_SOLAR_INVALID     = 6;
+    FAIL_WEDDING_LUNAR_INVALID     = 7;
+    FAIL_ADDRESS_INVALID           = 8;
+    FAIL_REMARK_INVALID            = 9;
+    FAIL_REMIND_PERIOD_DAY_INVALID = 10;
+    FAIL_DAYS_AGO_REMIND           = 11;
+
+    FAIL_UNKNOWN                   = 99;  
+  }
+  optional Result result    = 1 [default = FAIL_UNKNOWN];
+  optional string fail_text = 2;
+}
+
+message DeleteCustomerRequest {
+  repeated int32 customer_id = 1;
+}
+message DeleteCustomerResponse {
+  enum Result {
+    SUCC = 0;
+    
+    FAIL_UNKNOWN = 99;
+  }
+  optional Result result    = 1 [default = FAIL_UNKNOWN];
+  optional string fail_text = 2;
+}
+
+message GetProductListRequest {
+  optional bytes  offset_index = 1;
+  required int32  size         = 2;
+  optional string product_name = 3;
+}
+message GetProductListResponse {
+  repeated Product product      = 1;
+  required bytes   offset_index = 2;
+  required bool    has_more     = 3;
+}
+
+message GetCustomerProductRequest {
+  repeated int32 customer_id = 1;
+}
+message GetCustomerProductResponse {
+  message CustomerProduct {
+    required int32   customer_id = 1;
+    repeated Product product     = 2;
+  }
+  repeated CustomerProduct customer_product = 1;
+}
+
+message CreateCustomerProductRequest {
+  required int32 customer_id       = 1;
+  required int32 product_id        = 2;
+  optional int32 buy_time          = 3;
+  optional int32 remind_period_day = 4;
+}
+message CreateCustomerProductResponse {
+  enum Result {
+    SUCC = 0;
+    FAIL_CUSTOMER_ID_INVALID       = 1;
+    FAIL_PRODUCT_ID_INVALID        = 2;
+    FAIL_BUY_TIME_INVALID          = 3;
+    FAIL_REMIND_PERIOD_DAY_INVALID = 4;
+  
+    FAIL_UNKNOWN             = 99;
+  }
+  optional Result result    = 1 [default = FAIL_UNKNOWN];
+  optional string fail_text = 2;
+}
+
+message UpdateCustomerProductRequest {
+  required int32 customer_id       = 1;
+  required int32 old_product_id    = 2;
+  required int32 new_product_id    = 3;
+  optional int32 buy_time          = 4;
+  optional int32 remind_period_day = 5;
+}
+message UpdateCustomerProductResponse {
+  enum Result {
+    SUCC = 0;
+    FAIL_CUSTOMER_ID_INVALID       = 1;
+    FAIL_OLD_PRODUCT_ID_INVALID    = 2;
+    FAIL_NEW_PRODUCT_ID_INVALID    = 3;
+    FAIL_BUY_TIME_INVALID          = 4;
+    FAIL_REMIND_PERIOD_DAY_INVALID = 5;
+  
+    FAIL_UNKNOWN             = 99;
+  }
+  optional Result result    = 1 [default = FAIL_UNKNOWN];
+  optional string fail_text = 2;
+}
+
+message DeleteCustomerProductRequest {
+  required int32 customer_id = 1;
+  repeated int32 product_id  = 2;
+}
+message DeleteCustomerProductResponse {
+  enum Result {
+    SUCC = 0;
+    FAIL_CUSTOMER_ID_INVALID = 1;
+    FAIL_PRODUCT_ID_INVALID  = 2;
+  
+    FAIL_UNKNOWN             = 99;
+  }
+  optional Result result    = 1 [default = FAIL_UNKNOWN];
+  optional string fail_text = 2;
+}
+
+message GetCommunicateRecordRequest {
+  required int32 customer_id  = 1;
+  required int32 size         = 2; // 请求数量
+  optional bytes offset_index = 3; // 翻页偏移索引,首次不传,之后传后台返回的值
+}
+message GetCommunicateRecordResponse {
+  repeated CommunicateRecord communicateRecord = 1;
+  required bytes             offset_index      = 2;
+  required bool              has_more          = 3;
+}
+
+message CreateCommunicateRecordRequest {
+  required int32  customer_id  = 1;
+  required string content_text = 2;
+}
+message CreateCommunicateRecordResponse {
+  enum Result {
+    SUCC = 0;
+    FAIL_CUSTOMER_ID_INVALID  = 1;
+    FAIL_CONTENT_TEXT_INVALID = 2;
+    
+    FAIL_UNKNOWN              = 99;
+  }
+  optional Result result         = 1 [default = FAIL_UNKNOWN];
+  optional string fail_text      = 2;
+  optional int32  record_id = 3;
+}
+
+message UpdateCommunicateRecordRequest {
+  required int32  record_id    = 1;
+  optional string content_text = 2;
+}
+message UpdateCommunicateRecordResponse {
+  enum Result {
+    SUCC = 0;
+    FAIL_RECORD_ID_INVALID    = 1;
+    FAIL_CONTENT_TEXT_INVALID = 2;
+    
+    FAIL_UNKNOWN                    = 99;
+  }
+  optional Result result    = 1 [default = FAIL_UNKNOWN];
+  optional string fail_text = 2;
+}
+
+message DeleteCommunicateRecordRequest {
+  repeated int32 record_id = 1;
+}
+message DeleteCommunicateRecordResponse {
+  enum Result {
+    SUCC = 0;
+    
+    FAIL_UNKNOWN = 99;
+  }
+  optional Result result    = 1 [default = FAIL_UNKNOWN];
+  optional string fail_text = 2;
+}
+
+message GetCustomerAdminRequest {
+  required int32  start         = 1;
+  required int32  length        = 2;
+  repeated int64  saler_id      = 3;
+  optional bool   has_product   = 4;
+  optional string customer_name = 5;
+}
+message GetCustomerAdminResponse {
+  repeated Customer customer      = 1;
+  required int32    total_size    = 2;
+  required int32    filtered_size = 3;
+}
+
+message AssignedSalerRequest {
+  repeated int32 customer_id = 1;
+  required int64 saler_id  = 2;
+}
+message AssignedSalerResponse {
+  enum Result {
+    SUCC = 0;
+    FAIL_CUSTOMER_ID_INVALID = 1;
+    FAIL_SALER_ID_INVALID  = 2;
+    
+    FAIL_UNKNOWN           = 99;
+  }
+  optional Result result = 1 [default = FAIL_UNKNOWN];
+  optional string fail_text = 2;
+}
+
+message ImportCustomerRequest {
+  repeated Customer customer = 1;
+}
+message ImportCustomerResponse {
+  enum Result {
+    SUCC = 0;
+    FAIL_CUSTOMER_INVALID = 1;
+    	
+    FAIL_UNKNOWN          = 99;
+  }
+  message InvalidCustomer {
+    required string customer_name = 1;
+    required string fail_text     = 2;
+  }
+  optional Result          result         = 1 [default = FAIL_UNKNOWN];
+  optional string          fail_text      = 2;
+  repeated InvalidCustomer invalid_customer = 3;
+}
+
+message GetProductAdminRequest {
+  required int32  start        = 1;
+  required int32  length       = 2;
+  optional string product_name = 3;
+}
+message GetProductAdminResponse {
+  repeated Product product       = 1;
+  optional int32   total_size    = 2;
+  optional int32   filtered_size = 3;
+}
+
+message CreateProductRequest {
+  required string product_name      = 1;
+  required int32  remind_period_day = 2;
+  optional string image_name        = 3;
+  optional string product_desc      = 4;
+}
+message CreateProductResponse {
+  enum Result {
+    SUCC = 0;
+    FAIL_PRODUCT_NAME_INVALID = 1;
+    FAIL_REMIND_DAY_INVALID   = 2;
+    FAIL_IMAGE_NAME_INVALID   = 3;
+    FAIL_PRODUCT_DESC_INVALID = 4;
+    
+    FAIL_UNKNOWN              = 99;
+  }
+  optional Result result     = 1 [default = FAIL_UNKNOWN];
+  optional string fail_text  = 2;
+  optional int32  product_id = 3;
+}
+
+message UpdateProductRequest {
+  required int32  product_id        = 1;
+  required string product_name      = 2;
+  required int32  remind_period_day = 3;
+  optional string image_name        = 4;
+  optional string product_desc      = 5;
+}
+message UpdateProductResponse {
+  enum Result {
+    SUCC = 0;
+    FAIL_PRODUCT_ID_INVALID   = 1;
+    FAIL_PRODUCT_NAME_INVALID = 2;
+    FAIL_REMIND_TIME_INVALID  = 3;
+    FAIL_IMAGE_NAME_INVALID   = 4;
+    FAIL_PRODUCT_DESC_INVALID = 5;
+    
+    FAIL_UNKNOWN              = 99;
+  }
+  optional Result result    = 1 [default = FAIL_UNKNOWN];
+  optional string fail_text = 2;
+}
+
+message DeleteProductRequest {
+  repeated int32 product_id = 1;
+}
+message DeleteProductResponse {
+  enum Result {
+    SUCC = 0;
+    
+    FAIL_UNKNOWN = 99;
+  }
+  optional Result result    = 1 [default = FAIL_UNKNOWN];
+  optional string fail_text = 2;
+}
+
+message ImportProductRequest {
+  repeated Product product = 1;
+}
+message ImportProductResponse {
+  enum Result {
+    SUCC = 0;
+    FAIL_PRODUCT_INVALID = 1;
+    
+    FAIL_UNKNOWN        = 99;
+  }
+  message InvalidProduct {
+    required string product_name = 1;
+    required string fail_text    = 2;
+  }
+  optional Result         result          = 1 [default = FAIL_UNKNOWN];
+  optional string         fail_text       = 2;
+  repeated InvalidProduct invalid_product = 3;
+}
+
+message GetCommunicateRecordAdminRequest {
+  required int32 customer_id = 1;
+  required int32 start       = 2;
+  required int32 length      = 3;
+}
+message GetCommunicateRecordAdminResponse {
+  repeated CommunicateRecord communicate_record = 1;
+  required int32             total_size         = 2;
+  required int32             filtered_size      = 3;
+}
+
+service ReminderService {
+  rpc GetCustomerById (GetCustomerByIdRequest) returns (GetCustomerByIdResponse);
+  rpc GetCustomerList (GetCustomerListRequest) returns (GetCustomerListResponse);
+  rpc GetProductList (GetProductListRequest) returns (GetProductListResponse);
+  rpc GetCommunicateRecord (GetCommunicateRecordRequest) returns (GetCommunicateRecordResponse);
+  rpc CreateCommunicateRecord (CreateCommunicateRecordRequest) returns (CreateCommunicateRecordResponse);
+  rpc UpdateCommunicateRecord (UpdateCommunicateRecordRequest) returns (UpdateCommunicateRecordResponse);
+  rpc DeleteCommunicateRecord (DeleteCommunicateRecordRequest) returns (DeleteCommunicateRecordResponse);
+  
+  rpc CreateCustomer (CreateCustomerRequest) returns (CreateCustomerResponse);
+  rpc UpdateCustomer (UpdateCustomerRequest) returns (UpdateCustomerResponse);
+  rpc DeleteCustomer (DeleteCustomerRequest) returns (DeleteCustomerResponse);
+  rpc GetCustomerProduct (GetCustomerProductRequest) returns (GetCustomerProductResponse);
+  rpc CreateCustomerProduct (CreateCustomerProductRequest) returns (CreateCustomerProductResponse);
+  rpc UpdateCustomerProduct (UpdateCustomerProductRequest) returns (UpdateCustomerProductResponse);
+  rpc DeleteCustomerProduct (DeleteCustomerProductRequest) returns (DeleteCustomerProductResponse);
+  
+  rpc GetCustomerAdmin (GetCustomerAdminRequest) returns (GetCustomerAdminResponse);
+  rpc ImportCustomer (ImportCustomerRequest) returns (ImportCustomerResponse);
+  rpc AssignedSaler (AssignedSalerRequest) returns (AssignedSalerResponse);
+  rpc GetProductAdmin (GetProductAdminRequest) returns (GetProductAdminResponse);
+  rpc CreateProduct (CreateProductRequest) returns (CreateProductResponse);
+  rpc UpdateProduct (UpdateProductRequest) returns (UpdateProductResponse);
+  rpc DeleteProduct (DeleteProductRequest) returns (DeleteProductResponse);
+  rpc ImportProduct (ImportProductRequest) returns (ImportProductResponse);
+  rpc GetCommunicateRecordAdmin (GetCommunicateRecordAdminRequest) returns (GetCommunicateRecordAdminResponse);
+}

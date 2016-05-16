@@ -1,0 +1,81 @@
+
+INSERT IGNORE INTO weizhu_discover_module (module_id, module_name, icon_name, is_recommend, next_category_id) VALUES
+(1, '热门销售教程', '', 1, 0),
+(2, '经典案例', '', 1, 0),
+(3, '私人定制', '', 0, 0),
+(4, '阶段攻略', '', 0, 0),
+(5, '岗位课程', '', 0, 0),
+(6, '知识信息', '', 0, 0),
+(7, '考试', '', 0, 0);
+
+INSERT IGNORE INTO weizhu_discover_module_category (module_id, category_id, category_name) VALUES 
+(1, 1, '私人定制'),
+(1, 2, '热门推荐'),
+(1, 3, '阶段分类'),
+(2, 1, '客户案例'),
+(2, 2, '销售案例'),
+(3, 1, '最新'),
+(3, 2, '最热'),
+(4, 1, '默认列表'),
+(5, 1, '默认列表'),
+(6, 1, '默认列表'),
+(7, 1, '参加考试'),
+(7, 2, '已结束考试');
+
+INSERT IGNORE INTO weizhu_discover_module_item_default (module_id, category_id, item_id, create_time) VALUES 
+(1, 1, 1, 1422869341),
+(1, 1, 2, 1422869341),
+(1, 1, 3, 1422869341),
+(1, 1, 4, 1422869341),
+(1, 1, 5, 1422869341),
+(1, 1, 6, 1422869341),
+(1, 1, 7, 1422869341),
+(1, 1, 8, 1422869341),
+(1, 1, 9, 1422869341),
+(1, 1, 10, 1422869341),
+(1, 1, 11, 1422869341),
+(1, 1, 12, 1422869341),
+(1, 2, 4, 1422869341),
+(1, 2, 5, 1422869341),
+(1, 2, 6, 1422869341),
+(1, 2, 7, 1422869341),
+(1, 2, 8, 1422869341),
+(1, 2, 9, 1422869341),
+(2, 1, 4, 1422869341),
+(2, 1, 5, 1422869341),
+(2, 1, 6, 1422869341),
+(2, 1, 7, 1422869341),
+(2, 2, 4, 1422869341),
+(2, 2, 5, 1422869341),
+(2, 2, 6, 1422869341),
+(2, 2, 7, 1422869341),
+(3, 1, 4, 1422869341),
+(3, 1, 5, 1422869341),
+(3, 2, 6, 1422869341),
+(3, 2, 7, 1422869341),
+(4, 1, 7, 1422869341),
+(5, 1, 7, 1422869341),
+(6, 1, 7, 1422869341);
+
+INSERT IGNORE INTO weizhu_discover_banner (banner_id, banner_name, image_name, item_id, create_time) VALUES
+(1, '卡萨帝 BCD-455WDCCU1', 'f3af3d569b997bb11050a572a909ad72.jpg', 9, 1422869341),
+(2, '卡萨帝 BCD-801WBCAU1', 'a884cf4f9d73c8e407017c407beb0c81.jpg', 11, 1422869341),
+(3, '海尔 BCD-316WDCN', '39aeaa89a1c48ed86e7aca693796387f.jpg', 1, 1422869341),
+(4, '海尔 BCD-518WDGK', 'be8cc8e1bde3ee5b1eaeaee654ed8268.jpg', 6, 1422869341),
+(5, '海尔 BCD-412WDCN', '3ae163a5c7e611661210e8bf187185e4.jpg', 3, 1422869341),
+(6, '海尔 BCD-432WDCN', 'd46590b71a3b40356558e8601567873c.jpg', 4, 1422869341),
+(7, '海尔 BCD-518WDGH', 'fc2e62129d1d47af320418dff92b6feb.jpg', 5, 1422869341);
+
+INSERT IGNORE INTO weizhu_discover_item (item_id, item_name, icon_name, create_time, item_desc, enable_score, enable_comment, redirect_url) VALUES 
+(1, '海尔 BCD-316WDCN', '77bf8c98051765a89473150878f92135.jpg', 1422869341, '风冷巡航 智慧无霜', 1, 1, 'http://www.rabbitpre.com/apps/54c5e7c666038ab70d2da11c'), 
+(2, '海尔 BCD-402WDBA', 'bbf9f78d3cc369c68ebf2da191eb57fd.jpg', 1422869341, '多门智控感湿 天然保鲜首选', 1, 1, 'http://www.rabbitpre.com/apps/54cb296895dacd051f15ec83'), 
+(3, '海尔 BCD-412WDCN 技术', '220de2f43b3bcb9a15cf205a70580508.jpg', 1422869341, '智能双变温  随鲜而动', 1, 1, 'http://www.rabbitpre.com/apps/54c986d852c8dd2f06f17773'), 
+(4, '海尔 BCD-432WDCN', '952818472ca9b20c8370b047ffb2fb5c.jpg', 1422869341, '引领多门潮流 静享极致空间  ', 1, 1, 'http://www.rabbitpre.com/apps/54c727d56796b97d0598eb85'), 
+(5, '海尔 BCD-518WDGH', 'ac4b1c8554ad6e02388e529087bcc1c4.jpg', 1422869341, '精致超薄 彩晶艺术', 1, 1, 'http://www.rabbitpre.com/apps/54ca7d9b05c3950d1f082a32'), 
+(6, '海尔 BCD-518WDGK', '7e95435749fa9dca3f6e6f9175cb6349.jpg', 1422869341, '精致超薄 彩晶艺术', 1, 1, 'http://www.rabbitpre.com/apps/54cae4f956b937071f98e280'), 
+(7, '海尔 BCD-800WBOU1', 'e1d7397449fac60300bcfe58d9e3a602.png', 1422869341, '极智私享 鲜而易见', 1, 1, 'http://www.rabbitpre.com/apps/54c8451e3df5f5800519f7b2'), 
+(8, '卡萨帝 BCD-408WDCAU1', '150b649ee4cbcbc74ef3f57187df2e85.png', 1422869341, '净格局 享天然', 1, 1, 'http://www.rabbitpre.com/apps/54cb36d2e988180b1fbd3f51'), 
+(9, '卡萨帝 BCD-455WDCAU1', '02e0089467aa05979e936432485c014c.jpg', 1422869341, '新鲜、健康、养生都护卫', 1, 1, 'http://www.rabbitpre.com/apps/54c5f05a15ff744f056763e8'), 
+(10, '卡萨帝 BCD-728WDCA', 'ba663ad519268886c5913be10dd68dbf.jpg', 1422869341, '新鲜智慧 大有不同', 1, 1, 'http://www.rabbitpre.com/apps/54c5d93cd8e80ff90b51b6b7'), 
+(11, '卡萨帝 BCD-801WBCAU1', '72447b4b4452fe07bbf862818bef7b7d.png', 1422869341, '卡萨帝翊动朗度 双系统叠门冰箱', 1, 1, 'http://www.rabbitpre.com/apps/54ca4a81b2badf111f7bed27'), 
+(12, '冷柜 SC332', '707f6a8986d979ff909e15b74f9e365c.jpg', 1422869341, '竞品产品参数对比', 0, 0, 'http://mp.weixin.qq.com/s?__biz=MzA5OTcwMjkwOQ==&mid=203641566&idx=1&sn=23a452d4022318a75ec001c1676308e4#rd');

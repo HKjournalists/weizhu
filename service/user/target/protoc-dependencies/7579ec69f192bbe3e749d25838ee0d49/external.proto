@@ -1,0 +1,55 @@
+
+package weizhu.external;
+
+option java_package = "com.weizhu.proto";
+option java_outer_classname = "ExternalProtos";
+
+message SendSmsRequest {
+  repeated string mobile_no = 1;
+  required string sms_text  = 2;
+}
+
+message SendSmsResponse {
+  enum Result {
+    SUCC                   = 0;
+    FAIL_MOBILE_NO_INVALID = 1;
+    FAIL_SMS_TEXT_INVALID  = 2;
+    
+    FAIL_UNKNOWN            = 99;
+  }
+  
+  optional Result result    = 1 [default = FAIL_UNKNOWN];
+  optional string fail_text = 2;
+}
+
+// 发送邮件请求
+message SendEmailRequest {
+  repeated string to_recipients = 1; // 收件人
+  repeated string cc_recipients = 2; // 抄送人
+  required string subject       = 3; // 邮件主题
+  required string html_content  = 4; // 邮件html内容
+}
+
+message SendEmailResponse {
+  enum Result {
+    SUCC                    = 0;
+    FAIL_RECIPIENTS_INVALID = 1;
+    FAIL_SUBJECT_INVALID    = 2;
+    
+    FAIL_UNKNOWN            = 99;
+  }
+  
+  optional Result result    = 1 [default = FAIL_UNKNOWN];
+  optional string fail_text = 2;
+}
+
+// 访问外部接口的服务
+service ExternalService {
+
+  // 发送短信
+  rpc SendSms (SendSmsRequest) returns (SendSmsResponse);
+  
+  // 发送邮件
+  rpc SendEmail (SendEmailRequest) returns (SendEmailResponse);
+  
+}

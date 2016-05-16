@@ -1,0 +1,85 @@
+import "weizhu.proto";
+
+package weizhu.webrtc;
+
+option java_package = "com.weizhu.proto";
+option java_outer_classname = "WebRTCProtos";
+// option optimize_for = LITE_RUNTIME;
+
+message IceCandidate {
+  required string sdp_mid         = 1;
+  required int32  sdp_mline_index = 2;
+  required string sdp             = 3;
+}
+
+message WebRTCIceCandidateMessagePush {
+  required int64        user_id       = 1;
+  required int64        session_id    = 2;
+  repeated IceCandidate ice_candidate = 3;
+}
+
+message WebRTCIncomingCallMessagePush {
+  required int64  user_id      = 1;
+  required int64  session_id   = 2;
+  required bool   enable_video = 3;
+  required string offer_sdp    = 4;
+}
+
+message WebRTCAnswerCallMessagePush {
+  required int64  user_id    = 1;
+  required int64  session_id = 2;
+  required string answer_sdp = 4;
+}
+
+message WebRTCHangUpCallMessagePush {
+  required int64  user_id     = 1;
+  required int64  session_id  = 2;
+  required string hang_up_msg = 3;
+}
+
+message UpdateIceCandidateRequest {
+  required int64        user_id       = 1;
+  required int64        session_id    = 2;
+  repeated IceCandidate ice_candidate = 3;
+}
+
+message MakeCallRequest {
+  required int64  user_id      = 1;
+  required bool   enable_video = 2;
+  required string offer_sdp    = 3;
+}
+
+message MakeCallResponse {
+  enum Result {
+    SUCC                = 0;
+    FAIL_USER_NOT_EXIST = 1;
+    FAIL_USER_OFFLINE   = 2;
+    
+    FAIL_UNKNOWN        = 99;
+  }
+  
+  optional Result result    = 1 [default = FAIL_UNKNOWN];
+  optional string fail_text = 2;
+}
+
+message AnswerCallRequest {
+  required int64  user_id    = 1;
+  required int64  session_id = 2;
+  required string answer_sdp = 3;
+}
+
+message HangUpCallRequest {
+  required int64 user_id    = 1; // 对方的userId.
+  optional int64 session_id = 2; // 对方的sessionId. 此字段必填，只有当发起通话者在没有收到接听push并主动挂断电话时，可以不填。因为此时无法确认对方的会话id。
+}
+
+service WebRTCService {
+
+  rpc UpdateIceCandidate (UpdateIceCandidateRequest) returns (weizhu.EmptyResponse);
+  
+  rpc MakeCall (MakeCallRequest) returns (MakeCallResponse);
+  
+  rpc AnswerCall (AnswerCallRequest) returns (weizhu.EmptyResponse);
+
+  rpc HangUpCall (HangUpCallRequest) returns (weizhu.EmptyResponse);
+}

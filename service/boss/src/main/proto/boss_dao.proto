@@ -1,0 +1,11 @@
+
+package weizhu.boss.dao;
+
+option java_package = "com.weizhu.service.boss";
+option java_outer_classname = "BossDAOProtos";
+
+message SessionKey {
+  required string boss_id    = 1;
+  required int64  session_id = 2;
+  required int32  login_time = 3;
+}

@@ -1,0 +1,9 @@
+--server_url_prefix=https://boss.wehelpu.cn:8443/boss \
+--server_trust_store_type=jks \
+--server_trust_store=./cert/weizhu_ca.jks \
+--server_trust_store_password=weizhu2015 \
+--server_key_store_type=PKCS12 \
+--server_key_store=./cert/francislin.p12 \
+--server_key_store_password=weizhu2015
+--session_key=4d76d8874166da47684d7555392905ebd48b8cc5e148cea83fcd7b6ac595b5b0 \
+--list_company

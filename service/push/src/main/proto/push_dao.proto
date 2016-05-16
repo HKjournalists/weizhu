@@ -1,0 +1,23 @@
+package weizhu.push.dao;
+
+option java_package = "com.weizhu.service.push";
+option java_outer_classname = "PushDAOProtos";
+
+message OfflineMsg {
+  repeated int64  include_session_id = 1;
+  repeated int64  exclude_session_id = 2;
+  required int64  push_seq           = 3;
+  required string push_name          = 4;
+  required bytes  push_body          = 5;
+}
+
+message StateKey {
+  required string push_name = 1;
+  required bytes  push_key  = 2;
+}
+
+message OfflineState {
+  required int64  push_seq   = 1;
+  required string push_name  = 2;
+  required bytes  push_key   = 3;
+}

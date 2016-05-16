@@ -1,0 +1,262 @@
+package weizhu;
+
+option java_package = "com.weizhu.proto";
+option java_outer_classname = "WeizhuProtos";
+// option optimize_for = LITE_RUNTIME;
+
+// api 调用信息
+message Invoke {
+  required int32  invoke_id     = 1; // 调用id
+  required string service_name  = 2; // 调用服务名
+  required string function_name = 3; // 调用函数名
+}
+
+// 当前登录会话信息
+message Session {
+  required int64 company_id  = 1; // 公司id
+  required int64 user_id     = 2; // 用户id
+  required int64 session_id  = 3; // 会话id
+}
+
+// 网络相关信息
+message Network {
+  // 网络类型
+  enum Type {
+    UNKNOWN = 0;
+    WIFI    = 1;
+  }
+  // 数据传输编码协议
+  enum Protocol {
+    HTTP_PB    = 0; // 数据使用http传输, protobuf编码 
+    SOCKET_PB  = 1; // 数据使用tcp长连接传输, protobuf编码 
+    WEB_MOBILE = 2; // app浏览器访问h5页面
+  }
+  
+  required Type     type        = 1; // 网络类型
+  required Protocol protocol    = 2; // 数据传输编码协议
+  required string   remote_host = 3; // 调用客户端ip
+  required int32    remote_port = 4; // 调用客户端端口
+}
+
+// 微助App版本信息
+message Weizhu {
+  // 微助App平台
+  enum Platform {
+    ANDROID = 0;
+    IPHONE  = 1;
+  }
+  // 微助版本阶段类型
+  enum Stage {
+    RELEASE = 0; // 正式发布版
+    BETA    = 1; // 公开测试版
+    ALPHA   = 2; // 内部测试版
+  }
+
+  required Platform platform     = 1; // 微助App平台
+  required string   version_name = 2; // 微助App版本名
+  required int32    version_code = 3; // 微助App版本号
+  required Stage    stage        = 4; // 微助App版本阶段类型
+  required int32    build_time   = 5; // 微助App构建时间戳(单位：秒)
+  optional string   build_hash   = 6; // 微助App构建hash值
+}
+
+// Android手机信息
+message Android {
+  required string device       = 1; // 设备，对应字段为 android.os.Build.DEVICE
+  required string manufacturer = 2; // 制造商，对应字段为 android.os.Build.MANUFACTURER
+  required string brand        = 3; // 品牌，对应字段为 android.os.Build.BRAND
+  required string model        = 4; // 机型，对应字段为 android.os.Build.MODEL
+  required string serial       = 5; // 手机序列号，对应字段为 android.os.Build.SERIAL
+  required string release      = 6; // android.os.Build.VERSION.RELEASE
+  required int32  sdk_int      = 7; // android.os.Build.VERSION.SDK_INT
+  required string codename     = 8; // android.os.Build.VERSION.CODENAME
+}
+
+// Iphone手机信息
+message Iphone {
+  required string name            = 1; // 设备名称 [[UIDevice currentDevice] name]
+  required string system_name     = 2; // 系统名称 [[UIDevice currentDevice] systemName]
+  required string system_version  = 3; // 系统版本号 [[UIDevice currentDevice] systemVersion]
+  required string model           = 4; // 设备模式 [[UIDevice currentDevice] model]
+  required string localized_model = 5; // 本地设备模式 [[UIDevice currentDevice] localizedModel]
+  required string device_token    = 6; // 设备token，用于下发push信息
+  required string mac             = 7; // mac 地址
+  optional string app_id          = 8 [default = "com.21tb.weizhu"]; // AppId, 不填写默认为 com.21tb.weizhu
+}
+
+// 手机Web浏览器信息
+message WebMobile {
+  required string user_agent = 1; // 浏览器UA
+}
+
+// HttpApi请求数据
+message HttpApiRequest {
+  required bytes         session_key  = 1; // 会话Key，可解码为会话信息
+  required Invoke        invoke       = 2; // 调用相关信息
+  required Network.Type  network_type = 3; // 使用网络类型
+  required Weizhu        weizhu       = 4; // 微助版本信息
+  optional Android       android      = 5; // android信息
+  optional Iphone        iphone       = 6; // iphone信息
+
+  required bytes         request_body = 99; // 请求数据包体
+}
+
+// HttpApi返回数据
+message HttpApiResponse {
+  // 数据返回结果
+  enum Result {
+    SUCC                    = 0;  // 调用成功,response_body字段中必定有数据
+    FAIL_SESSION_DECRYPTION = 1;  // session_key 解码失败，fail_text字段必定有数据，下同
+    FAIL_SESSION_EXPIRED    = 2;  // session_key 校验失败或者已经过期，请重新登录
+    FAIL_INVOKE_UNKNOWN     = 3;  // 调用信息错误，服务名或者函数名错误
+    FAIL_BODY_DECRYPTION    = 4;  // 请求包体数据解密失败
+    FAIL_BODY_PARSE_FAIL    = 5;  // 请求包体数据格式解析失败
+    FAIL_USER_DISABLE       = 6;  // 该用户被禁用, 不能访问服务器
+    
+    FAIL_SERVER_EXCEPTION   = 99; // 服务器内部处理错误
+  }
+  
+  required Invoke invoke        = 1;                                   // 调用信息，和请求包中的调用信息一致
+  optional Result result        = 2 [default = FAIL_SERVER_EXCEPTION]; // 返回结果
+  optional string fail_text     = 3;                                   // 失败文本信息，可供客户端展示给用户
+  optional bytes  response_body = 4;                                   // 调用成功时，返回包体数据
+}
+
+// tcp长连接建立请求
+message SocketEstablishRequest {
+  required bytes         session_key  = 1; // 会话Key，可解码为会话信息
+  required Network.Type  network_type = 2; // 使用网络类型
+  required Weizhu        weizhu       = 3; // 微助版本信息
+  optional Android       android      = 4; // android信息
+  optional Iphone        iphone       = 5; // iphone信息
+  required int64         push_seq     = 6; // 开始接收push seq号, seq号之前的push消息直接忽略
+  repeated string        push_name    = 7; // 该客户端支持的push name
+}
+
+// tcp长连接建立返回
+message SocketEstablishResponse {
+  // 数据返回结果
+  enum Result {
+    SUCC                    = 0;  // 调用成功,response_body字段中必定有数据
+    FAIL_SESSION_DECRYPTION = 1;  // session_key 解码失败，fail_text字段必定有数据，下同
+    FAIL_SESSION_EXPIRED    = 2;  // session_key 校验失败或者已经过期，请重新登录
+    FAIL_USER_DISABLE       = 3;  // 该用户被禁用, 不能访问服务器
+    
+    FAIL_SERVER_EXCEPTION   = 99; // 服务器内部处理错误
+  }
+  optional Result result         = 1 [default = FAIL_SERVER_EXCEPTION]; // 返回结果
+  optional string fail_text      = 2;                                   // 失败文本信息,可供客户端展示给用户
+  optional int64  reset_push_seq = 3;                                   // 如果设置该值,则需要重置客户端上存储的push seq
+}
+
+// tcp长连接api请求
+message SocketApiRequest {
+  required Invoke invoke       = 1;  // 调用相关信息
+  
+  required bytes  request_body = 99; // 请求数据包体
+}
+
+// tcp长连接api返回
+message SocketApiResponse {
+  // 数据返回结果
+  enum Result {
+    SUCC                    = 0; // 调用成功,response_body字段中必定有数据
+    FAIL_ESTABLISH_INVALID  = 1; // 长连接未正确建立
+    FAIL_INVOKE_UNKNOWN     = 2; // 调用信息错误，服务名或者函数名错误
+    FAIL_BODY_DECRYPTION    = 3; // 请求包体数据解密失败
+    FAIL_BODY_PARSE_FAIL    = 4; // 请求包体数据格式解析失败
+    
+    FAIL_SERVER_EXCEPTION   = 99; // 服务器内部处理错误
+  }
+  
+  required Invoke invoke        = 1;                                   // 调用信息，和请求包中的调用信息一致
+  optional Result result        = 2 [default = FAIL_SERVER_EXCEPTION]; // 返回结果
+  optional string fail_text     = 3;                                   // 失败文本信息，可供客户端展示给用户
+  optional bytes  response_body = 4;                                   // 调用成功时，返回包体数据
+}
+
+message PushMessage {
+  required int64  push_seq  = 1;
+  required string push_name = 2;
+  required bytes  push_body = 3;
+}
+
+// tcp长连接push消息
+message SocketPushMsg {
+  required PushMessage push_msg = 1;
+  required bool        has_more = 2;
+}
+
+// tcp长连接push接收成功应答
+message SocketPushAck {
+  required int64 push_seq = 1;
+}
+
+message SocketPing {
+  required int32 id = 1;
+}
+
+message SocketPong {
+  required int32 id = 1;
+}
+
+// tcp长连接上行数据包(从手机端发送到服务器端)
+message SocketUpPacket {
+  oneof packet {
+    SocketEstablishRequest establish_request = 1;
+    SocketApiRequest       api_request       = 2;
+    SocketPushAck          push_ack          = 3;
+    SocketPing             ping              = 4;
+    SocketPong             pong              = 5;
+  }
+}
+
+// tcp长连接下行数据包(从服务器端发送到手机端)
+message SocketDownPacket {
+  oneof packet {
+    SocketEstablishResponse establish_response = 1;
+    SocketApiResponse       api_response       = 2;
+    SocketPushMsg           push_msg           = 3;
+    SocketPing              ping               = 4;
+    SocketPong              pong               = 5;
+  }
+}
+
+// 系统发起的接口请求
+message SystemHead {
+  // 还没想好
+  optional int64 company_id  = 1; // 公司id
+}
+
+// 用户调用请求数据包头,带登陆身份。server内部使用
+message RequestHead {
+  required Session   session    = 1; // 会话信息
+  required Invoke    invoke     = 2; // 调用信息
+  required Network   network    = 3; // 网络信息
+  optional Weizhu    weizhu     = 4; // 微助App版本信息
+  optional Android   android    = 5; // 客户端android手机相关信息
+  optional Iphone    iphone     = 6; // 客户端iphone手机相关信息
+  optional WebMobile web_mobile = 7; // 使用浏览器访问h5页面相关信息
+}
+
+// 匿名用户调用请求数据包头,匿名身份。server内部使用
+message AnonymousHead {
+  optional int64     company_id = 1; // 公司id，根据company_key获取。
+  required Invoke    invoke     = 2; // 调用信息
+  required Network   network    = 3; // 网络信息
+  optional Weizhu    weizhu     = 4; // 微助App版本信息
+  optional Android   android    = 5; // 客户端android手机相关信息
+  optional Iphone    iphone     = 6; // 客户端iphone手机相关信息
+  optional WebMobile web_mobile = 7; // 使用浏览器访问h5页面相关信息
+}
+
+message EmptyRequest {
+}
+
+message EmptyResponse {
+}
+
+// just for test
+message TestPush {
+  required string message = 1;
+}

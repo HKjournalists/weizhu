@@ -1,0 +1,5410 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<!--拨打电话用-->
+		<meta name="format-detection" content="telephone=no"> 
+		<meta http-equiv="x-rim-auto-match" content="none"> 
+		
+		<script src="../static/js/mobiscroll/jquery-1.11.1.min.js"></script>
+		<script type="text/javascript" src="../static/js/mobiscroll/jquery.mobile-1.4.3.min.js"></script>
+		
+		<title></title>
+		<style type="text/css">
+		
+    /*阴历插件-龙*/	
+		.ui-datepicker-mask{
+            position:fixed;
+            width:100%;
+            height: 100%;
+            left: 0;
+            top: 0;
+            z-index:2;
+            background-color: rgba(0,0,0,.2);
+        }
+        .ui-datepicker-bg
+        {
+        	position: absolute;
+        	width:100%;
+            height: 100%;
+            top: 0;
+            right: 0;
+            background-color:#333;
+            opacity: .3;
+            z-index: 3;
+        }
+        .ui-datepicker-wrap {
+            position: absolute;
+            bottom: 0px;
+            background-color: #fff;
+            width: 100%;
+            height: 180px;
+            -webkit-user-select: none;
+            -webkit-animation: ui-datepicker-show .5s;
+            z-index: 4;
+        }
+        .ui-datepicker-btn {
+            height: 40px;
+            line-height: 40px;
+            padding: 0 10px;
+            display: inline-block;
+            color: #2095f2;
+            font-weight: 900;
+            font-size: 17px;
+            text-decoration: none;
+        }
+        .ui-datepicker-header {
+            height: 40px;
+            border-bottom: 1px solid #acacac;
+            text-align: center;
+        }
+        .ui-datepicker-swith {
+            display: inline-block;
+            margin: 5px;
+            background-color: #fafafa;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            text-decoration: none;
+        }
+        .ui-datepicker-swith-tab{
+            display: inline-block;
+            padding: 5px 10px;
+            color: #2095f2;
+            border-radius: 5px;
+        }
+        .ui-datepicker-swith-tab.active{
+            background-color: #2095f2;
+            color: #fff;
+        }
+        .fl{
+            float: left;
+        }
+        .fr{
+            float: right;
+        }
+        .ui-datepicker-body{
+            height: 140px;
+            overflow: hidden;
+        }
+        .ui-datepicker-column{
+            width: 33%;
+            float: left;
+            text-align: center;
+            color: #9d9d9d;
+            font-size: 20px;
+            background: -webkit-linear-gradient(top,#fff,#9d9d9d 56px,#9d9d9d 84px,#fff 140px);
+            -webkit-background-clip:text;
+            color:transparent;
+            position: relative;
+        }
+        .ui-datepicker-ul{
+            -webkit-transition: margin-top .5s;
+        }
+        .ui-datepicker-wol {
+            height: 28px;
+            width: 100%;
+            position: absolute;
+            top: 56px;
+            border-top: 1px solid #dbdbdb;
+            border-bottom: 1px solid #dbdbdb;
+        }
+        .ui-datepicker-li{
+            display: block;
+            line-height: 28px;
+        }
+        .ui-datepicker-li-sel{
+            color:#000;
+        }
+        @-webkit-keyframes ui-datepicker-show{
+            from {margin-bottom:-180px;}
+            to {margin-bottom:0px;}
+        }
+        
+
+/*正常部分*/	
+		
+* {
+	margin: 0;
+	padding: 0;
+}
+
+a {
+	display: block;
+	text-decoration: none;
+	color: #999;
+}
+
+html {
+	height: 100%;
+	width: 100%;
+}
+
+body {
+	width:100%;
+	position: relative;
+	overflow: hidden;
+	font-family: "Helvetica Neue", Helvetica, "Hiragino Sans GB", "Microsoft YaHei", Arial, sans-serif;
+	font-size: 12px;
+	color: #666;
+}
+
+.detail {
+	width: 100%;
+	height: 100%;
+	overflow:hidden;
+	background-color: #f2f2f2;
+}
+
+.d_info,
+.d_customer {
+	width: 100%;
+	position: relative;
+	border-top: 1px solid #eee;
+	background-color: #fff;
+	border-bottom: 1px solid #eee;
+	margin-bottom: 10px;
+	overflow:hidden;
+}
+.did_nums
+{
+	overflow:hidden;
+	width:100%;
+}
+
+.d_customer {
+	border-bottom: 1px solid #eee;
+}
+
+.d_customer span {
+	line-height: 30px;
+	margin-left: 10px;
+}
+
+.dc_title {
+	width:100%;
+	height:44px;
+	position: fixed;
+	top:0;
+	left:0;
+	line-height: 44px;
+	text-align: center;
+	font-size: 14px;
+	background-color: #fff;
+	border-bottom: 1px solid #eee;
+	z-index:10;
+}
+p
+{
+	background-color:#fff;
+}
+.dct_back {
+	width: 60px;
+	height: 45px;
+	line-height: 45px;
+	position: absolute;
+	top: 0;
+	left: 0;
+	color: #2095f2;
+}
+
+.dct_add {
+	position: absolute;
+	width: 60px;
+	height: 45px;
+	background-repeat: no-repeat;
+	background-image: url(../static/images/clock/delete.png);
+	background-size: 20px 20px;
+	background-position: 20px 12px;
+	right: 0px;
+	top: 0px;
+}
+
+.dc_call {
+	width: 50px;
+	height: 20px;
+	position: absolute;
+	text-align: center;
+	line-height: 20px;
+	border: 1px solid #666;
+	border-radius: 5px;
+	top: 60px;
+	right: 30px;
+}
+
+.dc_delete {
+	position: absolute;
+	width: 30px;
+	line-height: 30px;
+	text-align: center;
+	border: 1px solid #999;
+	border-radius: 3px;
+	top: 0;
+	right: 10px;
+}
+
+.did_num {
+	width: 125%;
+	height: 35px;
+	overflow: hidden;
+	-webkit-transition: all 0.3s linear;
+	border-top: 1px solid #eee;
+	background-color:#fff;
+}
+.bao
+{
+	width:100%;
+	overflow:hidden;
+}
+.jianju
+{
+	width:100%;
+	height:10px;
+}
+.did_num div p {
+	margin-left: 10px;
+}
+
+.delete {
+	width: 20%;
+	float: left;
+	height: 35px;
+	line-height: 35px;
+	text-align: center;
+	color:#fff;
+}
+
+.drd_num {
+	margin-left: 10px;
+	padding-right: 10px;
+	border-bottom: 1px solid #ddd;
+	-webkit-transition: all 0.3s linear;
+}
+
+.gt_lb1
+{
+	margin-left: 10px;
+	padding-right: 10px;
+	border-bottom: 1px solid #ddd;
+}
+
+.gt_lb1 p
+{
+	line-height: 20px;
+	width:100%;
+	overflow:hidden;
+	margin-top: 10px;
+}
+
+.drd_num p {
+	line-height: 20px;
+	margin-top: 10px;
+}
+
+.drd_more {
+	line-height: 40px;
+	text-align: center;
+	color: #2095F2;
+	font-size: 13px;
+	border-top:1px solid #eee;
+}
+
+.d_remark {
+	width:100%;
+	overflow:hidden;
+	background-color: #fff;
+	border-top: 1px solid #eee;
+	border-bottom: 1px solid #eee;
+	margin-bottom: 10px;
+}
+
+.d_remark p,
+.d_message p {
+	line-height: 30px;
+	padding-left: 10px;
+	padding-right: 10px;
+}
+
+.dll_label {
+	padding: 7px;
+	text-align: center;
+	border: 1px solid #bfbfbf;
+	border-radius: 3px;
+	display: inline-block;
+	margin: 10px;
+	position: relative;
+}
+
+.dl_delete {
+	position: absolute;
+	width: 15px;
+	height: 15px;
+	background-repeat: no-repeat;
+	background-image: url(../static/images/clock/label_shanchu.png);
+	background-size: 15px 15px;
+	top: -7px;
+	right: -7px;
+}
+p
+{
+	display:block;
+}
+.d_message {
+	position: relative;
+}
+
+.sure_delete {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 20;
+}
+
+.sd_content {
+	width: 200px;
+	height: 150px;
+	background-color: #fff;
+	position: absolute;
+	top: 30%;
+	left: 50%;
+	margin-left: -100px;
+	border-radius: 5px;
+}
+
+.sd_content p {
+	text-align: center;
+	line-height:30px;
+}
+
+.sd_bg {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	opacity: .3;
+	background: #000;
+}
+
+.sd_content p {
+	margin-top: 30px;
+	font-weight: 900;
+	color: #666;
+	font-size: 14px;
+	margin-left: 10px;
+	margin-right: 10px;
+}
+
+.sdc_cancle {
+	width: 70px;
+	height: 25px;
+	border: 1px solid #eee;
+	text-align: center;
+	line-height: 25px;
+	border-radius: 5px;
+	position: absolute;
+	bottom: 20px;
+	left: 20px;
+	background-color: #f8f8f8;
+	color: #2095f2;
+}
+
+.sdc_sure {
+	width: 70px;
+	height: 25px;
+	border: 1px solid #eee;
+	text-align: center;
+	line-height: 25px;
+	border-radius: 5px;
+	position: absolute;
+	bottom: 20px;
+	right: 20px;
+	color: #fff;
+	background-color: #2095f2;
+}
+
+.info_title {
+	width:100%;
+	height:44px;
+	line-height: 44px;
+	text-align: center;
+	font-size: 14px;
+	border-bottom: 1px solid #ddd;
+	position: fixed;
+	top:0;
+	left:0;
+	z-index:1;
+	background-color:#fff;
+}
+
+.info,.info_ge{
+	position:absolute;
+	left:0;
+	top:0;
+	width: 100%;
+	height: 100%;
+}
+
+.i_save,.i_save_ge {
+	width: 60px;
+	height: 45px;
+	line-height: 45px;
+	position: absolute;
+	top: 0;
+	right: 0;
+	color: #2095f2;
+}
+
+.i_back,.i_back_ge {
+	width: 60px;
+	height: 45px;
+	line-height: 45px;
+	position: absolute;
+	top: 0;
+	left: 0;
+	color: #2095f2;
+}
+
+.i_content {
+	position:absolute;
+	top:45px;
+	left:0;
+	width: 100%;
+	overflow-y: auto;
+	overflow-x: hidden;	
+}
+
+.ic_con {
+	height: 50px;
+	width: 100%;
+	position: relative;
+	line-height: 50px;
+	border-bottom: 1px solid #ddd;
+	margin-left: 10px;
+}
+
+.ic_con label {
+	width: 30%;
+}
+
+.ic_con input,.ic_con span {
+	display: block;
+	position: absolute;
+	right: 10%;
+	top: 0;
+	width: 40%;
+	height:50px;
+	line-height: 50px;
+	text-align: right;
+	border: 0;
+	color: #333;
+}
+
+
+
+
+
+.ics_div {
+	width: 90px;
+	position: absolute;
+	top: 0;
+	right: 5%;
+}
+
+.ics_sex {
+	width: 20px;
+	height: 14px;
+	line-height: 14px;
+	padding-left: 20px;
+	display: inline-block;
+	background-image: url(../static/images/clock/circle1.png);
+	background-repeat: no-repeat;
+	background-size: contain;
+	position: relative;
+}
+
+.ic_sex .circle2 {
+	background-image: url(../static/images/clock/circle2.png);
+}
+
+.ics_sex_ge {
+	width: 20px;
+	height: 14px;
+	line-height: 14px;
+	padding-left: 20px;
+	display: inline-block;
+	background-image: url(../static/images/clock/circle1.png);
+	background-repeat: no-repeat;
+	background-size: contain;
+	position: relative;
+}
+
+.ic_sex_ge .circle2 {
+	background-image: url(../static/images/clock/circle2.png);
+}
+
+
+.ic_clock {
+	width: 100%;
+	line-height: 50px;
+	border-bottom: 1px solid #ddd;
+	background-color: #DDDDDD;
+}
+
+.ic_clock input {
+	width: 30px;
+}
+
+.p_content {
+	width: 100%;
+}
+
+.pc_con {
+	width: 100%;
+	line-height: 50px;
+	border-bottom: 1px solid #ddd;
+}
+
+.pc_con label,
+.pc_con1 label {
+	display: inline-block;
+	width: 30%;
+	padding-left: 10%;
+	display: inline-block;
+}
+
+.pc_con input {
+	width: 50%;
+	line-height: 50px;
+	text-align: center;
+	border: 0;
+	color: #999;
+}
+
+.pc_con1 {
+	border-bottom: 1px solid #ddd;
+}
+
+.pc_con1 input {
+	width: 40px;
+	line-height: 30px;
+	text-align: center;
+	color: #999;
+}
+
+.pc_con1 p {
+	display: inline-block;
+	line-height: 50px;
+}
+
+.com_record {
+	width: 100%;
+	height: 100%;
+	overflow:hidden;
+}
+
+.cr_save {
+	width: 70px;
+	height: 25px;
+	border: 1px solid #eee;
+	text-align: center;
+	line-height: 25px;
+	border-radius: 5px;
+	position: absolute;
+	top: 7px;
+	right: 10px;
+	color: #fff;
+	background-color: #2095f2;
+}
+
+.cr_div {
+	width: 100%;
+	position: relative;
+	margin-top: 20px;
+}
+
+.wordwrap {
+	position: absolute;
+	right: 5%;
+	bottom: 6px;
+}
+
+.com_list {
+	width: 100%;
+	height: 100%;
+}
+
+.cl_title {
+	position: fixed;
+	top:0;
+	left:0;
+	line-height: 50px;
+	width:100%;
+	height:50px;
+	text-align: center;
+	font-size: 14px;
+	background-color:#fff;
+	z-index:20;
+	border-bottom: 1px solid #ddd;
+}
+
+.cl_add {
+	position: absolute;
+	width: 50px;
+	height: 44px;
+	background-image: url(../static/images/clock/user_icon.png);
+	background-repeat: no-repeat;
+	background-size: 20px 20px;
+	background-position: 15px 12px;
+	top: 0;
+	right: 0;
+}
+
+.com_content
+{
+	width: 100%;
+	position: absolute;
+	display: block;
+	overflow-y:auto;
+	top: 45px;
+	left:0;
+}
+
+
+.m_header {
+	position: fixed;
+	width: 100%;
+	height: 50px;
+	background-color: #f8f8f8;
+	border-bottom: 1px solid #ddd;
+	top: 50px;
+	left: 0;
+	z-index: 10;
+}
+
+.ttt {
+	margin-left: auto;
+	margin-right: auto;
+	width: 70px;
+	border-bottom: 2px solid #fff;
+	height: 48px;
+	color: #666;
+	line-height: 48px;
+}
+
+.blue {
+	color: #2095f2;
+	border-bottom: 2px solid #2095f2;
+}
+
+.header1 {
+	width: 50%;
+	height: 50px;
+	float: left;
+	text-align: center;
+}
+
+.my_num {
+	position: relative;
+}
+
+.m_content {
+	width: 100%;
+	position: absolute;
+	top:100px;
+	left:0;
+}
+
+.m_yi {
+	width: 100%;
+	position: absolute;
+	top: 0;
+	left: 0;
+	display: block;
+	overflow-y: auto;
+}
+
+.my_num {
+	width: 100%;
+	height: 80px;
+	border-bottom: 1px solid #ddd;
+}
+
+.mndiv2 {
+	position: absolute;
+	top: 0px;
+	right: 0px;
+	width: 100px;
+	height: 80px;
+	line-height: 80px;
+	text-align: center;
+	background-repeat: no-repeat;
+	background-image: url(../static/images/clock/main_add.png);
+	background-size: 20px 20px;
+	background-position: 0 30px;
+}
+
+.m_wei {
+	width: 100%;
+	position: absolute;
+	top: 0;
+	left: 0;
+	display: none;
+	overflow-y: auto;
+}
+
+.mndiv1 {
+	height: 30px;
+	line-height: 30px;
+	padding-left: 20px;
+	margin-top: 20px;
+	margin-left: 10px;
+	background-repeat: no-repeat;
+	background-image: url(../static/images/clock/main_iphone.png);
+	background-size: 18px 18px;
+	background-position: 0 4px;
+}
+
+.main {
+	width: 100%;
+	height:100%;
+	position:relative;
+	top:0;
+	left:0;
+}
+
+.mnspan {
+	font-size: 14px;
+	font-weight: 900;
+	top: 15px;
+	margin-left: 10px;
+	position: relative;
+}
+
+.hongdian:after {
+	content: "";
+	position: absolute;
+	width: 7px;
+	height: 7px;
+	border: 1px solid #f66;
+	border-radius: 50%;
+	background-color: #f66;
+	top: 0px;
+	right: -15px;
+}
+.ms
+{
+	font-size: 14px;
+	font-weight: 900;
+	margin-left: 10px;
+	display:inline-block;
+}
+.myn_div
+{
+	width:100%;
+	height:20px;
+	margin-top:10px;
+}
+input
+{
+	outline:none;
+}
+.hd
+{
+	display:inline-block;
+	margin-top:-5px;
+	width: 5px;
+	height: 5px;
+	border: 1px solid #f66;
+	border-radius: 50%;
+	background-color: #f66;
+}
+
+.dc_link {
+	width:100%;
+	overflow:hidden;
+	margin-bottom: 10px;
+	border-bottom: 1px solid #eee;
+	position: relative;
+	height: 80px;
+	background-color: #fff;
+}
+
+.dc_phone {
+	position: absolute;
+	top: 25px;
+	padding-left: 17px;
+	right: 10px;
+	margin-left: 5px;
+	width: 60px;
+	height: 30px;
+	line-height: 30px;
+	text-align: center;
+	background-repeat: no-repeat;
+	background-image: url(../static/images/clock/iPhone.png);
+	background-size: 18px 18px;
+	background-position: 0 5px;
+}
+
+.dcl_name {
+	font-size: 15px;
+	top: 15px;
+	margin-left: 10px;
+	position: relative;
+}
+
+.dcl_sex
+{
+	position:relative;
+	top:21px;
+	margin-left:5px;
+	display:inline-block;
+	width: 20px;
+	height: 20px;
+	background-repeat: no-repeat;
+	background-size: 15px 15px;
+}
+
+.detail .dclman
+{
+	background-image: url(../static/images/clock/man.png);
+}
+
+.detail .dclwoman
+{
+	background-image: url(../static/images/clock/woman.png);
+}
+.detail .dclman
+{
+	background-image: url(../static/images/clock/man.png);
+}
+.d_record {
+	width:100%;
+	overflow:hidden;
+	background-color: #fff;
+	border-top:1px solid #eee;
+	border-bottom:1px solid #eee;
+	margin-bottom:10px;
+}
+
+.d_label {
+	background-color: #fff;
+	margin-bottom: 10px;
+	border-bottom: 1px solid #eee;
+}
+
+.d_message {
+	width:100%;
+	overflow:hidden;
+	background-color: #fff;
+}
+
+.d_title {
+	margin-left: 10px;
+	font-size: 12px;
+	padding-left: 20px;
+	height: 30px;
+	line-height: 30px;
+	background-repeat: no-repeat;
+	background-size: 15px 15px;
+	background-position: 0 7px;
+	position: relative;
+}
+
+.di_title {
+	background-image: url(../static/images/clock/dititle.png);
+}
+
+.d_add {
+	width: 50px;
+	height: 30px;
+	position: absolute;
+	padding-left: 17px;
+	top: 0px;
+	background-repeat: no-repeat;
+	background-size: 15px 15px;
+	background-position: 0 7px;
+}
+
+.dit_add {
+	background-image: url(../static/images/clock/main_add.png);
+	right: -10px;
+}
+
+
+.didn_name {
+	text-align: left;
+	line-height: 35px;
+	float: left;
+	width: 40%;
+}
+
+.didn_time {
+	text-align: center;
+	line-height: 35px;
+	float: left;
+	width: 40%;
+}
+
+.dr_title {
+	background-image: url(../static/images/clock/record.png);
+}
+
+.dr_add {
+	background-image: url(../static/images/clock/main_add.png);
+	right: -10px;
+}
+
+.drdnp2 {
+	text-align: right;
+	margin-right: 5px;
+	margin-top:10px;
+}
+
+.dr_detail {
+	border-bottom: 1px solid #eee;
+	width:100%;
+	overflow:hidden;
+	
+}
+
+.dre_title {
+	background-image: url(../static/images/clock/remark.png);
+}
+
+.dr_edit {
+	background-image: url(../static/images/clock/edit-_press.png);
+	right: -10px;
+}
+.dr_p
+{
+	border-top:1px solid #eee;
+	padding:0;margin:0;
+}
+
+.dl_title {
+	background-image: url(../static/images/clock/user_icon_tag.png);
+}
+
+.dl_add {
+	background-image: url(../static/images/clock/main_add.png);
+	right: -10px;
+}
+
+.dl_push {
+	border-top: 1px solid #eee;
+}
+
+.dl_push a {
+	line-height: 40px;
+	text-align: center;
+	color: #2095F2;
+	font-size: 13px;
+}
+
+.dm_title {
+	background-image: url(../static/images/clock/wz_discover_commentlist_icon_comment.png);
+	border-bottom: 1px solid #eee;
+}
+
+.dm_copy {
+	background-image: url(../static/images/clock/wz_discover_icon_web_url.png);
+	right: 10px;
+}
+
+.ic_xingxing {
+	position: relative;
+}
+
+.ic_xingxing:after {
+	content: "";
+	position: absolute;
+	width: 7px;
+	height: 7px;
+	background-repeat: no-repeat;
+	background-image: url(../static/images/clock/xingxing.png);
+	background-size: 7px 7px;
+	top: 3px;
+	right: -10px;
+}
+
+.ic_con .default_circle_d ,.ic_con .default_circle_det{
+	width: 30px;
+	text-align: center;
+	margin-right: 15px;
+}
+
+.icc_tian {
+	width: 15px;
+	height: 50px;
+	right: 10%;
+	top: 0;
+	position: absolute;
+}
+
+.ic_con .defau_notice {
+	width: 30px;
+	text-align: center;
+	margin-right: 15px;
+}
+
+.ic_con .default_circle{
+	width: 30px;
+	text-align: center;
+	margin-right: 15px;
+}
+
+
+.icc_tian1 {
+	width: 45px;
+	height: 50px;
+	right: 10%;
+	top: 0;
+	position: absolute;
+}
+
+.dl_labels {
+	width: 100%;
+
+}
+
+.info_biaoqian {
+	margin-left: 10px;
+	font-size: 12px;
+	height: 30px;
+	line-height: 30px;
+	background-repeat: no-repeat;
+	background-size: 15px 15px;
+	background-position: 0 7px;
+	position: relative;
+}
+
+.huise {
+	width: 100%;
+	height: 20px;
+	background-color: #f2f2f2;
+}
+
+.p_save {
+	width: 60px;
+	height: 45px;
+	line-height: 45px;
+	position: absolute;
+	top: 0;
+	right: 0;
+	color: #2095f2;
+}
+
+.p_title {
+	line-height: 45px;
+	text-align: center;
+	font-size: 14px;
+	border-bottom: 1px solid #ddd;
+	position: relative;
+}
+
+.p_back {
+	width: 60px;
+	height: 45px;
+	line-height: 45px;
+	position: absolute;
+	top: 0;
+	left: 0;
+	color: #2095f2;
+}
+
+.p_more {
+	width: 70%;
+	height: 40px;
+	margin-left: 15%;
+	margin-top: 20px;
+	font-size: 15px;
+	color: #fff;
+	background-color: #2095f2;
+	border-radius: 5px;
+	text-align: center;
+	line-height: 40px;
+}
+
+.attention, .attention1{
+	width: 100%;
+	height: 100%;
+	background-color: #fff;
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: 11;
+	overflow: hidden;
+	display: none;
+}
+
+.at_search,.at_search1 {
+	width: 100%;
+	height: 50px;
+	position: fixed;
+	top: 45px;
+	left: 0;
+	z-index: 10;
+	background-color: #fff;
+	background-repeat: no-repeat;
+}
+
+.search_input,.search_input1 {
+	position: absolute;
+	top: 10px;
+	left: 5%;
+	display: block;
+	width: 61%;
+	height: 30px;
+	border-radius: 5px;
+	border: 1px solid #ddd;
+	font-size: 12px;
+	color: #666;
+	padding-left: 8%;
+	background-image: url(../static/images/clock/icon_search.png);
+	background-repeat: no-repeat;
+	background-size: 15px 15px;
+	background-position: 8px 7px;
+}
+
+.search_man,.search_man1 {
+	display: block;
+	position: absolute;
+	width: 20%;
+	height: 30px;
+	left: 79%;
+	top: 10px;
+	text-align: center;
+	line-height: 30px;
+	background-color: #2095f2;
+	color: #fff;
+	border-radius: 5px;
+}
+
+.hint {
+	position: fixed;
+	top: 95px;
+	left: 0;
+	width: 95%;
+	height: 20px;
+	line-height: 20px;
+	background-color: #f1f2f6;
+	z-index: 10;
+	padding-left: 5%;
+	font-size: 12px;
+	color: #999;
+}
+
+.wrapper,.wrapper1{
+	position:absolute;
+	top:115px;
+	width: 100%;
+	overflow-y:auto;
+}
+
+.wrapper a,.wrapper1 a {
+	margin-left: 10px;
+	height: 50px;
+	line-height: 50px;
+	border-bottom: 1px solid #eee;
+}
+
+.a_title {
+	position:fixed;
+	top:0;
+	left:0;
+	width:100%;
+	height:44px;
+	line-height: 44px;
+	text-align: center;
+	font-size: 14px;
+	background-color:#fff ;
+	border-bottom: 1px solid #ddd;
+	z-index: 20;
+}
+
+.pro_clock {
+	width: 50px;
+	height: 50px;
+	background-repeat: no-repeat;
+	background-size: 35px 20px;
+	background-position: 7px 15px;
+	position: absolute;
+	top: 0;
+	right: 5%;
+}
+
+.pro_clock_on {
+	background-image: url(../static/images/clock/ON.png);
+}
+
+.pro_clock_off {
+	background-image: url(../static/images/clock/OFF.png);
+}
+
+.dc_content {
+	position:absolute;
+	top:45px;
+	left:0;
+	width: 100%;
+	overflow-y:auto;
+	
+	background-color:#f2f2f2;
+}
+
+.com_save {
+	width: 60px;
+	height: 45px;
+	line-height: 45px;
+	position: absolute;
+	top: 0;
+	right: 0;
+	color: #2095f2;
+}
+
+.com_back {
+	width: 60px;
+	height: 45px;
+	line-height: 45px;
+	position: absolute;
+	top: 0;
+	left: 0;
+	color: #2095f2;
+}
+
+.wordCount {
+	width: 100%;
+	position: relative;
+	margin-top: 10px;
+}
+
+.wordCount textarea {
+	width: 90%;
+	margin-top:60px;
+	margin-left: 2%;
+	margin-right: 2%;
+	padding-left: 3%;
+	padding-right: 3%;
+	height: 90px;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	resize: none;
+	border: 0;
+	font-size: 14px;
+	background-color: #f2f2f2;
+}
+
+.textarea_bg {
+	background: url(../static/images/clock/com_record.png);
+	background-repeat: no-repeat;
+	background-size: 15px 15px;
+	background-position: 10px 10px;
+}
+
+.wordCount .wordwrap {
+	position: absolute;
+	right: 5%;
+	bottom: 6px;
+}
+
+.wordCount .word {
+	color: #666;
+	padding: 0 4px;
+}
+
+.coml_back {
+	width: 60px;
+	height: 45px;
+	line-height: 45px;
+	position: absolute;
+	top: 0;
+	left: 0;
+	color: #2095f2;
+}
+
+.drdn_p2 {
+	text-align: right;
+}
+.gt_p2
+{
+	margin-bottom:10px;
+	text-align: right;
+}
+.atten_save,.atten_save1 {
+	width: 60px;
+	height: 45px;
+	line-height: 45px;
+	position: absolute;
+	top: 0;
+	right: 0;
+	color: #2095f2;
+}
+
+.atten_back,.atten_back1 {
+	width: 60px;
+	height: 45px;
+	line-height: 45px;
+	position: absolute;
+	top: 0;
+	left: 0;
+	color: #2095f2;
+}
+
+.ic_con .textarea_add,.ic_con .textarea_add_ge {
+	position: absolute;
+	width: 70%;
+	line-height: 17px;
+	right: 10px;
+	top: 0;
+	height: 50px;
+	overflow: hidden;
+	resize: none;
+	border: 0;
+}
+
+.add_success {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 20;
+}
+
+.as_content {
+	width: 200px;
+	height: 150px;
+	background-color: #fff;
+	position: absolute;
+	top: 30%;
+	left: 50%;
+	margin-left: -100px;
+	border-radius: 5px;
+}
+
+.as_pic {
+	width: 50px;
+	height: 50px;
+	background: url(../static/images/clock/icon1.png);
+	background-repeat: no-repeat;
+	background-size: 50px 50px;
+	background-position: 0px 0px;
+	margin-top: 10px;
+	margin-left: 75px;
+}
+
+.as_sure {
+	width: 70px;
+	height: 25px;
+	border: 1px solid #eee;
+	text-align: center;
+	line-height: 25px;
+	border-radius: 5px;
+	position: absolute;
+	bottom: 20px;
+	left: 20px;
+	background-color: #f8f8f8;
+	color: #2095f2;
+}
+
+.as_addpro {
+	width: 70px;
+	height: 25px;
+	border: 1px solid #eee;
+	text-align: center;
+	line-height: 25px;
+	border-radius: 5px;
+	position: absolute;
+	bottom: 20px;
+	right: 20px;
+	color: #fff;
+	background-color: #2095f2;
+}
+
+.as_bg {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	opacity: .3;
+	background: #000;
+}
+
+.as_content p {
+	text-align: center;
+	margin-top: 10px;
+}
+
+
+/*详情页的添加产品*/
+
+.p_save_det {
+	width: 60px;
+	height: 45px;
+	line-height: 45px;
+	position: absolute;
+	top: 0;
+	right: 0;
+	color: #2095f2;
+}
+
+.p_back_det {
+	width: 60px;
+	height: 45px;
+	line-height: 45px;
+	position: absolute;
+	top: 0;
+	left: 0;
+	color: #2095f2;
+}
+
+
+/*侧滑删除*/
+
+
+/*自己改的滑动删除*/
+
+.delete {
+	width: 20%;
+	height: 35px;
+	text-align: center;
+	line-height: 35px;
+	background-color: #f66;
+}
+
+.n_save {
+	width: 60px;
+	height: 45px;
+	line-height: 45px;
+	position: absolute;
+	top: 0;
+	right: 0;
+	color: #2095f2;
+}
+
+.n_back {
+	width: 60px;
+	height: 45px;
+	line-height: 45px;
+	position: absolute;
+	top: 0;
+	left: 0;
+	color: #2095f2;
+}
+
+.note,
+.product,.product_det {
+	width: 100%;
+	height: 100%;
+	overflow:hidden;
+}
+
+.selected {
+	-webkit-transform: translate(-20%, 0);
+	-webkit-transition: all 0.3s linear;
+}
+
+/*下拉刷新模块*/
+
+.fresh-loading
+{
+	position:absolute;
+	top:0px;
+	left:50%;
+	margin-top:10px;
+	margin-left:-15px;
+	width:30px;
+	height:30px;
+	border:1px solid #eee;
+	border-radius:50%;
+	background-color:#fff;
+	-webkit-box-shadow:0 0 5px 1px rgba(0,0,0,.5);
+	text-align:center;
+	z-index:5;
+}
+
+.fresh-loading:before
+{
+	display:inline-block;
+	margin-top:5px;
+	width:13px;
+	height:13px;
+	border:3px solid transparent;
+	border-top:3px solid #2095f2;
+	border-left:3px solid #2095f2;
+	border-radius:50%;
+	content:''
+}
+
+.fresh-loading-m-yi
+{
+	position:absolute;
+	top:-50px;
+	left:50%;
+	margin-top:10px;
+	margin-left:-15px;
+	width:30px;
+	height:30px;
+	border:1px solid #eee;
+	border-radius:50%;
+	background-color:#fff;
+	-webkit-box-shadow:0 0 5px 1px rgba(0,0,0,.5);
+	text-align:center;
+	z-index:5;
+}
+
+.fresh-loading-m-yi:before
+{
+	display:inline-block;
+	margin-top:5px;
+	width:13px;
+	height:13px;
+	border:3px solid transparent;
+	border-top:3px solid #2095f2;
+	border-left:3px solid #2095f2;
+	border-radius:50%;
+	content:''
+}
+.fresh-loading-m-wei
+{
+	position:absolute;
+	top:-50px;
+	left:50%;
+	margin-top:10px;
+	margin-left:-15px;
+	width:30px;
+	height:30px;
+	border:1px solid #eee;
+	border-radius:50%;
+	background-color:#fff;
+	-webkit-box-shadow:0 0 5px 1px rgba(0,0,0,.5);
+	text-align:center;
+	z-index:5;
+}
+
+.fresh-loading-m-wei:before
+{
+	display:inline-block;
+	margin-top:5px;
+	width:13px;
+	height:13px;
+	border:3px solid transparent;
+	border-top:3px solid #2095f2;
+	border-left:3px solid #2095f2;
+	border-radius:50%;
+	content:''
+}
+
+.fresh-loading-a-shangpin
+{
+	position:absolute;
+	top:70px;
+	left:50%;
+	margin-left:-15px;
+	width:30px;
+	height:30px;
+	border:1px solid #eee;
+	border-radius:50%;
+	background-color:#fff;
+	-webkit-box-shadow:0 0 5px 1px rgba(0,0,0,.5);
+	text-align:center;
+	z-index:5;
+}
+.fresh-loading-a-shangpin:before
+{
+	display:inline-block;
+	margin-top:5px;
+	width:13px;
+	height:13px;
+	border:3px solid transparent;
+	border-top:3px solid #2095f2;
+	border-left:3px solid #2095f2;
+	border-radius:50%;
+	content:''
+}
+
+
+
+
+.fresh-transition
+{
+	-webkit-transition:margin-top .3s
+}
+.goaround 
+{
+	animation: goaround .5s infinite linear
+}
+@-webkit-keyframes goaround
+{
+	0%{-webkit-transform:rotate(0)}
+	to{-webkit-transform:rotate(360deg)}
+}	
+@-webkit-keyframes loading
+{
+    0% {-webkit-transform: rotate(0deg);transform: rotate(0deg);}
+    100% {-webkit-transform: rotate(360deg);transform: rotate(360deg);}
+}   
+@-webkit-keyframes bounceIn
+{
+	0%{opacity:0}
+	to{opacity:1}
+}
+.loading-wrap{width: 100%;height:100%;top:0;left: 0;position: fixed;background-color: RGBA(0,0,0,0.4);z-index: 1;}
+.loading-wrap .loader{width:50px;height: 50px;top: 50%;left:50%;margin-top:-80px;margin-left: -35px;font-size: 10px;position: absolute;text-indent: -9999em;border-top: 10px solid rgba(255, 255, 255, 0.2);border-right: 10px solid rgba(255, 255, 255, 0.2);border-bottom: 10px solid rgba(255, 255, 255, 0.2);border-left: 10px solid #ffffff;-webkit-animation: loading .8s infinite linear;animation: loading .8s infinite linear;}
+.loading-wrap .loader, .loading-wrap .loader:after{border-radius: 50%;width: 50px;height: 50px;}
+
+
+
+.drd_num1
+{
+	width: 125%;
+	padding-left: 10px;
+	padding-right: 10px;
+	overflow:hidden;
+	border-top:1px solid #eee;
+	padding-bottom: 10px;
+	padding-top: 10px;
+	-webkit-transition: all 0.3s linear;
+	background-color:#fff;
+}
+
+.drdn_l
+{
+	width: 75%;
+	display:inline-block;
+	padding-right: 5%;
+	
+}
+
+.drd_num1 .delete{float:right;display:inline-block}
+
+.drdn_r
+{
+	width: 20%;
+	height: 100%;
+	float: left;
+	text-align: center;
+	background:#f66;
+	color:#fff;
+}
+
+.ui-loader-default{ display:none}
+.ui-mobile-viewport{ border:none;}
+.ui-page {padding: 0; margin: 0; outline: 0} 
+
+
+.textarea1 .ui-input-text{min-height: 90px;}
+.textarea .ui-input-text{min-height: 90px;}
+.textarea_add .ui-input-text{min-height: 50px;}
+
+.i_content .b_red
+{
+	border-bottom:#f66 1px solid;
+}
+.product .b_red
+{
+	border-bottom:#f66 1px solid;
+}
+
+.p_content .b_red
+{
+	border-bottom:#f66 1px solid;
+}
+
+
+.ic_con .ic_birthday 
+{
+	
+}
+.ic_con .ic_wedding
+{
+	
+}
+
+</style>
+	</head>
+	<body>
+		<div class='detail' style="display: none;">
+			<div class='dc_title'>
+				客户详情
+				<a href="javascript:void(0)" class='dct_back'>返回</a>
+				<a href="javascript:void(0)" class='dct_add'></a>
+			</div>
+			
+			<div class='dc_content'>
+				<div class='dc_link'>
+					<span class='dcl_name'></span><div class='dcl_sex'> </div>
+					<div class='mndiv1'></div>
+					<a class='dc_phone' href="javascript:void(0)">
+						拨打电话
+					</a>
+				</div>
+				<div class='d_info'>
+					<div class='d_title di_title'>
+						产品信息
+						<a href="javascript:void(0)" class='dit_add d_add'>添加</a>
+					</div>
+					<div class="did_nums">
+						
+					</div>
+				</div>
+				<div class='d_record'>
+					<div class='d_title dr_title'>
+						沟通记录
+						<a href="javascript:void(0)" class='d_add dr_add'>添加</a>
+					</div>
+	
+					<div class='dr_detail'>
+						
+					</div>
+				</div>
+				<div class='d_remark'>
+					<div class='d_title dre_title'>
+						备注
+						<a href="javascript:void(0)" class='dr_edit d_add'>编辑</a>
+					</div>
+					<p class='dr_p'></p>
+				</div>
+				<!--  
+				<div class='d_label'>
+					<div class='d_title dl_title'>
+						标签
+						<a href="javascript:void(0)" class='d_add dl_add'>添加</a>
+					</div>
+					<div class="dl_labels">
+						<div class='dll_label'>标签1
+							<a href="javascript:void(0)" class='dl_delete'></a>
+						</div>
+						<div class='dll_label'>标签2
+							<a href="javascript:void(0)" class='dl_delete'></a>
+						</div>
+						<div class='dll_label'>标签3
+							<a href="javascript:void(0)" class='dl_delete'></a>
+						</div>
+						<div class='dll_label'>标签4
+							<a href="javascript:void(0)" class='dl_delete'></a>
+						</div>
+						<div class='dll_label'>标签5
+							<a href="javascript:void(0)" class='dl_delete'></a>
+						</div>
+						<div class='dll_label'>标签6
+							<a href="javascript:void(0)" class='dl_delete'></a>
+						</div>
+						<div class='dll_label'>标签7
+							<a href="javascript:void(0)" class='dl_delete'></a>
+						</div>
+					</div>
+					<div class='dl_push'>
+						<a href="javascript:void(0)">相关内容推送</a>
+					</div>
+				</div>
+				
+				-->
+				<div class='d_message'>
+					<div class='d_title dm_title'>
+						短信
+						<a href="javascript:void(0)" class='d_add dm_copy'>发送短信</a>
+					</div>
+					<p class='message'>祝您心情愉快，万事如意，心想事成，快乐每一天。</p>
+				</div>
+			
+			</div>
+		</div>
+<!-- 添加客户 -->
+		<div class='info' style="display: none;">
+			<div class='info_title'>添加客户
+				<a href="javascript:void(0)" class='i_back'>返回</a>
+				<a href="javascript:void(0)" class='i_save'>保存</a>
+			</div>
+			<div class='i_content'>
+				<div class='ic_con i_name'>
+					<label class='ic_xingxing'>姓名</label>
+					<input class='ic_name'  placeholder="" />
+				</div>
+				<div class='ic_con i_phone'>
+					<label class='ic_xingxing'>手机号</label>
+					<input class='ic_phone' placeholder="" type="tel" name="num" />
+				</div>
+				<div class='ic_con ic_sex'>
+					<label>性别</label>
+					<div class='ics_div'>
+						<a class='ics_sex nan circle2'>男</a>
+						<a class='ics_sex nv'>女</a>
+					</div>
+				</div>
+				<div class='ic_con i_bir'>
+					<label>生日</label>
+					<input class='ic_birthday' readonly/>
+				</div>
+				<!--  
+				<div class='ic_con i_bir_tixing'>
+					<label>默认提醒周期</label>
+					<input class='ic_circle default_circle' type="tel" name="num" value="" maxlength="3" autocomplete="off" />
+					<div class='icc_tian'>天</div>
+				</div>
+				-->
+				
+				<div class='ic_con i_wedding'>
+					<label>结婚纪念日</label>
+					<input class='ic_wedding' readonly/>
+				</div>
+				<div class='ic_con i_wed_tixing'>
+					<label>默认提前提醒时间</label>
+					<input  class='defau_notice' type="tel" name="num" value="" maxlength="3" autocomplete="off"/>
+					<div class='icc_tian'>天</div>
+				</div>
+				<div class='ic_con i_textarea'>
+					<label>住址</label>
+					<textarea placeholder="" class='textarea_add' maxlength="32"  ></textarea>
+				</div>
+				<div class='ic_con i_clock'>
+					<label>产品闹钟</label>
+					<a href="javascript:void(0)" class='pro_clock pro_clock_on' data-role="none"></a>
+				</div>
+				<!--  
+				<div>
+					<div class='info_biaoqian'>
+						标签
+						<a href="javascript:void(0)" class='d_add dl_add'>添加</a>
+					</div>
+					<div class="dl_labels">
+						<div class='dll_label'>标签1
+							<a href="javascript:void(0)" class='dl_delete'></a>
+						</div>
+						<div class='dll_label'>标签2
+							<a href="javascript:void(0)" class='dl_delete'></a>
+						</div>
+						<div class='dll_label'>标签3
+							<a href="javascript:void(0)" class='dl_delete'></a>
+						</div>
+					</div>
+				</div>
+
+				-->
+			</div>
+		</div>
+		
+<!-- 更改客户 -->
+		<div class='info_ge' style="display: none;">
+			<div class='info_title'>客户信息更改
+				<a href="javascript:void(0)" class='i_back_ge'>返回</a>
+				<a href="javascript:void(0)" class='i_save_ge'>保存</a>
+			</div>
+			<div class='i_content'>
+				<div class='ic_con i_name_ge'>
+					<label class=''>姓名</label>
+					<input class='ic_name'  placeholder="" />
+				</div>
+				<div class='ic_con i_phone_ge'>
+					<label class=''>手机号</label>
+					<input class='ic_phone' placeholder="" type="tel" name="num"/>
+				</div>
+				<div class='ic_con ic_sex_ge'>
+					<label>性别</label>
+					<div class='ics_div'>
+						<a class='ics_sex nan circle2'>男</a>
+						<a class='ics_sex nv'>女</a>
+					</div>
+				</div>
+				<div class='ic_con i_bir_ge'>
+					<label>生日</label>
+					<input class='ic_birthday' readonly/>
+				</div>
+				
+				<!--  
+				<div class='ic_con i_cir_ge'>
+					<label>默认提醒周期</label>
+					<input class='ic_circle default_circle' type="tel" name="num" value="" maxlength="3" autocomplete="off"/>
+					<div class='icc_tian'>天</div>
+				</div>
+				-->
+				<div class='ic_con i_wedding_ge'>
+					<label>结婚纪念日</label>
+					<input class='ic_wedding' readonly>
+				</div>
+				<div class='ic_con i_def_ge'>
+					<label>默认提前提醒时间</label>
+					<input class='defau_notice' type="tel" name="num" value="" maxlength="3" autocomplete="off"/>
+					<div class='icc_tian'>天</div>
+				</div>
+				<div class='ic_con i_textarea_ge'>
+					<label>住址</label>
+					<textarea placeholder="" class='textarea_add' maxlength="32"  ></textarea>
+				</div>
+				<div class='ic_con i_clock_ge'>
+					<label>产品闹钟</label>
+					<a href="javascript:void(0)" class='pro_clock pro_clock_on' data-role="none"></a>
+				</div>
+				
+				<!--  
+				<div>
+					<div class='info_biaoqian'>
+						标签
+						<a href="javascript:void(0)" class='d_add dl_add'>添加</a>
+					</div>
+					<div class="dl_labels">
+						<div class='dll_label'>标签1
+							<a href="javascript:void(0)" class='dl_delete'></a>
+						</div>
+						<div class='dll_label'>标签2
+							<a href="javascript:void(0)" class='dl_delete'></a>
+						</div>
+						<div class='dll_label'>标签3
+							<a href="javascript:void(0)" class='dl_delete'></a>
+						</div>
+					</div>
+				</div>
+				-->
+			</div>
+		</div>
+
+		<div class='sure_delete' style="display: none;">
+			<div class='sd_bg'></div>
+			<div class='sd_content'>
+				<p>删除后该客户的所有信息将被清空，是否确定删除?</p>
+				<a class='sdc_sure' href="javascript:void(0)">确定</a>
+				<a class='sdc_cancle' href="javascript:void(0)">取消</a>
+			</div>
+		</div>
+		
+		<!--首页的添加产品-->
+		<div class='product' style="display: none;">
+			<div class='p_title'>产品信息
+				<a href="javascript:void(0)" class='p_save'>保存</a>
+				<a href="javascript:void(0)" class='p_back'>返回</a>
+			</div>
+			<div class='p_content'>
+				<div class='pc_yi'>
+
+				</div>
+				<div class='pc_wei'>
+					<div class='ic_con pc_goumai'>
+						<label>购买产品</label>
+						<span class='pcg_in1'></span>
+					</div>
+					<div class='ic_con pc_riqi'>
+						<label>购买日期</label>
+						<input class='pcg_in2' readonly />
+					</div>
+					<div class='ic_con pc_morenti'>
+						<label>默认提醒周期</label>
+						<input  class='default_circle_d' type="tel" name="num" value="" maxlength="3" autocomplete="off" />
+						<div class='icc_tian'>天</div>
+					</div>
+				</div>
+				
+				<a href="javascript:void(0)" class='p_more'>继续添加</a>				
+			</div>
+		</div>
+
+		<!--详情页的添加产品-->
+		<div class='product_det' style="display: none;">
+			<div class='p_title'>产品信息
+				<a href="javascript:void(0)" class='p_save_det'>保存</a>
+				<a href="javascript:void(0)" class='p_back_det'>返回</a>
+			</div>
+			
+			<div class='p_content'>
+				<div class='ic_con pc_goumai_det'>
+					<label>购买产品</label>
+					<span class="pcg_in11"></span>
+				</div>
+				<div class='ic_con pro'>
+					<label>购买日期</label>
+					<input  class='pcg_in21' readonly/>
+				</div>
+				<div class='ic_con pc_circle'>
+					<label>默认提醒周期</label>
+					<input type="tel" name="num" value="" maxlength="3" autocomplete="off" class='default_circle_det'/>
+					<div class='icc_tian'>天</div>
+				</div>
+			</div>
+		</div>
+		
+		<!--所搜产品页面-->
+		<div class='attention' style="display: none;">
+			<div class='a_title'>产品信息
+				<a href="javascript:void(0)" class='atten_back'>返回</a>
+			</div>
+			<div class='at_search'>
+				<input type="text" placeholder="搜索" class='search_input'/>
+				<a href='javascript:void(0)' class='search_man'>搜索</a>
+			</div>
+			
+			<div class='hint'>
+				搜索结果
+			</div>
+				<div class='fresh-loading-a-shangpin'></div>
+			<div class='wrapper'>
+				
+			</div>
+		</div>
+		
+		
+		<!--另一个所搜产品页面-->
+		<div class='attention1' style="display: none;">
+			<div class='a_title'>产品信息
+		
+				<a href="javascript:void(0)" class='atten_back1'>返回</a>
+			</div>
+			<div class='at_search'>
+				<input type="text" placeholder="搜索" class='search_input1'/>
+				<a href='javascript:void(0)' class='search_man1'>搜索</a>
+			</div>
+			
+			<div class='hint'>
+				搜索结果
+			</div>
+			
+			<div class='wrapper1'>
+				
+			</div>
+		</div>
+			
+		<!--沟通记录-->
+		<div class='com_record' style="display: none;">	
+			<div class='a_title'>沟通记录
+				<a href="javascript:void(0)" class='com_save'>保存</a>
+				<a href="javascript:void(0)" class='com_back'>返回</a>
+			</div>
+			
+			<div class='wordCount' id='wordCount'>
+		    	<textarea placeholder="" class='textarea textarea_bg' onfocus="qudiao()"></textarea>
+		    	<span class='wordwrap'><var class='word'></var>/100</span>
+		    </div>
+		</div>
+		
+		<!--备注，和沟通记录相同-->
+		<div class='note' style="display: none;">	
+			<div class='a_title'>备注
+				<a href="javascript:void(0)" class='n_save'>保存</a>
+				<a href="javascript:void(0)" class='n_back'>返回</a>
+			</div>
+			
+			<div class='wordCount' id='wordCount1'>
+		    	<textarea placeholder="" class='textarea1 textarea_bg' onfocus="qudiao1()"></textarea>
+		    	<span class='wordwrap'><var class='word1'></var>/100</span>
+		    </div>
+		</div>
+		
+		<div class='com_list' style="display: none;">
+			<div class='a_title'>沟通列表
+				<a href="javascript:void(0)" class='coml_back'>返回</a>
+			</div>
+			
+			<div class='com_content'>
+				
+			</div>
+			<div class='fresh-loading'></div>
+		</div>
+
+		<div class='main' style="">
+			<div class='cl_title'>我的客户
+				
+				<a href="javascript:void(0)" class='cl_add'></a>
+			</div>
+			<div class='m_header'>
+				<div class='header1'>
+					<div class='yi ttt blue'>已成交</div>
+				</div>
+				<div class='header1'>
+					<div class='wei ttt '>未成交</div>
+				</div>
+			</div>
+			<div class='m_content'>
+				<div class='fresh-loading-m-yi'></div>
+				<div class='fresh-loading-m-wei'></div>
+				<!-- 已成交用户 -->
+				<div class='m_yi'>
+					
+				</div>
+				<!-- 未成交用户 -->
+				<div class='m_wei'>
+					
+				</div>
+			</div>
+		</div>
+		
+		<div class='add_success' style="display: none;">
+			<div class='as_bg'></div>
+			<div class='as_content'>
+				<div class='as_pic'></div>
+				<p>添加成功</p>
+				<a class='as_sure' href="javascript:void(0)">确定</a>
+				<a class='as_addpro' href="javascript:void(0)">添加产品</a>
+			</div>
+			
+		</div>
+		
+	</body>
+	<script type="text/javascript">
+	
+	var g_birthDate = null;
+	var g_birthDate_ge=null;
+	
+	var g_wendingDate = null;
+	var g_wendingDate_ge=null;
+	
+	
+	var g_change_pro_time=null;
+	var g_add_pro_time=null;
+		
+	
+	
+window.onload=function()
+{
+	
+	/*
+	$('.did_nums').on("touchmove", function(e) {     e.preventDefault();});
+	$('.dr_detail').on("touchmove", function(e) {     e.preventDefault();});
+	*/
+	
+	jujiao();
+	count();
+	count1();
+	var height = document.body.scrollHeight; 
+	
+	$('body').css({'height':height});
+	$('.detail').css({'height':height});
+	$('.i_content').css({
+		'height': height - 45 + 'px'
+	});
+	$('.dc_content').css({
+		'height': height - 45 + 'px'
+	});
+	$('.m_yi').css({
+		"height": height - 100 + 'px'
+	});
+	$('.m_wei').css({
+		"height": height - 100 + 'px'
+	});
+	$('.com_content').css({
+		"height": height - 45 + 'px'
+	});
+	$('.wrapper').css({
+		"height": height - 115 + 'px'
+	});
+	$('.wrapper1').css({
+		"height": height - 115 + 'px'
+	});
+    
+	//主页
+	$('.yi').off('click');
+	$('.yi').on('click', function() {
+		$('.yi').addClass('blue');
+		$('.wei').removeClass('blue');
+		$('.m_yi').css({
+			'display': 'block'
+		});
+		$('.m_wei').css({
+			'display': 'none'
+		});
+	})
+	
+	
+	$('.wei').off('click');
+	$('.wei').on('click', function() {
+		$('.wei').addClass('blue');
+		$('.yi').removeClass('blue');
+		$('.m_wei').css({
+			'display': 'block'
+		});
+		$('.m_yi').css({
+			'display': 'none'
+		});
+	})
+	
+	//添加客户页
+	$('.nv').off('click');
+	$('.nv').on('click', function() {
+		$('.nv').addClass('circle2');
+		$('.nan').removeClass('circle2');
+	})
+	
+	$('.nan').off('click');
+	$('.nan').on('click', function() {
+		$('.nan').addClass('circle2');
+		$('.nv').removeClass('circle2');
+	})
+	
+	$('.pro_clock').off('click');
+	$('.pro_clock').on('click', function() 
+	{
+		if ($('.pro_clock').hasClass('pro_clock_on')) 
+		{
+			$('.pro_clock').removeClass('pro_clock_on');
+			$('.pro_clock').addClass('pro_clock_off');
+		} 
+		else if($('.pro_clock').hasClass('pro_clock_off'))
+		{
+			$('.pro_clock').removeClass('pro_clock_off');
+			$('.pro_clock').addClass('pro_clock_on');
+		}
+	})
+	
+	$('.cl_add').off('click');
+	$('.cl_add').on('click', function() {
+		$('.main').css({
+			'display': 'none'
+		});
+		$('.info').css({
+			'display': 'block'
+		});
+	})
+
+	$('.i_back').off('click');
+	$('.i_back').on('click', function() {
+		clean_info();
+		//未成交页面刷新，之前的删除，添加新的
+		$('.i_content').scrollTop(0);
+		$('.m_wei .my_num').remove();
+		get_customer('',false);
+		
+		$('.main').css({
+			'display': 'block'
+		});
+		$('.info').css({
+			'display': 'none'
+		});
+	})
+	
+	
+	$('.dct_back').off('click');
+	$('.dct_back').on('click', function() {
+		clean_info();	
+		$('.dc_content').scrollTop(0);
+		$('.my_num').remove();	
+		$('.gt_lb1').remove();
+		get_customer('',false);
+		get_customer('',true);
+	
+		$('.main').css({
+			'display': 'block'
+		});
+		$('.detail').css({
+			'display': 'none'
+		});
+		
+	})
+
+	//添加产品页
+	$('.p_back').off('click');
+	$('.p_back').on('click', function() {
+		$('.product').css({
+			'display': 'none'
+		});
+		$('.detail').css({
+			'display': 'block'
+		});
+	
+		//重置参数
+		$('.pcg_in1').html('');
+		$('.pcg_in2').val('');
+		$('.default_circle_d').val('');
+		$('.pc_goumai').removeClass('b_red');
+		$('.pc_riqi').removeClass('b_red');
+		$('.pc_morenti').removeClass('b_red');
+		$('.pc_yi .ic_con').remove();
+	})
+	
+	$('.dct_add').off('click');
+	$('.dct_add').on('click', function() {
+		$('.sure_delete').css({
+			'display': 'block'
+		});
+		
+		$('.gt_lb1').remove();
+		$('.dc_content').css({'overflow-y':'hidden'});
+	
+	})
+
+	//添加产品
+	$('.pc_goumai').off('click');
+	$('.pc_goumai').on('click', function() {
+		$('.wrap_name').remove();
+		
+		$('.product').css({
+			'display': 'none'
+		});
+		$('.attention').css({
+			'display': 'block'
+		});
+		
+		get_product('','');
+		
+	})
+	
+	$('.atten_back').off('click');
+	$('.atten_back').on('click', function() 
+	{
+		$('.product').css({
+			'display': 'block'
+		});
+		$('.attention').css({
+			'display': 'none'
+		});
+		
+		$('.wrap_name').remove();
+	})
+	
+	$('.atten_back1').off('click');
+	$('.atten_back1').on('click', function() 
+	{
+		$('.product_det').css({
+			'display': 'block'
+		});
+		$('.attention1').css({
+			'display': 'none'
+		});
+
+	})
+
+		//添加成功
+	$('.i_save').off('click');
+	$('.i_save').on('click', function() {
+		panduan_zhuce();
+	})
+	//添加成功
+	$('.as_sure').off('click');
+	$('.as_sure').on('click', function() {
+		clean_info();
+		$('.i_content').css({'overflow-y':'auto'});
+		$('.add_success').css({
+			'display': 'none'
+		});
+		$('.info').css({
+			'display': 'none'
+		});
+		$('.main').css({
+			'display': 'block'
+		});
+		
+		$('.wei').addClass('blue');
+		$('.yi').removeClass('blue');
+		$('.m_wei').css({
+			'display': 'block'
+		});
+		$('.m_yi').css({
+			'display': 'none'
+		});
+		
+		//未成交页面刷新，之前的删除，添加新的
+		$('.m_wei .my_num').remove();
+		get_customer('',false);
+	})
+	
+	$('.as_bg').off('click');
+	$('.as_bg').on('click', function() 
+	{
+		$('.i_content').css({'overflow-y':'auto'});
+		$('.add_success').css({
+			'display': 'none'
+		});
+	})
+
+	//详情页拨打电话
+	$('.dc_phone').off('click');
+	$('.dc_phone').on('click', function(event) {
+		event.stopPropagation();
+		phone($('.mndiv1').html());
+	})
+	
+	$('.p_back_det').off('click');
+	$('.p_back_det').on('click', function() {
+		$('.product_det').css({
+			'display': 'none'
+		});
+		$('.detail').css({
+			'display': 'block'
+		});
+		
+		$('.pcg_in11').html('');
+		$('.pcg_in21').val('');
+		$('.default_circle_det').val('');
+		$('.pc_goumai_det').removeClass('b_red');
+		$('.pro').removeClass('b_red');
+		$('.pc_circle').removeClass('b_red');
+
+	})
+
+	
+	$('.pc_goumai_det').off('click');
+	$('.pc_goumai_det').on('click', function() {
+		$('.wrap_name1').remove();
+		$('.product_det').css({
+			'display': 'none'
+		});
+		$('.attention1').css({
+			'display': 'block'
+		});
+	})
+
+	//详情页添加沟通记录
+	$('.dr_add').off('click');
+	$('.dr_add').on('click', function() {
+		$('.detail').css({
+			'display': 'none'
+		});
+		$('.com_record').css({
+			'display': 'block'
+		});
+	})
+	
+	$('.com_back').off('click');
+	$('.com_back').on('click', function() {
+		$('.detail').css({
+			'display': 'block'
+		});
+		$('.com_record').css({
+			'display': 'none'
+		});
+		
+		$('.textarea').val('');	
+	})
+	
+	$('.coml_back').off('click');
+	$('.coml_back').on('click', function() {
+		$(".com_content").scrollTop(0);
+		$('.detail').css({
+			'display': 'block'
+		});
+		$('.com_list').css({
+			'display': 'none'
+		});
+	})
+
+	//详情页备注
+	$('.dr_edit').off('click');
+	$('.dr_edit').on('click', function() {
+		$('.detail').css({
+			'display': 'none'
+		});
+		$('.note').css({
+			'display': 'block'
+		});
+		
+		$('.textarea1').val($('.dr_p').html());
+	
+		if($('.textarea1').val()=='')
+		{	
+			if($('.textarea1').hasClass('textarea_bg'))
+			{
+				
+			}
+			else
+			{
+				$('.textarea1').addClass('textarea_bg');
+			}
+		}
+		else
+		{
+	
+			if($('.textarea1').hasClass('textarea_bg'))
+			{
+				$('.textarea1').removeClass('textarea_bg');
+			}
+			else
+			{
+				
+			}
+		}
+	})
+	
+	
+	$('.n_back').off('click');
+	$('.n_back').on('click', function() {
+		$('.detail').css({
+			'display': 'block'
+		});
+		$('.note').css({
+			'display': 'none'
+		});
+		
+		$('.textarea1').val('');
+		
+	})
+
+	//标签删除
+	$('.dl_delete').off('click');
+	$('.dl_delete').on('click', function() {
+		$(this).parent().remove();
+	})
+
+	//标签添加
+	//		$('.dl_add').on('click',function()
+	//		{
+	//			$('.detail').css({'display':'none'});
+	//			$('.note').css({'display':'none'});
+	//		})
+
+	//复制短信
+	$('.dm_copy').off('click');
+	console.log($('.message').html());
+	$('.dm_copy').on('click', function() {
+		message($('.mndiv1').html(),$('.message').html());
+	})
+
+	//详情页跳转到个人详情
+	$('.dc_link').off('click');
+	$('.dc_link').on('click', function() {
+		$('.detail').css({
+			'display': 'none'
+		});
+		$('.info_ge').css({
+			'display': 'block'
+		});
+	})
+	
+	//搜索
+	$('.search_man').off('click');
+	$('.search_man').on('click',function()
+	{	
+		var search=$('.search_input').val();
+		if(search=='')
+		{
+			
+		}
+		else
+		{
+			$('.wrap_name').remove();
+			get_product('',search);
+		}
+			
+	})
+	
+	$('.search_man1').off('click');
+	$('.search_man1').on('click',function()
+	{
+		$('.wrap_name1').remove();
+		var search=$('.search_input1').val();
+		if(search=='')
+		{
+			
+		}
+		else
+		{
+			get_product('',search);
+		}
+			
+	})
+
+	fresh_loading();
+	get_customer('',false);
+	get_customer('',true);
+}
+//判断注册信息是否正确
+function panduan_zhuce()
+{
+	var reg=/^0?1\d{10}$/;
+	//姓名
+	if($('.ic_name').val()=='')
+	{
+		$('.i_name').addClass('b_red');
+	}
+	else
+	{
+		$('.i_name').removeClass('b_red');
+	}
+	//手机
+	if(reg.test($('.ic_phone').val()))
+	{
+		$('.i_phone').removeClass('b_red');
+	}
+	else
+	{
+		$('.i_phone').addClass('b_red');
+	}
+	
+	if(!$('.ic_name').val()==''&&reg.test($('.ic_phone').val()))
+	{
+		create_customer();
+		clean_info();
+	}
+}
+
+//判断更改
+function panduan_genggai(id)
+{
+	var reg=/^0?1\d{10}$/;
+	//姓名
+	if($('.i_name_ge .ic_name').val()=='')
+	{
+		$('.i_name_ge').addClass('b_red');
+	}
+	else
+	{
+		$('.i_name_ge').removeClass('b_red');
+	}
+	//手机
+	if(reg.test($('.i_phone_ge .ic_phone').val()))
+	{
+		$('.i_phone_ge').removeClass('b_red');
+	}
+	else
+	{
+		$('.i_phone_ge').addClass('b_red');
+	}
+	if(!$('.i_name_ge .ic_name').val()==''&&reg.test($('.i_phone_ge .ic_phone').val()))
+	{
+		update_customer(id);
+		$('.detail').css({
+			'display': 'block'
+		});
+		$('.info_ge').css({
+			'display': 'none'
+		});
+		clean_info();
+	}
+}
+
+
+//拨打电话
+function phone(date) {
+	window.location.href = 'tel:' + date;
+}
+//判断是安卓害死ios
+function message(date,con) {
+	var u = navigator.userAgent, app = navigator.appVersion;
+	var isAndroid = u.indexOf('Android') > -1 || u.indexOf('Linux') > -1; //android终端或者uc浏览器
+	var isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
+	
+	if(isAndroid)
+	{
+		window.location.href = 'sms:' + date+'?body='+con;
+	}
+	else if(isiOS)
+	{
+		window.location.href = 'sms:' + date+'&body='+con;
+	}	
+}
+
+function qudiao() {
+	$('.textarea').removeClass('textarea_bg');
+}
+
+function qudiao1() {
+	$('.textarea1').removeClass('textarea_bg');
+}
+
+function count() {
+	var wordCount = $("#wordCount");
+	var textArea = wordCount.find(".textarea");
+	var word = wordCount.find(".word");
+	statInputNum(textArea, word);
+}
+
+function count1() {
+	var wordCount = $("#wordCount1");
+	var textArea = wordCount.find(".textarea1");
+	var word = wordCount.find(".word1");
+	statInputNum(textArea, word);
+}
+
+function statInputNum(textArea, numItem) {
+	var max = numItem.text();
+	var curLength;
+	textArea[0].setAttribute("maxlength", 100);
+	curLength = textArea.val().length;
+	numItem.text(max - curLength);
+	textArea.on('input ', function() {
+		numItem.text(max + $(this).val().length);
+	});
+}
+
+//沟通列表下拉刷新
+function fresh_loading1(num)
+{
+	//沟通记录下拉刷新
+	var conHeight = $('.com_content').height();
+	$('.com_content').off('touchstart');
+	$('.com_content').on('touchstart', function(e) 
+	{	
+		var moveType = '-1';
+		var startX = event.changedTouches[0].pageX;
+		var startY = event.changedTouches[0].pageY;
+		var startTime = new Date().getTime();
+		$('.com_content').on('touchmove', touchMove);
+		$('.com_content').on('touchend', touchEnd);
+		$('.com_content').on('touchcancle', touchEnd);
+
+		function touchMove(e) {
+			var curX = event.changedTouches[0].pageX;
+			var curY = event.changedTouches[0].pageY;
+			if (moveType == '-1') {
+				if (curY > startY && $('.com_content')[0].scrollTop == 0) {
+					moveType = '3';
+				} else {
+					
+				}
+			}
+
+			if (moveType == '3') {
+				var top =  curY - startY;
+				var marginTop = 120 * Math.sin(Math.PI / 2 * top / conHeight) ;
+				$('.fresh-loading').css({
+					'margin-top': marginTop,
+					'-webkit-transform': 'rotate(' + (top * 10) + 'deg)'
+				});
+				e.preventDefault();
+			}
+		}
+
+		function touchEnd(e) {
+			var $this = $('body');
+			var curX = event.changedTouches[0].pageX;
+			var curY = event.changedTouches[0].pageY;
+			var endTime = new Date().getTime();
+			if (moveType == '3') {
+				var top = -40 + curY - startY;
+				var marginTop = 120 * Math.sin(Math.PI / 2 * top / conHeight) - 40;
+				if (marginTop < 40) {
+					$('.fresh-loading').addClass('fresh-transition');
+					$('.fresh-loading').css({
+						'margin-top': -40,
+						'-webkit-transform': 'rotate(0deg)'
+					});
+					setTimeout(function() {
+						$('.fresh-loading').removeClass('fresh-transition');
+						$('.fresh-loading').removeClass('goaround');
+					}, 500);
+				} else {
+					//下拉刷新后请求的接口写在这
+					$('.fresh-loading').addClass('goaround').hide().show();
+					var length = $('.gt_lb1').length;
+					if (length > 5) {
+						get_communicate_record1(num,$('.gt_lb1')[length-1].classList[1]);
+			
+						$('.fresh-loading').addClass('fresh-transition');
+						$('.fresh-loading').css({
+							'margin-top': -40,
+							'-webkit-transform': 'rotate(0deg)'
+						});
+						setTimeout(function() {
+							$('.fresh-loading').removeClass('fresh-transition');
+							$('.fresh-loading').removeClass('goaround');
+						}, 500)
+					} 
+					else if (length <= 5) 
+					{
+						$('.fresh-loading').addClass('fresh-transition');
+						$('.fresh-loading').css({
+							'margin-top': -40,
+							'-webkit-transform': 'rotate(0deg)'
+						});
+						setTimeout(function() {
+							$('.fresh-loading').removeClass('fresh-transition');
+							$('.fresh-loading').removeClass('goaround');
+						}, 500)
+					}
+				}
+			}
+			$(this).off('touchmove', touchMove);
+			$(this).off('touchend', touchEnd);
+			$(this).off('touchcancle', touchEnd);
+		}
+	})
+}
+
+function fresh_loading() {
+	var m_yi=$('.m_yi').height();
+	var conHeight = $('.com_content').height();
+	$('.m_yi').off('touchstart');
+	$('.m_yi').on('touchstart', function(e) 
+	{	
+		var moveType = '-1';
+		var startX = event.changedTouches[0].pageX;
+		var startY = event.changedTouches[0].pageY;
+		var startTime = new Date().getTime();
+		$('.m_yi').on('touchmove', touchMove);
+		$('.m_yi').on('touchend', touchEnd);
+		$('.m_yi').on('touchcancle', touchEnd);
+
+		function touchMove(e) {
+			var curX = event.changedTouches[0].pageX;
+			var curY = event.changedTouches[0].pageY;
+			if (moveType == '-1') {
+				if (curY > startY && $('.m_yi')[0].scrollTop == 0) {
+					moveType = '3';
+				} else {
+
+				}
+			}
+
+			if (moveType == '3') {
+				var top =  curY - startY;
+				var marginTop = 120 * Math.sin(Math.PI / 2 * top / conHeight) ;
+				$('.fresh-loading-m-yi').css({
+					'margin-top': marginTop,
+					'-webkit-transform': 'rotate(' + (top * 10) + 'deg)'
+				});
+				e.preventDefault();
+			}
+		}
+
+		function touchEnd(e) {
+			var $this = $('body');
+			var curX = event.changedTouches[0].pageX;
+			var curY = event.changedTouches[0].pageY;
+			var endTime = new Date().getTime();
+			if (moveType == '3') {
+				var top = -40 + curY - startY;
+				var marginTop = 120 * Math.sin(Math.PI / 2 * top / conHeight) - 40;
+				if (marginTop < 40) {
+					$('.fresh-loading-m-yi').addClass('fresh-transition');
+					$('.fresh-loading-m-yi').css({
+						'margin-top': -40,
+						'-webkit-transform': 'rotate(0deg)'
+					});
+					setTimeout(function() {
+						$('.fresh-loading-m-yi').removeClass('fresh-transition');
+						$('.fresh-loading-m-yi').removeClass('goaround');
+					}, 500);
+				} else {
+					//下拉刷新后请求的接口写在这
+					$('.fresh-loading-m-yi').addClass('goaround').hide().show();
+					var length = $('.m_yi .my_num').length;
+				
+					//调获取成交用户接口
+					if (length > 9) {
+						get_customer($('.m_yi .my_num')[length-1].classList[2],true);
+						
+						$('.fresh-loading-m-yi').addClass('fresh-transition');
+						$('.fresh-loading-m-yi').css({
+							'margin-top': -40,
+							'-webkit-transform': 'rotate(0deg)'
+						});
+						setTimeout(function() {
+							$('.fresh-loading-m-yi').removeClass('fresh-transition');
+							$('.fresh-loading-m-yi').removeClass('goaround');
+						}, 500)
+						
+						
+					} else if (length <= 9) {
+						$('.fresh-loading-m-yi').addClass('fresh-transition');
+						$('.fresh-loading-m-yi').css({
+							'margin-top': -40,
+							'-webkit-transform': 'rotate(0deg)'
+						});
+						setTimeout(function() {
+							$('.fresh-loading-m-yi').removeClass('fresh-transition');
+							$('.fresh-loading-m-yi').removeClass('goaround');
+						}, 500)
+					}
+				}
+			}
+			$(this).off('touchmove', touchMove);
+			$(this).off('touchend', touchEnd);
+			$(this).off('touchcancle', touchEnd);
+		}
+	})
+	
+	var m_wei=$('.m_wei').height();
+	$('.m_wei').off('touchstart');
+	$('.m_wei').on('touchstart', function(e) 
+	{	
+		var moveType = '-1';
+		var startX = event.changedTouches[0].pageX;
+		var startY = event.changedTouches[0].pageY;
+		var startTime = new Date().getTime();
+		$('.m_wei').on('touchmove', touchMove);
+		$('.m_wei').on('touchend', touchEnd);
+		$('.m_wei').on('touchcancle', touchEnd);
+
+		function touchMove(e) {
+			var curX = event.changedTouches[0].pageX;
+			var curY = event.changedTouches[0].pageY;
+			if (moveType == '-1') {
+				if (curY > startY && $('.m_wei')[0].scrollTop == 0) {
+					moveType = '3';
+				} else {
+
+				}
+			}
+
+			if (moveType == '3') {
+				var top =  curY - startY;
+				var marginTop = 120 * Math.sin(Math.PI / 2 * top / conHeight) ;
+				$('.fresh-loading-m-wei').css({
+					'margin-top': marginTop,
+					'-webkit-transform': 'rotate(' + (top * 10) + 'deg)'
+				});
+				e.preventDefault();
+			}
+		}
+
+		function touchEnd(e) {
+			var $this = $('body');
+			var curX = event.changedTouches[0].pageX;
+			var curY = event.changedTouches[0].pageY;
+			var endTime = new Date().getTime();
+			if (moveType == '3') {
+				var top = -40 + curY - startY;
+				var marginTop = 120 * Math.sin(Math.PI / 2 * top / conHeight) - 40;
+				if (marginTop < 40) {
+					$('.fresh-loading-m-wei').addClass('fresh-transition');
+					$('.fresh-loading-m-wei').css({
+						'margin-top': -40,
+						'-webkit-transform': 'rotate(0deg)'
+					});
+					setTimeout(function() {
+						$('.fresh-loading-m-wei').removeClass('fresh-transition');
+						$('.fresh-loading-m-wei').removeClass('goaround');
+					}, 500);
+				} else { 
+					//下拉刷新后请求的接口写在这
+					$('.fresh-loading-m-wei').addClass('goaround').hide().show();
+					var length=$('.m_wei .my_num').length;
+		
+					if (length > 9) {
+						get_customer($('.m_wei .my_num')[length-1].classList[2],false);
+
+						$('.fresh-loading-m-wei').addClass('fresh-transition');
+						$('.fresh-loading-m-wei').css({
+							'margin-top': -40,
+							'-webkit-transform': 'rotate(0deg)'
+						});
+						setTimeout(function() {
+							$('.fresh-loading-m-wei').removeClass('fresh-transition');
+							$('.fresh-loading-m-wei').removeClass('goaround');
+						}, 500)
+					} else if (length <= 9) {
+						$('.fresh-loading-m-wei').addClass('fresh-transition');
+						$('.fresh-loading-m-wei').css({
+							'margin-top': -40,
+							'-webkit-transform': 'rotate(0deg)'
+						});
+						setTimeout(function() {
+							$('.fresh-loading-m-wei').removeClass('fresh-transition');
+							$('.fresh-loading-m-wei').removeClass('goaround');
+						}, 500)
+					}
+				}
+			}
+			$(this).off('touchmove', touchMove);
+			$(this).off('touchend', touchEnd);
+			$(this).off('touchcancle', touchEnd);
+		}
+	})
+	
+	
+	//商品列表下拉刷新
+	var wrapper=$('.wrapper').height();
+	$('.wrapper').off('touchstart');
+	$('.wrapper').on('touchstart', function(e) 
+	{	
+		var moveType = '-1';
+		var startX = event.changedTouches[0].pageX;
+		var startY = event.changedTouches[0].pageY;
+		var startTime = new Date().getTime();
+		$('.wrapper').on('touchmove', touchMove);
+		$('.wrapper').on('touchend', touchEnd);
+		$('.wrapper').on('touchcancle', touchEnd);
+
+		function touchMove(e) {
+			var curX = event.changedTouches[0].pageX;
+			var curY = event.changedTouches[0].pageY;
+			if (moveType == '-1') {
+				if (curY > startY && $('.wrapper')[0].scrollTop == 0) {
+					moveType = '3';
+				} else {
+
+				}
+			}
+
+			if (moveType == '3') {
+				var top =  curY - startY;
+				var marginTop = 120 * Math.sin(Math.PI / 2 * top / conHeight) ;
+				$('.fresh-loading-a-shangpin').css({
+					'margin-top': marginTop,
+					'-webkit-transform': 'rotate(' + (top * 10) + 'deg)'
+				});
+				e.preventDefault();
+			}
+		}
+		
+		function touchEnd(e) {
+			var $this = $('body');
+			var curX = event.changedTouches[0].pageX;
+			var curY = event.changedTouches[0].pageY;
+			var endTime = new Date().getTime();
+			if (moveType == '3') {
+				var top = -40 + curY - startY;
+		
+				var marginTop = 120 * Math.sin(Math.PI / 2 * top / conHeight) - 40;
+				if (marginTop < 40) {
+					$('.fresh-loading-a-shangpin').addClass('fresh-transition');
+					$('.fresh-loading-a-shangpin').css({
+						'margin-top': -40,
+						'-webkit-transform': 'rotate(0deg)'
+					});
+					setTimeout(function() {
+						$('.fresh-loading-a-shangpin').removeClass('fresh-transition');
+						$('.fresh-loading-a-shangpin').removeClass('goaround');
+					}, 500);
+				} else { 
+					//下拉刷新后请求的接口写在这
+					$('.fresh-loading-a-shangpin').addClass('goaround').hide().show();
+					
+					var length=$('.wrapper .wrap_name').length;
+					var shuzu=[];
+					for(var i=0;i<length;i++)
+					{
+						shuzu.push($('.wrapper .wrap_name')[i].classList[1]);
+						
+						
+					}
+					shuzu.sort();
+					
+		
+		;
+					if (length > 9) {
+						get_product($('.wrapper .wrap_name')[length-1].classList[2],'');
+						$('.fresh-loading-a-shangpin').addClass('fresh-transition');
+						$('.fresh-loading-a-shangpin').css({
+							'margin-top': -40,
+							'-webkit-transform': 'rotate(0deg)'
+						});
+						setTimeout(function() {
+							$('.fresh-loading-a-shangpin').removeClass('fresh-transition');
+							$('.fresh-loading-a-shangpin').removeClass('goaround');
+						}, 500)
+					} else if (length <= 9) {
+						$('.fresh-loading-a-shangpin').addClass('fresh-transition');
+						$('.fresh-loading-a-shangpin').css({
+							'margin-top': -40,
+							'-webkit-transform': 'rotate(0deg)'
+						});
+						setTimeout(function() {
+							$('.fresh-loading-a-shangpin').removeClass('fresh-transition');
+							$('.fresh-loading-a-shangpin').removeClass('goaround');
+						}, 500)
+					}
+				}
+			}
+			$(this).off('touchmove', touchMove);
+			$(this).off('touchend', touchEnd);
+			$(this).off('touchcancle', touchEnd);
+		}
+	})
+	
+	
+	
+}
+
+//主页新建
+function m_wei_cus(name,phone,c,id,index,d)
+{
+	var m_wei=document.querySelector('.m_wei');
+	var my_num=document.createElement('div');
+	var mnspan=document.createElement('span');
+	var mndiv1=document.createElement('div');
+	var mndiv2=document.createElement('a');
+	
+	my_num.classList.add('my_num');
+	my_num.classList.add(id);
+	if(!index=='')
+	{
+		my_num.classList.add(index);
+	}
+	mnspan.classList.add('mnspan');
+	if(d==true)
+	{
+		mnspan.classList.add('hongdian');
+	}
+	
+	mndiv1.classList.add('mndiv1');
+	mndiv2.classList.add('mndiv2');
+	mndiv2.classList.add(id);
+	
+	mnspan.innerHTML=name;
+	mndiv1.innerHTML=phone;
+	mndiv2.innerHTML='添加产品'
+	
+	my_num.appendChild(mnspan);
+	my_num.appendChild(mndiv1);
+	my_num.appendChild(mndiv2);
+	m_wei.appendChild(my_num);
+}
+
+function m_yi_cus(name,phone,c,id,index,d)
+{
+	var m_yi=document.querySelector('.m_yi');
+	var my_num=document.createElement('div');
+	var mnspan=document.createElement('span');
+	var mndiv1=document.createElement('div');
+	var mndiv2=document.createElement('a');
+	
+	my_num.classList.add('my_num');
+	my_num.classList.add(id);
+	if(!index=='')
+	{
+		my_num.classList.add(index);
+	}
+	mnspan.classList.add('mnspan');
+	if(d==true)
+	{
+		mnspan.classList.add('hongdian');
+	}
+	
+	mndiv1.classList.add('mndiv1');
+	mndiv2.classList.add('mndiv2');
+	mndiv2.classList.add(id);
+	
+	mnspan.innerHTML=name;
+	mndiv1.innerHTML=phone;
+	mndiv2.innerHTML='添加产品'
+	
+	my_num.appendChild(mnspan);
+	my_num.appendChild(mndiv1);
+	my_num.appendChild(mndiv2);
+	m_yi.appendChild(my_num);
+}
+
+//清空注册页
+function clean_info()
+{
+	//添加页清空
+	$('.ic_name').val('');
+	$('.ic_phone').val('');
+	$('.ic_birthday').val('');
+	$('.ic_circle').val('');
+	$('.ic_wedding').val('');
+	$('.default_circle').val('');
+	$('.defau_notice').val('');
+	$('.textarea_add').val('');
+
+	
+	$('.nan').addClass('circle2');
+	$('.nv').removeClass('circle2');
+	
+	$('.pc_yi .ic_con').remove();
+	
+	if($('.i_name').hasClass('b_red'))
+	{
+		$('.i_name').removeClass('b_red');
+	}
+	if($('.i_phone').hasClass('b_red'))
+	{
+		$('.i_phone').removeClass('b_red');
+	}
+	
+	if($('.i_name_ge').hasClass('b_red'))
+	{
+		$('.i_name_ge').removeClass('b_red');
+	}
+	
+	if($('.i_phone_ge').hasClass('b_red'))
+	{
+		$('.i_phone_ge').removeClass('b_red');
+	}
+	
+}
+
+
+//创建沟通列表
+function create_cus_cum(a,b)
+{
+	var com_content=document.querySelector('.com_content');
+	var drd_num=document.createElement('div');
+	var drdn_p1=document.createElement('p');
+	var drdn_p2=document.createElement('p');
+	
+	drd_num.classList.add('drd_num');
+	drdn_p1.classList.add('drdn_p1');
+	drdn_p2.classList.add('drdn_p2');
+	
+	drdn_p1.innerHTML=a;
+	drdn_p2.innerHTML=b;
+	
+	drd_num.appendChild(drdn_p1);
+	drd_num.appendChild(drdn_p2);
+	com_content.appendChild(drd_num);
+
+}
+	
+	
+//获取顾客
+function get_customer(a,b)
+{	
+	//
+	var offset_index=a;
+	var size=10;
+	var has_product=b;
+	
+	$.ajax({
+		type: 'get',
+		url: '../api/tools/productclock/get_customer.json',
+		data: {
+			offset_index:offset_index,
+			size:size,
+			has_product:has_product,
+		},
+		dataType: 'json',
+		timeout: '10000',
+		success: function(json)
+		{
+			if(b==false)
+			{
+				for(var i=0;i<json.customer_list.length;i++)
+				{
+					m_wei_cus(json.customer_list[i].customer_name,json.customer_list[i].mobile_no,json.customer_list[i].is_remind,json.customer_list[i].customer_id,json.offset_index,json.customer_list[i].is_remind_today);
+				}	
+			}
+			else
+			{
+				for(var i=0;i<json.customer_list.length;i++)
+				{
+					m_yi_cus(json.customer_list[i].customer_name,json.customer_list[i].mobile_no,json.customer_list[i].is_remind,json.customer_list[i].customer_id,json.offset_index,json.customer_list[i].is_remind_today);
+				}	
+			}
+			
+			$('.my_num').off('click');
+			$('.my_num').on('click', function() {
+				login_detail(this.classList[1])
+			})
+			
+			//直接添加产品
+			$('.mndiv2').off('click');
+			$('.mndiv2').on('click', function(event) 
+			{
+				var customer_id=this.classList[1];	
+			
+				event.stopPropagation();
+				$('.product').css({
+					'display': 'block'
+				});
+				$('.main').css({
+					'display': 'none'
+				});
+				
+				//添加更多
+				$('.p_more').off('click');
+				$('.p_more').on('click', function() 
+				{
+					if(!$('.pcg_in1').html()==''&&!$('.pcg_in2').val()==''&&!$('.default_circle_d').val()=='')
+					{
+						var cont='<div class="ic_con"><label>'+$('.pcg_in1').html()+'</label><span class="pc_yi_span">'+$('.pcg_in2').val()+'</span></div>'
+						$('.pc_yi').append(cont);
+						
+						
+						create_customer_product(customer_id,$('.pcg_in1')[0].classList[1],g_add_pro_time.getTimeStap(),$('.default_circle_d').val());
+					
+						$('.pcg_in1').html('');
+						$('.pcg_in2').val('');
+						$('.default_circle_d').val('');
+						
+					}
+				})	
+				
+				//返回
+				$('.p_back').off('click')
+				$('.p_back').on('click',function()
+				{
+					$('.product').css({
+						'display': 'none'
+					});
+					$('.detail').css({
+						'display': 'block'
+					});
+					
+					add_pro_clean();
+					login_detail(customer_id);
+				})
+				
+				
+				$('.p_save').off('click');
+				$('.p_save').on('click', function() 
+				{
+					if($('.pcg_in1').html()=='')
+					{
+						$('.pc_goumai').addClass('b_red');
+					}
+					else
+					{
+						$('.pc_goumai').removeClass('b_red');
+					}
+					if($('.pcg_in2').val()=='')
+					{
+						$('.pc_riqi').addClass('b_red');
+					}
+					else
+					{
+						$('.pc_riqi').removeClass('b_red');
+					}
+					if($('.default_circle_d').val()=='')
+					{
+						$('.pc_morenti').addClass('b_red');
+					}
+					else
+					{
+						$('.pc_morenti').removeClass('b_red');
+					}
+					if(!$('.pcg_in1').html()==''&&!$('.pcg_in2').val()==''&&!$('.default_circle_d').val()=='')
+					{
+						//删除之前存在的产品名称
+						
+						$('.product').css({
+							'display': 'none'
+						});
+						$('.detail').css({
+							'display': 'block'
+						});
+						$('.did_nums .did_num').remove();	
+						create_customer_product(customer_id,$('.pcg_in1')[0].classList[1],g_add_pro_time.getTimeStap(),$('.default_circle_d').val());
+						login_detail(customer_id);
+						add_pro_clean();
+					}
+					clean_info();
+				})
+		
+			})
+			
+		},
+		error: function(json)
+		{
+			
+		}
+	});
+}
+
+
+
+function add_pro_clean()
+{
+	$('.pcg_in1').html('');
+	$('.pcg_in2').val('');
+	$('.default_circle_d').val('');
+	
+	$('.pc_goumai').removeClass('b_red');
+	$('.pc_riqi').removeClass('b_red');
+	$('.pc_morenti').removeClass('b_red');
+	$('.pc_yi .ic_con').remove();
+}
+
+
+
+function login_detail(id)
+{
+	
+	clean_info();
+	
+	//通过id获取信息
+	
+	//沟通记录的下拉刷新
+	fresh_loading1(id);
+	get_customer_by_id(id);
+	
+	
+	
+	
+	//获取客户产品
+	get_customer_product(id);
+	//获取沟通记录
+
+	get_communicate_record(id,'');
+	get_communicate_record1(id,'');
+	
+	$('.main').css({
+		'display': 'none'
+	});
+	$('.detail').css({
+		'display': 'block'
+	});
+	
+	//赋值	
+	
+	//详情页的添加产品
+	$('.dit_add').off('click');
+	$('.dit_add').on('click', function() 
+	{
+		
+		$('.pcg_in1').html('');
+		$('.pcg_in2').val('');
+		$('.default_circle_d').val('');
+	
+		$('.detail').css({
+			'display': 'none'
+		});
+		$('.product').css({
+			'display': 'block'
+		});
+		
+		$('.p_more').off('click');
+		$('.p_more').on('click', function() 
+		{
+			if(!$('.pcg_in1').html()==''&&!$('.pcg_in2').val()==''&&!$('.default_circle_d').val()=='')
+			{
+				var cont='<div class="ic_con"><label>'+$('.pcg_in1').html()+'</label><span class="pc_yi_span">'+$('.pcg_in2').val()+'</span></div>'
+				$('.pc_yi').append(cont);
+				
+
+				create_customer_product(id,$('.pcg_in1')[0].classList[1],g_add_pro_time.getTimeStap(),$('.default_circle_d').val());
+				
+				$('.pcg_in1').html('');
+				$('.pcg_in2').val('');
+				$('.default_circle_d').val('');
+				
+			}
+		})		
+	})
+	
+	//保存备注
+	$('.n_save').off('click');
+	$('.n_save').on('click', function() {
+		$('.detail').css({
+			'display': 'block'
+		});
+		$('.note').css({
+			'display': 'none'
+		});
+		
+		$('.dr_p').html($('.textarea1 ').val());
+		
+		update_customer(id);
+		
+	})
+	
+	
+	//保存沟通记录
+	$('.com_save').off('click');
+	$('.com_save').on('click', function() {
+	
+		if($('.textarea').val()=='')
+		{
+			
+		}
+		else
+		{
+			$('.detail').css({
+				'display': 'block'
+			});
+			$('.com_record').css({
+				'display': 'none'
+			});
+			
+			$('.drd_num1').remove();
+			
+			create_communicate_record(id,$('.textarea').val());
+			$('.textarea').val('');
+			$('.wordCount .wordwrap .word').html('0');
+		}
+	})
+
+	
+	//删除联系人
+	$('.sdc_sure').off('click');
+	$('.sdc_sure').on('click', function() {
+		$('.sure_delete').css({
+			'display': 'none'
+		});
+		$('.main').css({
+			'display': 'block'
+		});
+		$('.detail').css({
+			'display': 'none'
+		});	
+		$('.dc_content').css({'overflow-y':'auto'});
+		delete_customer(id);
+		
+	})
+	$('.sdc_cancle').off('click');
+	$('.sdc_cancle').on('click', function() {
+		$('.sure_delete').css({
+			'display': 'none'
+		});
+		$('.dc_content').css({'overflow-y':'auto'});
+	})
+	
+	$('.sd_bg').off('click');
+	$('.sd_bg').on('click', function() {
+		$('.sure_delete').css({
+			'display': 'none'
+		});
+		$('.dc_content').css({'overflow-y':'auto'});
+	})
+	
+	
+	//更改客户信息返回
+	$('.i_back_ge').off('click');
+	$('.i_back_ge').on('click', function() {
+		$('.i_content').scrollTop(0);
+		$('.detail').css({
+			'display': 'block'
+		});
+		$('.info_ge').css({
+			'display': 'none'
+		});
+	})
+	
+	//更改客户信息保存
+	$('.i_save_ge').off('click');
+	$('.i_save_ge').on('click', function() 
+	{
+		panduan_genggai(id);
+	})	
+}
+
+
+
+
+function get_customer1(a,b)
+{	
+	//
+	var offset_index=a;
+	var size=10;
+	var has_product=b;
+	
+	$.ajax({
+		type: 'get',
+		url: '../api/tools/productclock/get_customer.json',
+		data: {
+			offset_index:offset_index,
+			size:size,
+			has_product:has_product,
+		},
+		dataType: 'json',
+		timeout: '10000',
+		success: function(json)
+		{
+	
+			//创建联系人页面中的创建产品
+			$('.i_content').css({'overflow-y':'hidden'});
+			$('.add_success').css({
+				'display': 'block'
+			});
+				
+			$('.as_addpro').on('click', function() 
+			{
+				$('.pc_yi .ic_con').remove();
+				$('.pc_goumai').removeClass('b_red');
+				$('.pc_riqi').removeClass('b_red');
+				$('.pc_morenti').removeClass('b_red');
+				
+				$('.i_content').css({'overflow-y':'auto'});
+				$('.add_success').css({
+					'display': 'none'
+				});
+				$('.product').css({
+					'display': 'block'
+				});
+				$('.info').css({
+					'display': 'none'
+				});
+				
+				$('.pcg_in1').html('');
+				$('.pcg_in2').val('');
+				$('.default_circle_d').val('');
+				
+				
+				//清空沟通记录，可移动
+				$('.drd_num1').remove();
+				$('.gt_lb1').remove();
+				//设置搜索
+				$('.p_save').off('click');
+				$('.p_save').on('click', function() 
+				{
+					clean_info();
+					
+					if($('.pcg_in1').html()=='')
+					{
+						$('.pc_goumai').addClass('b_red');
+					}
+					else
+					{
+						$('.pc_goumai').removeClass('b_red');
+					}
+					if($('.pcg_in2').val()=='')
+					{
+						$('.pc_riqi').addClass('b_red');
+					}
+					else
+					{
+						$('.pc_riqi').removeClass('b_red');
+					}
+					if($('.default_circle_d').val()=='')
+					{
+						$('.pc_morenti').addClass('b_red');
+					}
+					else
+					{
+						$('.pc_morenti').removeClass('b_red');
+					}
+					if(!$('.pcg_in1').html()==''&&!$('.pcg_in2').val()==''&&!$('.default_circle_d').val()=='')
+					{
+						//删除之前存在的产品名称
+						$('.product').css({
+							'display': 'none'
+						});
+						$('.detail').css({
+							'display': 'block'
+						});
+						
+						$('.did_nums .did_num').remove();
+						
+						create_customer_product(json.customer_list[0].customer_id,$('.pcg_in1')[0].classList[1],g_add_pro_time.getTimeStap(),$('.default_circle_d').val());
+						
+						login_detail(json.customer_list[0].customer_id);
+						
+					}
+				})
+				
+				$('.p_back').off('click')
+				$('.p_back').on('click',function()
+				{
+					$('.product').css({
+						'display': 'none'
+					});
+					$('.detail').css({
+						'display': 'block'
+					});
+					login_detail(json.customer_list[0].customer_id);
+				})
+				
+				
+				
+				//添加更多
+				$('.p_more').off('click');
+				$('.p_more').on('click', function() 
+				{
+					if(!$('.pcg_in1').html()==''&&!$('.pcg_in2').val()==''&&!$('.default_circle_d').val()=='')
+					{
+						var cont='<div class="ic_con"><label>'+$('.pcg_in1').html()+'</label><span class="pc_yi_span">'+$('.pcg_in2').val()+'</span></div>'
+						$('.pc_yi').append(cont);
+						
+						create_customer_product(json.customer_list[0].customer_id,$('.pcg_in1')[0].classList[1],g_add_pro_time.getTimeStap(),$('.default_circle_d').val());
+			
+						$('.pcg_in1').html('');
+						$('.pcg_in2').val('');
+						$('.default_circle_d').val('');
+						
+					}
+				})		
+			
+			})	
+		},
+		error: function(json)
+		{
+			
+		}
+	});
+}
+
+
+function create_customer()
+{	
+	var customer_name=$('.ic_name').val();
+	var mobile_no=$('.ic_phone').val();
+	var gender='';
+	if($('.nan').hasClass('circle2'))
+	{
+		gender='MALE';
+	}
+	else
+	{
+		gender='FEMALE';
+	}
+	
+	var birthday_solar='';
+	var birthday_lunar='';
+	var wedding_solar='';
+	var wedding_lunar='';
+
+	
+	if(!$('.i_bir .ic_birthday').val()=='')
+	{
+		if(g_birthDate.getdate().type=='solar')
+		{
+			birthday_solar= g_birthDate.getTimeStap();
+		}
+		else
+		{
+			birthday_lunar=g_birthDate.getTimeStap();
+		}
+	}
+
+	if(!$('.i_wedding .ic_wedding').val()=='')
+	{
+		if(g_wendingDate.getdate().type=='solar')
+		{
+			wedding_solar= g_wendingDate.getTimeStap();
+		}
+		else
+		{
+			wedding_lunar= g_wendingDate.getTimeStap();
+		}
+	}
+	
+	var address=$('.textarea_add').val();
+	var remark='';
+	var is_remind='';
+	
+	if($('.pro_clock').hasClass('pro_clock pro_clock_on'))
+	{
+		is_remind='true';
+	}
+	else
+	{
+		is_remind='false';
+	}
+	
+	var days_ago_remind=$('.i_wed_tixing .defau_notice').val();
+	
+	$.ajax({
+		type: 'get',
+		url: '../api/tools/productclock/create_customer.json',
+		data: {
+			customer_name:customer_name,
+			mobile_no:mobile_no,
+			gender:gender,
+			birthday_solar:birthday_solar,
+			birthday_lunar:birthday_lunar,
+			wedding_solar:wedding_solar,
+			wedding_lunar:wedding_lunar,
+			address:address,
+			remark:remark,
+			is_remind:is_remind,
+			days_ago_remind:days_ago_remind,
+		},
+		dataType: 'json',
+		timeout: '10000',
+		success: function(json)
+		{
+		
+			get_customer('',false);
+			
+			get_customer1('',false);
+			
+		},
+		error: function(json)
+		{
+			
+		}
+	});
+}
+
+function update_customer(id)
+{	
+	var customer_id=id;
+	var customer_name=$('.i_name_ge .ic_name').val();
+	var mobile_no=$('.i_phone_ge .ic_phone').val();
+	var gender='';
+	if($('.ic_sex_ge .nan').hasClass('circle2'))
+	{
+		gender='MALE';
+	}
+	else
+	{
+		gender='FEMALE';
+	}
+	
+	var birthday_solar='';
+	var birthday_lunar='';
+	var wedding_solar='';
+	var wedding_lunar='';
+	
+	
+	if(!$('.i_bir_ge .ic_birthday').val()=='')
+	{
+		if(g_birthDate_ge.getdate().type=='solar')
+		{
+			birthday_solar= g_birthDate_ge.getTimeStap();
+		}
+		else
+		{
+			birthday_lunar=g_birthDate_ge.getTimeStap();
+		}
+	}
+
+	if(!$('.i_wedding_ge .ic_wedding').val()=='')
+	{
+		if(g_wendingDate_ge.getdate().type=='solar')
+		{
+			wedding_solar= g_wendingDate_ge.getTimeStap();
+		}
+		else
+		{
+			wedding_lunar= g_wendingDate_ge.getTimeStap();
+		}
+	}
+	
+
+	
+	var address=$('.textarea_add').val();
+	var remark=$('.textarea1').val();
+	var is_remind='';
+	
+	if($('.pro_clock').hasClass('pro_clock pro_clock_on'))
+	{
+		is_remind='true';
+	}
+	else
+	{
+		is_remind='false';
+	}
+	
+	var days_ago_remind=$('.i_def_ge .defau_notice').val();	
+	$.ajax({
+		type: 'get',
+		url: '../api/tools/productclock/update_customer.json',
+		data: {
+			customer_id:customer_id,
+			customer_name:customer_name,
+			mobile_no:mobile_no,
+			gender:gender,
+			birthday_solar:birthday_solar,
+			birthday_lunar:birthday_lunar,
+			wedding_solar:wedding_solar,
+			wedding_lunar:wedding_lunar,
+			address:address,
+			remark:remark,
+			is_remind:is_remind,
+			days_ago_remind:days_ago_remind,
+		},
+		dataType: 'json',
+		timeout: '10000',
+		success: function(json)
+		{
+		
+	
+			get_customer_by_id(id);	
+		},
+		error: function(json)
+		{
+			
+		}
+	});
+}
+
+function delete_customer(a)
+{	
+	var customer_id_list=a;
+	$.ajax({
+		type: 'get',
+		url: '../api/tools/productclock/delete_customer.json',
+		data: {
+			customer_id_list:customer_id_list,
+		},
+		dataType: 'json',
+		timeout: '10000',
+		success: function(json)
+		{
+			
+		
+			
+			$('.my_num').remove();	
+			get_customer('',false);
+			get_customer('',true);
+		},
+		error: function(json)
+		{
+			
+		}
+	});
+}
+//给用户创建产品
+function create_customer_product(a,b,c,d)
+{
+	var customer_id=a;
+	var product_id=b;
+	var buy_time=c;
+	var remind_period_day=d;
+	
+
+	
+	$.ajax({
+		type: 'get',
+		url: '../api/tools/productclock/create_customer_product.json',
+		data: {
+			customer_id:customer_id,
+			product_id:product_id,
+			buy_time:buy_time,
+			remind_period_day:remind_period_day,
+		},
+		dataType: 'json',
+		timeout: '10000',
+		success: function(json)
+		{
+	
+			get_customer_product(a);
+		},
+		error: function(json)
+		{
+			
+		}
+	});
+	
+}
+
+
+//搜索产品
+function get_product(a,b)
+{	
+	var offset_index=a;
+	var size='10';
+	var product_name=b;
+	
+	$.ajax({
+		type: 'get',
+		url: '../api/tools/productclock/get_product.json',
+		data: {
+			offset_index:offset_index,
+			size:size,
+			product_name:product_name,
+		},
+		dataType: 'json',
+		timeout: '10000',
+		success: function(json)
+		{
+			console.log(json);
+			for(var i=0;i<json.product_list.length;i++)
+			{
+				var tt=json.product_list[i].product_id;
+				var d_day=json.product_list[i].default_remind_day; 
+				
+				var cont='<a href="javascript:void(0)" class="wrap_name '+tt+' '+json.offset_index+' '+d_day+'">'+json.product_list[i].product_name+'</a>';
+				var cont1='<a href="javascript:void(0)" class="wrap_name1 '+tt+'">'+json.product_list[i].product_name+'</a>';
+				$('.wrapper').append(cont);
+				$('.wrapper1').append(cont1);
+			}
+			
+			$('.wrap_name').on('click',function()
+			{
+				$('.attention').css({
+					'display': 'none'
+				});
+				$('.product').css({
+					'display': 'block'
+				});
+				
+				$('.pcg_in1').html($(this).html());
+				$('.pcg_in1').removeClass($('.pcg_in1')[0].classList[1]);
+				$('.pcg_in1').addClass(this.classList[1]);
+				$('.default_circle_d').val(this.classList[3]);
+				$('.wrap_name').remove();
+				$('.search_input').val('');
+			})
+			
+			$('.wrap_name1').on('click',function()
+			{
+				$('.attention1').css({
+					'display': 'none'
+				});
+				$('.product_det').css({
+					'display': 'block'
+				});
+				
+				$('.pcg_in11').html($('.wrap_name1').html());
+				$('.pcg_in11').removeClass($('.pcg_in11')[0].classList[1]);
+		
+				$('.pcg_in11').addClass(this.classList[1]);
+				$('.wrap_name1').remove();
+				$('.search_input1').val('');
+			})
+		},
+		error: function(json)
+		{
+			
+		}
+	});
+}
+
+
+function get_customer_product(num)
+{	
+	var customer_id_list=num;
+	$.ajax({
+		type: 'get',
+		url: '../api/tools/productclock/get_customer_product.json',
+		data: {
+			customer_id_list:customer_id_list,
+		},
+		dataType: 'json',
+		timeout: '10000',
+		success: function(json)
+		{
+			console.log(json);
+			var tt=0;
+			if(json.product_list.length==0)
+			{
+				
+			}
+			else
+			{
+				tt=json.product_list[0].customer_product.length;
+			}	
+			$('.did_num').remove();
+			if(tt>6)
+			{		
+				for(var i=tt;i>tt-6;i--)
+				{
+					var cont = '<div class="did_num"><div class="didn_name"><p>'+json.product_list[0].customer_product[i-1].product_name+'</p></div><div class="didn_time"><p>'+re_time_long1(json.product_list[0].customer_product[i-1].buy_time)+'</p></div><a class="delete" href="javascript:void(0)">删除</a></div>'
+					$('.did_nums').append(cont);
+				}
+			}
+			else 
+			{
+				
+				for(var i=tt;i>0;i--)
+				{
+					var cont = '<div class="did_num '+json.product_list[0].customer_product[i-1].product_id+'"><div class="didn_name"><p>'+json.product_list[0].customer_product[i-1].product_name+'</p></div><div class="didn_time"><p>'+re_time_long1(json.product_list[0].customer_product[i-1].buy_time)+'</p></div><a class="delete" href="javascript:void(0)">删除</a></div>'
+					$('.did_nums').append(cont);
+				}
+			}
+			
+			//进入产品编辑
+			$('.did_num').off('click');
+			$('.did_num').on('click', function() {
+				var customer_product_id=this.classList[1];
+
+				$('.detail').css({
+					'display': 'none'
+				});
+				$('.product_det').css({
+					'display': 'block'
+				});	
+				
+				$('.pcg_in11').html('');
+				$('.pcg_in21').val('');
+				$('.default_circle_det').val('');
+				
+				var paixu=$('.did_num').length-1-$(this).index();
+
+				var pro_pro=json.product_list[0].customer_product[paixu].product_name;
+				var pro_time=json.product_list[0].customer_product[paixu].buy_time;
+				var pro_remind=json.product_list[0].customer_product[paixu].default_remind_day;
+				
+				
+				$('.pcg_in11').removeClass($('.pcg_in11')[0].classList[1]);
+				$('.pcg_in11').addClass(this.classList[1]);
+					
+				$('.pcg_in11').html(pro_pro);
+				$('.pcg_in21').val(re_time_long1(pro_time));
+				$('.default_circle_det').val(pro_remind);		
+				
+				g_change_pro_time.setValue(json.product_list[0].customer_product[paixu].buy_time,'solar');
+				
+				//更改产品信息确定按钮
+				$('.p_save_det').off('click');
+				$('.p_save_det').on('click', function() 
+				{
+					if($('.pcg_in11').html()=='')
+					{
+						$('.pc_goumai_det').addClass('b_red');
+					}
+					else
+					{
+						$('.pc_goumai_det').removeClass('b_red');
+					}
+					if($('.pcg_in21').val()=='')
+					{
+						$('.pro').addClass('b_red');
+					}
+					else
+					{
+						$('.pro').removeClass('b_red');
+					}
+					if($('.default_circle_det').val()=='')
+					{
+						$('.pc_circle').addClass('b_red');
+					}
+					else
+					{
+						$('.pc_circle').removeClass('b_red');
+					}
+					if(!$('.pcg_in11').html()==''&&!$('.pcg_in21').val()==''&&!$('.default_circle_det').val()=='')
+					{
+						update_customer_product(customer_id_list,customer_product_id,$('.pcg_in11')[0].classList[1],g_change_pro_time.getTimeStap(),$('.default_circle_det').val());
+
+						$('.product_det').css({
+							'display': 'none'
+						});
+						$('.detail').css({
+							'display': 'block'
+						});
+						
+						$('.pcg_in11').html('');
+						$('.pcg_in21').val('');
+						$('.default_circle_det').val('');
+						$('.pc_goumai_det').removeClass('b_red');
+						$('.pro').removeClass('b_red');
+						$('.pc_circle').removeClass('b_red');
+					}
+				})
+	
+			})
+		
+			$('.did_num').off('touchstart');
+			$('.did_num').on('touchstart', function(e) 
+			{	
+				var count=0;
+				var scroll_top=$(this).scrollTop();
+				var startX = event.changedTouches[0].pageX;
+				var startY = event.changedTouches[0].pageY;
+				var startTime = new Date().getTime();
+				$('.did_num').off('touchmove', touchMove);
+				$('.did_num').off('touchend', touchEnd);
+				$('.did_num').off('touchcancle', touchEnd);
+				$('.did_num').on('touchmove', touchMove);
+				$('.did_num').on('touchend', touchEnd);
+				$('.did_num').on('touchcancle', touchEnd);
+
+				function touchMove(e) {
+					if(count==0)
+					{
+						var curX = event.changedTouches[0].pageX;
+						var curY = event.changedTouches[0].pageY;
+						
+						var distanceX = Math.abs(startX - curX);    
+						var distanceY = Math.abs(startY - curY);  
+						
+						if(distanceX>distanceY)
+						{						
+							$('.did_nums').on("touchmove", function(e) {     e.preventDefault();}); 
+						}
+						else if(distanceX<distanceY)
+						{
+							$('.did_nums').off("touchmove");
+							$('.dr_detail').off("touchmove");
+						}
+							
+					}
+					count++;	
+				}
+				function touchEnd(e)
+				{
+					
+				}
+			})
+				
+				
+			$(".did_num").off("swipeleft");
+			$(".did_num").on("swipeleft", function() {
+				
+				var pro_id=this.classList[1];
+				$(this).addClass('selected').siblings().removeClass('selected');
+				$(this).find(".delete").on("click", function() {
+					var touchId = $(this).parents(".did_num").remove();
+					delete_customer_product(num,pro_id);
+				})
+			})
+			$(".did_num").off("swiperight");
+			$(".did_num").on("swiperight", function() 
+			{
+				$(this).removeClass('selected');
+			})
+			
+			$('.dc_content').off('click');
+			$('.dc_content').on('click', function() {
+				$(".did_num").removeClass('selected');
+			})	
+
+		},
+		error: function(json)
+		{
+			
+		}
+	});
+}
+
+function update_customer_product(a,b,c,d,e)
+{	
+	var customer_id=a;
+	var old_product_id=b;
+	var new_product_id=c;
+	var buy_time=d;
+	var remind_period_day=e;
+	
+	
+
+	$.ajax({
+		type: 'get',
+		url: '../api/tools/productclock/update_customer_product.json',
+		data: {
+			customer_id:customer_id,
+			old_product_id:old_product_id,
+			new_product_id:new_product_id,
+			buy_time:buy_time,
+			remind_period_day:remind_period_day,
+		},
+		dataType: 'json',
+		timeout: '10000',
+		success: function(json)
+		{
+		
+			$('.did_num').remove();
+			get_customer_product(customer_id);
+		},
+		error: function(json)
+		{
+			
+		}
+	});
+}
+
+
+function delete_customer_product(a,b)
+{	
+	var customer_id=a;
+	var product_id_list=b;
+	$.ajax({
+		type: 'get',
+		url: '../api/tools/productclock/delete_customer_product.json',
+		data: {
+			customer_id:customer_id,
+			product_id_list:product_id_list,
+		},
+		dataType: 'json',
+		timeout: '10000',
+		success: function(json)
+		{
+			
+			get_customer_product(a);
+			
+		},
+		error: function(json)
+		{
+			
+		}
+	});
+}
+
+
+function get_communicate_record(a,b)
+{	
+	var customer_id=a;
+	var offset_index=b;
+	var size=6;
+	
+	$.ajax({
+		type: 'get',
+		url: '../api/tools/productclock/get_communicate_record.json',
+		data: {
+			customer_id:customer_id,
+			offset_index:offset_index,
+			size:size,
+		},
+		dataType: 'json',
+		timeout: '10000',
+		success: function(json)
+		{
+			$('.drd_num1').remove();
+			$('.drd_more').remove();
+			
+			for(var i=0;i<json.communicate_record_list.length;i++)
+			{	
+				var shijian=re_time_long(json.communicate_record_list[i].create_time);
+				chuang_goutong(json.communicate_record_list[i].content_text,shijian,json.communicate_record_list[i].record_id);	
+				
+				
+				$('.drd_num1 .delete')[i].style.height=$('.drdn_l')[i].offsetHeight+'px';
+				$('.drd_num1 .delete')[i].style.lineHeight=$('.drdn_l')[i].offsetHeight+'px';
+	
+			}
+			
+			//创建更多沟通记录
+			var dr_detail=document.querySelector('.dr_detail');
+			var gengduo=document.createElement('a');
+			gengduo.classList.add('drd_more');
+			gengduo.setAttribute('href','javascript:void(0)');
+			gengduo.innerHTML='更多沟通记录';
+			dr_detail.appendChild(gengduo);
+			
+			//更多沟通记录按钮设置
+			$('.drd_more').off('click');
+			$('.drd_more').on('click', function() {
+				$('.detail').css({
+					'display': 'none'
+				});
+				$('.com_list').css({
+					'display': 'block'
+				});
+			})
+			
+		
+			
+			$('.drd_num1').off('touchstart');
+			$('.drd_num1').on('touchstart', function(e) 
+			{	
+				var count=0;
+				var scroll_top=$(this).scrollTop();
+				var startX = event.changedTouches[0].pageX;
+				var startY = event.changedTouches[0].pageY;
+				
+				var startTime = new Date().getTime();
+				$('.drd_num1').off('touchmove', touchMove);
+				$('.drd_num1').off('touchend', touchEnd);
+				$('.drd_num1').off('touchcancle', touchEnd);
+				$('.drd_num1').on('touchmove', touchMove);
+				$('.drd_num1').on('touchend', touchEnd);
+				$('.drd_num1').on('touchcancle', touchEnd);
+
+				function touchMove(e) {
+					if(count==0)
+					{
+						var curX = event.changedTouches[0].pageX;
+						var curY = event.changedTouches[0].pageY;
+						
+						var distanceX = Math.abs(startX - curX);    
+						var distanceY = Math.abs(startY - curY);  
+						
+						if(distanceX>distanceY)
+						{
+							$('.dr_detail').on("touchmove", function(e) {     e.preventDefault();});  
+						}
+						else if(distanceX<distanceY)
+						{
+							$('.did_nums').off("touchmove");
+							$('.dr_detail').off("touchmove");
+						}
+					}
+					count++;	
+				}
+				function touchEnd(e)
+				{
+					
+				}
+				
+				
+				$(".drd_num1").off("swipeleft");
+				$(".drd_num1").on("swipeleft", function() {
+					$(this).addClass('selected').siblings().removeClass('selected');
+					var com_record=this.classList[1];
+					$(this).find(".delete").on("click", function() {
+						var touchId = $(this).parent().remove();
+						delete_communicate_record(com_record,customer_id);
+					})
+				})
+				
+				$(".drd_num1").off("swiperight");
+				$(".drd_num1").on("swiperight", function() 
+				{
+					$(this).removeClass('selected');
+				})	
+				
+			})	
+		},
+		error: function(json)
+		{
+			
+		}
+	});
+}
+
+function get_communicate_record1(a,b)
+{	
+	var customer_id=a;
+	var offset_index=b;
+	var size=6;
+	
+	$.ajax({
+		type: 'get',
+		url: '../api/tools/productclock/get_communicate_record.json',
+		data: {
+			customer_id:customer_id,
+			offset_index:offset_index,
+			size:size,
+		},
+		dataType: 'json',
+		timeout: '10000',
+		success: function(json)
+		{
+			for(var i=0;i<json.communicate_record_list.length;i++)
+			{	
+				var shijian=re_time_long(json.communicate_record_list[i].create_time);
+				chuang_goutong1(json.communicate_record_list[i].content_text,shijian,json.offset_index);	
+			}
+		},
+		error: function(json)
+		{
+			
+		}
+	});
+}
+
+function add0(m){return m<10?'0'+m:m }
+
+function re_time_long(time)
+{
+	var time = new Date(time*1000);
+	var y = time.getFullYear();
+	var m = time.getMonth()+1;
+	var d = time.getDate();
+	var h =time.getHours();
+	var min =time.getMinutes();	
+	return y+'-'+add0(m)+'-'+add0(d)+'&nbsp&nbsp'+add0(h)+':'+add0(min);
+}
+
+function re_time_long1(time)
+{
+	var time = new Date(time*1000);
+	var y = time.getFullYear();
+	var m = time.getMonth()+1;
+	var d = time.getDate();
+	var h =time.getHours();
+	return y+'年'+add0(m)+'月'+add0(d)+'日';
+}
+
+function chuang_goutong(a,b,c)
+{
+	var dr_detail=document.querySelector('.dr_detail');
+	var com_content=document.querySelector('.com_content');
+	
+	var drd_num1=document.createElement('div');
+	var drdn_l=document.createElement('div');
+	var p1=document.createElement('p');
+	var drdnp2=document.createElement('p');
+	var delete_a=document.createElement('a');
+
+	
+	drd_num1.classList.add('drd_num1');
+	drd_num1.classList.add(c);
+	drdn_l.classList.add('drdn_l');
+	drdnp2.classList.add('drdnp2');
+	delete_a.classList.add('delete');
+	
+	delete_a.setAttribute('href','javascript:void(0)');
+	p1.setAttribute('word-wrap','break-word');
+	
+	p1.innerHTML=a;
+	drdnp2.innerHTML=b;
+	delete_a.innerHTML='刪除';
+	
+	drdn_l.appendChild(p1);
+	drdn_l.appendChild(drdnp2);
+	
+	drd_num1.appendChild(drdn_l);
+	drd_num1.appendChild(delete_a);
+	
+	dr_detail.appendChild(drd_num1);
+}
+
+function chuang_goutong1(a,b,c)
+{
+	var com_content=document.querySelector('.com_content');
+	var gt_lb1=document.createElement('div');
+	var gt_p1=document.createElement('p');
+	var gt_p2=document.createElement('p');
+	
+	gt_lb1.classList.add('gt_lb1');
+	gt_lb1.classList.add(c);
+	gt_p2.classList.add('gt_p2');
+	
+	gt_p1.innerHTML=a;
+	gt_p2.innerHTML=b;
+	
+	gt_lb1.appendChild(gt_p1);
+	gt_lb1.appendChild(gt_p2);
+	
+	com_content.appendChild(gt_lb1);
+}
+
+
+
+function create_communicate_record(a,b)
+{	
+	var customer_id=a;
+	var content_text=b;
+	
+	$.ajax({
+		type: 'get',
+		url: '../api/tools/productclock/create_communicate_record.json',
+		data: {
+			customer_id:customer_id,
+			content_text:content_text,	
+		},
+		dataType: 'json',
+		timeout: '10000',
+		success: function(json)
+		{
+			get_communicate_record(a,'');
+			
+			$('.gt_lb1').remove();
+			get_communicate_record1(a,'');
+		},
+		error: function(json)
+		{
+			
+		}
+	});
+}
+
+function update_communicate_record()
+{	
+	var customer_id='';
+	var content_text='';
+	
+	$.ajax({
+		type: 'get',
+		url: '../api/tools/productclock/update_communicate_record.json',
+		data: {
+			customer_id:customer_id,
+			content_text:content_text,	
+		},
+		dataType: 'json',
+		timeout: '10000',
+		success: function(json)
+		{
+			
+			
+		},
+		error: function(json)
+		{
+			
+		}
+	});
+}
+
+
+function delete_communicate_record(a,b)
+{	
+	var record_id_list=a;
+	
+	$.ajax({
+		type: 'get',
+		url: '../api/tools/productclock/delete_communicate_record.json',
+		data: {
+			record_id_list:record_id_list,
+		},
+		dataType: 'json',
+		timeout: '10000',
+		success: function(json)
+		{
+		
+			$('.gt_lb1').remove();
+			get_communicate_record(b,'');
+			get_communicate_record1(b,'');
+		},
+		error: function(json)
+		{
+			
+		}
+	});
+}
+
+//按客户id查寻客户信息
+function get_customer_by_id(num)
+{
+	var customer_id_list=num;
+	
+	$.ajax({
+		type: 'get',
+		url: '../api/tools/productclock/get_customer_by_id.json',
+		data: {
+			customer_id_list:customer_id_list,
+		},
+		dataType: 'json',
+		timeout: '10000',
+		success: function(json)
+		{
+			//设置名字
+			$('.dcl_name').html(json.customer_list[0].customer_name);
+			//设置性别
+			//$('.dcl_name').removeClass('dclman');
+			if(json.customer_list[0].gender=='MALE')
+			{
+				$('.dcl_sex').removeClass('dclwoman')
+				$('.dcl_sex').addClass('dclman');
+				
+				$('.ic_sex_ge .nan').removeClass('circle2');
+				$('.ic_sex_ge .nv').removeClass('circle2');
+				$('.ic_sex_ge .nan').addClass('circle2');
+			}
+			else
+			{
+				$('.dcl_sex').addClass('dclwoman');
+				$('.dcl_sex').removeClass('dclman');
+				
+				$('.ic_sex_ge .nan').removeClass('circle2');
+				$('.ic_sex_ge .nv').removeClass('circle2');
+				$('.ic_sex_ge .nv').addClass('circle2');
+			}
+			//设置地电话
+			$('.mndiv1').html(json.customer_list[0].mobile_no);	
+			
+			//更改信息页面设置
+			$('.i_name_ge .ic_name').val(json.customer_list[0].customer_name);
+			$('.i_phone_ge .ic_phone').val(json.customer_list[0].mobile_no);
+			
+			
+			
+			if(json.customer_list[0].birthday_solar||json.customer_list[0].birthday_lunar)
+			{
+				if(json.customer_list[0].birthday_solar)
+				{
+				
+					g_birthDate_ge.setValue(json.customer_list[0].birthday_solar,'solar');
+				}
+				else if(json.customer_list[0].birthday_lunar)
+				{
+		
+					g_birthDate_ge.setValue(json.customer_list[0].birthday_lunar,'lunar');
+				}
+			}
+			
+			
+			if(json.customer_list[0].wedding_solar||json.customer_list[0].wedding_lunar)
+			{
+				if(json.customer_list[0].wedding_solar)
+				{
+			
+					g_wendingDate_ge.setValue(json.customer_list[0].wedding_solar,'solar');
+				}
+				else if(json.customer_list[0].wedding_lunar)
+				{
+			
+					g_wendingDate_ge.setValue(json.customer_list[0].wedding_lunar,'lunar');
+				}
+			}
+			
+			
+			$('.i_textarea_ge .textarea_add').val(json.customer_list[0].address);
+			
+			
+			if(json.customer_list[0].is_remind==true)
+			{
+				if($('.pro_clock').hasClass('pro_clock_on'))
+				{
+					
+				}
+				else
+				{
+					$('.pro_clock').addClass('pro_clock_on');
+				}
+			}
+			else
+			{
+				$('.pro_clock').removeClass('pro_clock_on');
+			}
+			
+			
+			//缺字段
+			$('.dr_p').html(json.customer_list[0].remark);
+			
+			$('.i_def_ge .defau_notice').val(json.customer_list[0].days_ago_remind);
+			
+			
+			
+			
+			//设置搜索
+			$('.p_save').off('click');
+			$('.p_save').on('click', function() 
+			{
+				clean_info();
+				
+				if($('.pcg_in1').html()=='')
+				{
+					$('.pc_goumai').addClass('b_red');
+				}
+				else
+				{
+					$('.pc_goumai').removeClass('b_red');
+				}
+				if($('.pcg_in2').val()=='')
+				{
+					$('.pc_riqi').addClass('b_red');
+				}
+				else
+				{
+					$('.pc_riqi').removeClass('b_red');
+				}
+				if($('.default_circle_d').val()=='')
+				{
+					$('.pc_morenti').addClass('b_red');
+				}
+				else
+				{
+					$('.pc_morenti').removeClass('b_red');
+				}
+				if(!$('.pcg_in1').html()==''&&!$('.pcg_in2').val()==''&&!$('.default_circle_d').val()=='')
+				{
+					//删除之前存在的产品名称
+					$('.product').css({
+						'display': 'none'
+					});
+					$('.detail').css({
+						'display': 'block'
+					});
+					
+					$('.did_nums .did_num').remove();
+					create_customer_product(num,$('.pcg_in1')[0].classList[1],g_add_pro_time.getTimeStap(),$('.default_circle_d').val());
+					
+					
+					//重置参数
+					$('.pcg_in1').html('');
+					$('.pcg_in2').val('');
+					$('.default_circle_d').val('');
+					$('.pc_goumai').removeClass('b_red');
+					$('.pc_riqi').removeClass('b_red');
+					$('.pc_morenti').removeClass('b_red');
+					$('.pc_yi .ic_con').remove();
+				}
+			})
+			
+		},
+		error: function(json)
+		{
+				
+		}
+	});
+}
+
+
+//点击聚焦
+function jujiao()
+{
+	//添加客户
+	$('.i_name').on('click',function()
+	{
+		$('.i_name .ic_name').focus();
+	});
+	$('.i_phone').on('click',function()
+	{
+		$('.i_phone .ic_phone').focus();
+	});
+	$('.i_bir_tixing').on('click',function()
+	{
+		$('.i_bir_tixing .default_circle').focus();
+	});
+	$('.i_wed_tixing').on('click',function()
+	{
+		$('.i_wed_tixing .defau_notice').focus();
+	})
+	$('.i_textarea').on('click',function()
+	{
+		$('.i_textarea .textarea_add').focus();
+	})
+	
+	
+	//更改客户
+	$('.i_name_ge').on('click',function()
+	{
+		$('.i_name_ge .ic_name').focus();
+	});
+	$('.i_phone_ge').on('click',function()
+	{
+		$('.i_phone_ge .ic_phone').focus();
+	});
+	$('.i_cir_ge').on('click',function()
+	{
+		$('.i_cir_ge .default_circle').focus();
+	});
+	$('.i_def_ge').on('click',function()
+	{
+		$('.i_def_ge .defau_notice').focus();
+	})
+	$('.i_textarea_ge').on('click',function()
+	{
+		$('.i_textarea_ge .textarea_add').focus();
+	})
+	
+	$('.pc_morenti').on('click',function()
+	{
+		$('.default_circle_d').focus();
+	});
+	
+	$('.pc_circle').on('click',function()
+	{
+		$('.default_circle_det').focus();
+	});
+
+
+	//生日阴历插件
+	g_birthDate = $('.i_bir .ic_birthday').datepicker();
+	//结婚纪念
+	g_wendingDate = $('.i_wedding .ic_wedding').datepicker();
+	
+	g_birthDate_ge=$('.i_bir_ge .ic_birthday').datepicker();
+	
+	g_wendingDate_ge=$('.i_wedding_ge .ic_wedding').datepicker();
+	
+	//添加产品,更改产品
+	g_change_pro_time=$('.pro .pcg_in21').datepicker();
+	
+	g_add_pro_time=$('.pc_riqi .pcg_in2').datepicker();
+	
+}
+
+//阴历插件-龙
+(function($){
+    if(!$) return false;
+    var calendar = {
+
+        /**
+         * 农历1900-2100的润大小信息表
+         * @Array Of Property
+         * @return Hex
+         */
+        lunarInfo:[0x04bd8,0x04ae0,0x0a570,0x054d5,0x0d260,0x0d950,0x16554,0x056a0,0x09ad0,0x055d2,//1900-1909
+            0x04ae0,0x0a5b6,0x0a4d0,0x0d250,0x1d255,0x0b540,0x0d6a0,0x0ada2,0x095b0,0x14977,//1910-1919
+            0x04970,0x0a4b0,0x0b4b5,0x06a50,0x06d40,0x1ab54,0x02b60,0x09570,0x052f2,0x04970,//1920-1929
+            0x06566,0x0d4a0,0x0ea50,0x06e95,0x05ad0,0x02b60,0x186e3,0x092e0,0x1c8d7,0x0c950,//1930-1939
+            0x0d4a0,0x1d8a6,0x0b550,0x056a0,0x1a5b4,0x025d0,0x092d0,0x0d2b2,0x0a950,0x0b557,//1940-1949
+            0x06ca0,0x0b550,0x15355,0x04da0,0x0a5b0,0x14573,0x052b0,0x0a9a8,0x0e950,0x06aa0,//1950-1959
+            0x0aea6,0x0ab50,0x04b60,0x0aae4,0x0a570,0x05260,0x0f263,0x0d950,0x05b57,0x056a0,//1960-1969
+            0x096d0,0x04dd5,0x04ad0,0x0a4d0,0x0d4d4,0x0d250,0x0d558,0x0b540,0x0b6a0,0x195a6,//1970-1979
+            0x095b0,0x049b0,0x0a974,0x0a4b0,0x0b27a,0x06a50,0x06d40,0x0af46,0x0ab60,0x09570,//1980-1989
+            0x04af5,0x04970,0x064b0,0x074a3,0x0ea50,0x06b58,0x055c0,0x0ab60,0x096d5,0x092e0,//1990-1999
+            0x0c960,0x0d954,0x0d4a0,0x0da50,0x07552,0x056a0,0x0abb7,0x025d0,0x092d0,0x0cab5,//2000-2009
+            0x0a950,0x0b4a0,0x0baa4,0x0ad50,0x055d9,0x04ba0,0x0a5b0,0x15176,0x052b0,0x0a930,//2010-2019
+            0x07954,0x06aa0,0x0ad50,0x05b52,0x04b60,0x0a6e6,0x0a4e0,0x0d260,0x0ea65,0x0d530,//2020-2029
+            0x05aa0,0x076a3,0x096d0,0x04bd7,0x04ad0,0x0a4d0,0x1d0b6,0x0d250,0x0d520,0x0dd45,//2030-2039
+            0x0b5a0,0x056d0,0x055b2,0x049b0,0x0a577,0x0a4b0,0x0aa50,0x1b255,0x06d20,0x0ada0//2040-2049
+        ],
+
+
+        /**
+         * 公历每个月份的天数普通表
+         * @Array Of Property
+         * @return Number
+         */
+        solarMonth:[31,28,31,30,31,30,31,31,30,31,30,31],
+
+        /**
+         * 数字转中文速查表
+         * @Array Of Property
+         * @trans ['日','一','二','三','四','五','六','七','八','九','十']
+         * @return Cn string
+         */
+        nStr1:["\u65e5","\u4e00","\u4e8c","\u4e09","\u56db","\u4e94","\u516d","\u4e03","\u516b","\u4e5d","\u5341"],
+
+
+        /**
+         * 日期转农历称呼速查表
+         * @Array Of Property
+         * @trans ['初','十','廿','卅']
+         * @return Cn string
+         */
+        nStr2:["\u521d","\u5341","\u5eff","\u5345"],
+
+
+        /**
+         * 月份转农历称呼速查表
+         * @Array Of Property
+         * @trans ['正','一','二','三','四','五','六','七','八','九','十','冬','腊']
+         * @return Cn string
+         */
+        nStr3:["\u6b63","\u4e8c","\u4e09","\u56db","\u4e94","\u516d","\u4e03","\u516b","\u4e5d","\u5341","\u51ac","\u814a"],
+
+
+        /**
+         * 返回农历y年一整年的总天数
+         * @param lunar Year
+         * @return Number
+         * @eg:var count = calendar.lYearDays(1987) ;//count=387
+         */
+        lYearDays:function(y) {
+            var i, sum = 348;
+            for(i=0x8000; i>0x8; i>>=1) { sum += (calendar.lunarInfo[y-1900] & i)? 1: 0; }
+            return(sum+calendar.leapDays(y));
+        },
+
+
+        /**
+         * 返回农历y年闰月是哪个月；若y年没有闰月 则返回0
+         * @param lunar Year
+         * @return Number (0-12)
+         * @eg:var leapMonth = calendar.leapMonth(1987) ;//leapMonth=6
+         */
+        leapMonth:function(y) { //闰字编码 \u95f0
+            return(calendar.lunarInfo[y-1900] & 0xf);
+        },
+
+
+        /**
+         * 返回农历y年闰月的天数 若该年没有闰月则返回0
+         * @param lunar Year
+         * @return Number (0、29、30)
+         * @eg:var leapMonthDay = calendar.leapDays(1987) ;//leapMonthDay=29
+         */
+        leapDays:function(y) {
+            if(calendar.leapMonth(y)) {
+                return((calendar.lunarInfo[y-1900] & 0x10000)? 30: 29);
+            }
+            return(0);
+        },
+
+
+        /**
+         * 返回农历y年m月（非闰月）的总天数，计算m为闰月时的天数请使用leapDays方法
+         * @param lunar Year
+         * @return Number (-1、29、30)
+         * @eg:var MonthDay = calendar.monthDays(1987,9) ;//MonthDay=29
+         */
+        monthDays:function(y,m) {
+            if(m>12 || m<1) {return -1}//月份参数从1至12，参数错误返回-1
+            return( (calendar.lunarInfo[y-1900] & (0x10000>>m))? 30: 29 );
+        },
+
+
+        /**
+         * 返回公历(!)y年m月的天数
+         * @param solar Year
+         * @return Number (-1、28、29、30、31)
+         * @eg:var solarMonthDay = calendar.leapDays(1987) ;//solarMonthDay=30
+         */
+        solarDays:function(y,m) {
+            if(m>12 || m<1) {return -1} //若参数错误 返回-1
+            var ms = m-1;
+            if(ms==1) { //2月份的闰平规律测算后确认返回28或29
+                return(((y%4 == 0) && (y%100 != 0) || (y%400 == 0))? 29: 28);
+            }else {
+                return(calendar.solarMonth[ms]);
+            }
+        },
+
+        /**
+         * 传入农历数字月份返回汉语通俗表示法
+         * @param lunar month
+         * @return Cn string
+         * @eg:var cnMonth = calendar.toChinaMonth(12) ;//cnMonth='腊月'
+         */
+        toChinaMonth:function(m) { // 月 => \u6708
+            if(m>12 || m<1) {return -1} //若参数错误 返回-1
+            var s = calendar.nStr3[m-1];
+            s+= "\u6708";//加上月字
+            return s;
+        },
+
+
+        /**
+         * 传入农历日期数字返回汉字表示法
+         * @param lunar day
+         * @return Cn string
+         * @eg:var cnDay = calendar.toChinaDay(21) ;//cnMonth='廿一'
+         */
+        toChinaDay:function(d){ //日 => \u65e5
+            var s;
+            switch (d) {
+                case 10:
+                    s = '\u521d\u5341'; break;
+                case 20:
+                    s = '\u4e8c\u5341'; break;
+                    break;
+                case 30:
+                    s = '\u4e09\u5341'; break;
+                    break;
+                default :
+                    s = calendar.nStr2[Math.floor(d/10)];
+                    s += calendar.nStr1[d%10];
+            }
+            return(s);
+        },
+
+        /**
+         * 传入公历年月日获得详细的公历、农历object信息 <=>JSON
+         * @param y  solar year
+         * @param m solar month
+         * @param d  solar day
+         * @return JSON object
+         * @eg:console.log(calendar.solar2lunar(1987,11,01));
+         */
+        solar2lunar:function (y,m,d) { //参数区间1900.1.31~2100.12.31
+            if(y<1900 || y>2100) {return -1;}//年份限定、上限
+            if(y==1900&&m==1&&d<31) {return -1;}//下限
+            if(!y) { //未传参 获得当天
+                var objDate = new Date();
+            }else {
+                var objDate = new Date(y,parseInt(m)-1,d)
+            }
+            var i, leap=0, temp=0;
+            //修正ymd参数
+            var y = objDate.getFullYear(),m = objDate.getMonth()+1,d = objDate.getDate();
+            var offset = (Date.UTC(objDate.getFullYear(),objDate.getMonth(),objDate.getDate()) - Date.UTC(1900,0,31))/86400000;
+            for(i=1900; i<2101 && offset>0; i++) { temp=calendar.lYearDays(i); offset-=temp; }
+            if(offset<0) { offset+=temp; i--; }
+
+            //是否今天
+            var isTodayObj = new Date(),isToday=false;
+            if(isTodayObj.getFullYear()==y && isTodayObj.getMonth()+1==m && isTodayObj.getDate()==d) {
+                isToday = true;
+            }
+            //星期几
+            var nWeek = objDate.getDay(),cWeek = calendar.nStr1[nWeek];
+            if(nWeek==0) {nWeek =7;}//数字表示周几顺应天朝周一开始的惯例
+            //农历年
+            var year = i;
+
+            var leap = calendar.leapMonth(i); //闰哪个月
+            var isLeap = false;
+
+            //效验闰月
+            for(i=1; i<13 && offset>0; i++) {
+                //闰月
+                if(leap>0 && i==(leap+1) && isLeap==false){
+                    --i;
+                    isLeap = true; temp = calendar.leapDays(year); //计算农历闰月天数
+                }
+                else{
+                    temp = calendar.monthDays(year, i);//计算农历普通月天数
+                }
+                //解除闰月
+                if(isLeap==true && i==(leap+1)) { isLeap = false; }
+                offset -= temp;
+            }
+
+            if(offset==0 && leap>0 && i==leap+1)
+                if(isLeap){
+                    isLeap = false;
+                }else{
+                    isLeap = true; --i;
+                }
+            if(offset<0){ offset += temp; --i; }
+            //农历月
+            var month = i;
+            //农历日
+            var day = offset + 1;
+
+            return {'lYear':year,'lMonth':month,'lDay':day,'IMonthCn':(isLeap?"\u95f0":'')+calendar.toChinaMonth(month),'IDayCn':calendar.toChinaDay(day),'cYear':y,'cMonth':m,'cDay':d,'isToday':isToday,'isLeap':isLeap,'nWeek':nWeek,'ncWeek':"\u661f\u671f"+cWeek};
+        },
+
+
+        /**
+         * 传入公历年月日以及传入的月份是否闰月获得详细的公历、农历object信息 <=>JSON
+         * @param y  lunar year
+         * @param m lunar month
+         * @param d  lunar day
+         * @param isLeapMonth  lunar month is leap or not.
+         * @return JSON object
+         * @eg:console.log(calendar.lunar2solar(1987,9,10));
+         */
+        lunar2solar:function(y,m,d,isLeapMonth) {  //参数区间1900.1.31~2100.12.1
+            var leapOffset = 0;
+            var leapMonth = calendar.leapMonth(y);
+            var leapDay = calendar.leapDays(y);
+            if(isLeapMonth&&(leapMonth!=m)) {return -1;}//传参要求计算该闰月公历 但该年得出的闰月与传参的月份并不同
+            if(y==2100&&m==12&&d>1 || y==1900&&m==1&&d<31) {return -1;}//超出了最大极限值
+            var day = calendar.monthDays(y,m);
+            if(y<1900 || y>2100 || d>day) {return -1;}//参数合法性效验
+
+            //计算农历的时间差
+            var offset = 0;
+            for(var i=1900;i<y;i++) {
+                offset+=calendar.lYearDays(i);
+            }
+            var leap = 0,isAdd= false;
+            for(var i=1;i<m;i++) {
+                leap = calendar.leapMonth(y);
+                if(!isAdd) {//处理闰月
+                    if(leap<=i && leap>0) {
+                        offset+=calendar.leapDays(y);isAdd = true;
+                    }
+                }
+                offset+=calendar.monthDays(y,i);
+            }
+            //转换闰月农历 需补充该年闰月的前一个月的时差
+            if(isLeapMonth) {offset+=day;}
+            //1900年农历正月一日的公历时间为1900年1月30日0时0分0秒(该时间也是本农历的最开始起始点)
+            var stmap = Date.UTC(1900,1,30,0,0,0);
+            var calObj = new Date((offset+d-31)*86400000+stmap);
+            var cY = calObj.getUTCFullYear();
+            var cM = calObj.getUTCMonth()+1;
+            var cD = calObj.getUTCDate();
+
+            return calendar.solar2lunar(cY,cM,cD);
+        }
+    };
+
+    var DatePicker = function(settings){
+        this.data = null;
+        this.dom = settings.dom;
+        this.init();
+    };
+
+    DatePicker.prototype = {
+        init: function(){
+            var me = this;
+            $(this.dom).click(function(){
+            	//添加
+            	//$('.i_content').css({'overflow-y':'hidden'})
+                me.render();
+            });
+        },
+        render: function(){
+            var me = this;
+            var year_list = [],month_list = [],day_list = [];
+            var now = new Date();
+            for(var i=1900;i<2050;i++){
+                year_list.push('<span rel="'+i+'" class="ui-datepicker-li'+(now.getFullYear() == i?' ui-datepicker-li-sel':'')+'">'+i+'年</span>');
+            }
+            for(var i=1;i<13;i++){
+                var month = ('0'+i).slice(-2);
+                month_list.push('<span rel="'+month+'" class="ui-datepicker-li'+(now.getMonth()+1==i?' ui-datepicker-li-sel':'')+'">'+month+'月</span>');
+            }
+
+            var monthDays = calendar.solarDays(now.getFullYear(),now.getMonth()+1);
+            for(var i=1;i<=31;i++){
+                var day = ('0'+i).slice(-2);
+                day_list.push('<span rel="'+day+'" class="ui-datepicker-li'+(now.getDate()==i?' ui-datepicker-li-sel':'')+'">'+day+'日</span>');
+            }
+
+            wrapDom = $(['<div class="ui-datepicker-mask">',
+                '<div class="ui-datepicker-wrap">',
+                '<div class="ui-datepicker-header">',
+                '<a href="javascript:void(0)" class="ui-datepicker-btn ui-datepicker-ok fl">确定</a>',
+                '<a href="javascript:void(0)" class="ui-datepicker-btn ui-datepicker-cancel fr">取消</a>',
+                '<a href="javascript:void(0)" class="ui-datepicker-swith">',
+                '<span class="ui-datepicker-swith-tab active">阳历</span>',
+                '<span class="ui-datepicker-swith-tab">阴历</span>',
+                '</a>',
+                '</div>',
+                '<div class="ui-datepicker-body">',
+                '<div class="ui-datepicker-column ui-datepicker-year">',
+                '<div class="ui-datepicker-ul">',
+                year_list.join(''),
+                '</div>',
+                '<div class="ui-datepicker-wol"></div>',
+                '</div>',
+                '<div class="ui-datepicker-column ui-datepicker-month">',
+                '<div class="ui-datepicker-ul">',
+                month_list.join(''),
+                '</div>',
+                '<div class="ui-datepicker-wol"></div>',
+                '</div>',
+                '<div class="ui-datepicker-column ui-datepicker-day">',
+                '<div class="ui-datepicker-ul">',
+                day_list.join(''),
+                '</div>',
+                '<div class="ui-datepicker-wol"></div>',
+                '</div>',
+                '</div>',
+                '</div>',
+                '<div class="ui-datepicker-bg">',
+                '</div>',
+                '</div>'].join('')).appendTo('body');
+            wrapDom.find('.ui-datepicker-column').bind('touchstart',function(e){
+                var cur_mt = parseInt($(this).find('.ui-datepicker-ul').css('margin-top'))||0;
+            	 //更改
+                var start_y = e.originalEvent.targetTouches[0].pageY;
+
+                $(this).bind('touchmove',function(e){	
+                	//更改
+                    var cur_y = event.changedTouches[0].pageY;
+                    $(this).find('.ui-datepicker-ul').css('margin-top',cur_mt+cur_y-start_y);
+                });
+                $(this).bind('touchend',function(e){
+                    cur_mt = parseInt($(this).find('.ui-datepicker-ul').css('margin-top'))||0;
+                    var ulHeight = $(this).find('.ui-datepicker-ul').height();
+                    if(cur_mt > 56){
+                        cur_mt = 56;
+                    }else if(cur_mt < 84-ulHeight){
+                        cur_mt = 84-ulHeight;
+                    }
+                    var index = Math.round(cur_mt/28);
+                    cur_mt = index*28;
+                    $(this).find('.ui-datepicker-ul').css('margin-top',cur_mt);
+                    $(this).find('.ui-datepicker-li.ui-datepicker-li-sel').removeClass('ui-datepicker-li-sel');
+                    $(this).find('.ui-datepicker-li').eq(Math.abs(index-2)).addClass('ui-datepicker-li-sel');
+                    if($(this).hasClass('ui-datepicker-year')){
+                        var year = $(this).find('.ui-datepicker-li.ui-datepicker-li-sel').attr('rel');
+                        changeMonth();
+                        changeDate();
+                    }else if($(this).hasClass('ui-datepicker-month')){
+                        changeDate();
+                    }
+                    $(this).unbind('touchmove');
+                    $(this).unbind('touchend');
+                });
+            });
+            wrapDom.on('click','.ui-datepicker-li',function(e){
+                e.stopPropagation();
+                $(this).siblings('.ui-datepicker-li-sel').removeClass('ui-datepicker-li-sel');
+                $(this).addClass('ui-datepicker-li-sel');
+                $(this).parent().css('margin-top',-($(this).index()-2)*28);
+                if($(this).parent().parent().hasClass('ui-datepicker-month')){
+                    changeDate();
+                }else if($(this).parent().parent().hasClass('ui-datepicker-year')){
+                    changeMonth();
+                    changeDate();
+                }
+            });
+            wrapDom.find('.ui-datepicker-swith-tab').click(function(){
+                if(!$(this).hasClass('active')){
+                    $(this).siblings('.active').removeClass('active');
+                    $(this).addClass('active');
+
+                    var year = parseInt(wrapDom.find('.ui-datepicker-year .ui-datepicker-li-sel').attr('rel'));
+                    var month = parseInt(wrapDom.find('.ui-datepicker-month .ui-datepicker-li-sel').attr('rel'));
+                    var day = parseInt(wrapDom.find('.ui-datepicker-day .ui-datepicker-li-sel').attr('rel'));
+                    if($(this).index() == 1){
+                        wrapDom.find('.ui-datepicker-month .ui-datepicker-li').each(function(){
+                            $(this).text(calendar.toChinaMonth(parseInt($(this).attr('rel'))));
+                        });
+                        wrapDom.find('.ui-datepicker-day .ui-datepicker-li').each(function(){
+                            $(this).text(calendar.toChinaDay(parseInt($(this).attr('rel'))));
+                        });
+                        var date = calendar.solar2lunar(year,month,day);
+                        wrapDom.find('.ui-datepicker-year .ui-datepicker-li[rel="'+date.lYear+'"]').trigger('click');
+                        wrapDom.find('.ui-datepicker-day .ui-datepicker-li[rel="'+('0'+date.lDay).slice(-2)+'"]').trigger('click');
+                        setTimeout(function(){
+                            var md = wrapDom.find('.ui-datepicker-month .ui-datepicker-li[rel="'+('0'+date.lMonth).slice(-2)+(date.isLeap?'_leap':'')+'"]')
+                            if(md.length == 0){
+                                auguments.callee();
+                            }else{
+                                md.trigger('click');
+                            }
+                        },10);
+                        changeMonth();
+                    }else{
+                        var leap = false;
+                        if(wrapDom.find('.ui-datepicker-month .ui-datepicker-li-sel').hasClass('ui-datepicker-month-leap')) leap=true;
+                        wrapDom.find('.ui-datepicker-month .ui-datepicker-li').each(function(){
+                            $(this).text($(this).attr('rel')+'月');
+                        });
+                        wrapDom.find('.ui-datepicker-day .ui-datepicker-li').each(function(){
+                            $(this).text($(this).attr('rel')+'日');
+                        });
+                        wrapDom.find('.ui-datepicker-month .ui-datepicker-month-leap').remove();
+                        var date = calendar.lunar2solar(year,month,day,leap);
+                        wrapDom.find('.ui-datepicker-year .ui-datepicker-li[rel="'+date.cYear+'"]').trigger('click');
+                        wrapDom.find('.ui-datepicker-month .ui-datepicker-li[rel="'+('0'+date.cMonth).slice(-2)+'"]').trigger('click');
+                        wrapDom.find('.ui-datepicker-day .ui-datepicker-li[rel="'+('0'+date.cDay).slice(-2)+'"]').trigger('click');
+                    }
+                }
+            });
+            wrapDom.find('.ui-datepicker-ok').click(function(){
+                var year = parseInt(wrapDom.find('.ui-datepicker-year .ui-datepicker-li-sel').attr('rel'));
+                var month = parseInt(wrapDom.find('.ui-datepicker-month .ui-datepicker-li-sel').attr('rel'))||1;
+                var day = parseInt(wrapDom.find('.ui-datepicker-day .ui-datepicker-li-sel').attr('rel'))||1;
+                var type = wrapDom.find('.ui-datepicker-swith-tab.active').index()==0?'solar':'lunar';
+                if(type == 'solar'){
+                    var date = {
+                        type: type,
+                        timestap: new Date(year,month-1,day).getTime()/1000,
+                        year: year,
+                        month: month,
+                        day: day
+                    };
+                    me.setDate(date);
+                }else{
+                    var isLeap = wrapDom.find('.ui-datepicker-month .ui-datepicker-li-sel').hasClass('ui-datepicker-month-leap')
+                    var date = calendar.lunar2solar(year,month,day,isLeap);
+                    date = {
+                        type: type,
+                        timestap: new Date(date.cYear,date.cMonth-1,date.cDay).getTime()/1000,
+                        year: date.cYear,
+                        month: date.cMonth,
+                        day: date.cDay
+                    };
+                    me.setDate(date);
+                }
+                wrapDom.remove();
+            });
+            wrapDom.find('.ui-datepicker-cancel').click(function(){
+                wrapDom.remove();
+                //不好使detail
+               // $('.info .i_content').css({'overflow-y':'auto'});
+            });
+            
+            wrapDom.find('.ui-datepicker-bg').click(function(){
+            	//$('.info .i_content').css({'overflow-y':'auto'});
+                wrapDom.remove();
+            });
+            
+            function changeMonth(){
+                var type = wrapDom.find('.ui-datepicker-swith-tab.active').index();
+                var year = parseInt(wrapDom.find('.ui-datepicker-year .ui-datepicker-li-sel').attr('rel'));
+                if(type == 1){
+                    var lm = calendar.leapMonth(year);
+                    if(lm>0){
+                        if(wrapDom.find('.ui-datepicker-month .ui-datepicker-month-leap').hasClass('ui-datepicker-li-sel')){
+                            wrapDom.find('.ui-datepicker-month .ui-datepicker-month-leap').prev().trigger('click');
+                        }
+                        wrapDom.find('.ui-datepicker-month .ui-datepicker-month-leap').remove();
+                        var leapMonth = $('<span rel="'+('0'+lm).slice(-2)+'_leap" class="ui-datepicker-li ui-datepicker-month-leap">润'+calendar.toChinaMonth(lm)+'</span>');
+                        wrapDom.find('.ui-datepicker-month .ui-datepicker-li[rel="'+('0'+lm).slice(-2)+'"]').after(leapMonth);
+                    }
+                }
+            }
+
+            function changeDate(){
+                var type = wrapDom.find('.ui-datepicker-swith-tab.active').index();
+                var year = parseInt(wrapDom.find('.ui-datepicker-year .ui-datepicker-li-sel').attr('rel'));
+                var month = parseInt(wrapDom.find('.ui-datepicker-month .ui-datepicker-li-sel').attr('rel'))||1;
+                var dates = calendar.solarDays(year,month);
+                if(type == 1){
+                    dates = calendar.monthDays(year,month);
+                    if(month == calendar.leapMonth(year) && wrapDom.find('.ui-datepicker-month .ui-datepicker-li-sel').hasClass('ui-datepicker-month-leap')){
+                        dates = calendar.leapDays(year);
+                    }
+                }
+                wrapDom.find('.ui-datepicker-day .ui-datepicker-li').slice(0,dates).show();
+                wrapDom.find('.ui-datepicker-day .ui-datepicker-li').slice(dates).hide();
+                if(wrapDom.find('.ui-datepicker-day .ui-datepicker-li.ui-datepicker-li-sel').index()>=dates){
+                    wrapDom.find('.ui-datepicker-day .ui-datepicker-li').eq(dates-1).trigger('click');
+                }
+            }
+
+            function renderDate(year,month,day,type){
+                wrapDom.find('.ui-datepicker-swith-tab').first().trigger('click');
+                wrapDom.find('.ui-datepicker-year .ui-datepicker-li[rel="'+year+'"]').trigger('click');
+                wrapDom.find('.ui-datepicker-month .ui-datepicker-li[rel="'+('0'+month).slice(-2)+'"]').trigger('click');
+                wrapDom.find('.ui-datepicker-day .ui-datepicker-li[rel="'+('0'+day).slice(-2)+'"]').trigger('click');
+                if(type == 'lunar'){
+                    wrapDom.find('.ui-datepicker-swith-tab').last().trigger('click');
+                }
+            }
+
+            function initWrap(){
+                var date = me.data || {
+                    timestap: new Date().getTime()/1000,
+                    year: new Date().getFullYear(),
+                    month: new Date().getMonth() + 1,
+                    day: new Date().getDate(),
+                    type: 'solar'
+                };
+                renderDate(date.year,date.month,date.day,date.type);
+            }
+            initWrap();
+        },
+        setValue: function(timestap,type){
+            var date = new Date(timestap*1000);
+            var year = date.getFullYear();
+            var month = date.getMonth() + 1;
+            var day = date.getDate();
+            this.data = {
+                timestap: timestap,
+                year: year,
+                month: month,
+                day: day,
+                type: type
+            };
+            if(type == 'lunar'){
+                date = calendar.solar2lunar(year,month,day);
+                $(this.dom).val(date.lYear+'年'+calendar.toChinaMonth(date.lMonth)+calendar.toChinaDay(date.lDay));
+            }else{
+                $(this.dom).val(year+'年'+('0'+month).slice(-2)+'月'+('0'+day).slice(-2)+'日');
+            }
+        },
+        getTimeStap: function(){
+            return this.data.timestap || '';
+        },
+        getdate: function(){
+            return this.data || {
+            	timestap: ''
+            };
+        },
+        setDate: function(date){
+            this.data = date;
+            this.setValue(new Date(date.year,date.month-1,date.day).getTime()/1000,date.type);
+        }
+    }
+
+    $.extend($.fn,{
+        datepicker: function(){
+            var dom = this[0];
+            if(!!dom){
+                return new DatePicker({dom:dom});
+            }
+        }
+    })
+})(jQuery);
+
+
+
+</script>
+</html>

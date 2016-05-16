@@ -1,0 +1,157 @@
+import "weizhu.proto";
+
+package weizhu.tag;
+
+option java_package = "com.weizhu.proto";
+option java_outer_classname = "TagProtos";
+// option optimize_for = LITE_RUNTIME;
+
+// 内容状态
+enum State {
+  NORMAL  = 0; // 用户 管理员 boss
+  DISABLE = 1; // 管理员 boss
+  DELETE  = 2; // boss
+}
+
+// 标签分类
+message Category {
+  required int32  category_id     = 1; // 分类id. 严格保证 > 0
+  required string category_name   = 2; // 分类名称. 最多20个字符，不可出现空格和半角逗号(`,`)和分号(`;`)
+  
+  optional State  state           = 95 [default = NORMAL]; 
+  optional int64  create_admin_id = 96;
+  optional int32  create_time     = 97;
+  optional int64  update_admin_id = 98;
+  optional int32  update_time     = 99;
+}
+
+// 标签
+message Tag {
+  required int32  tag_id          = 1; // 标签id. 严格保证 > 0
+  required string tag_name        = 2; // 标签名称. 最多20个字符，不可出现空格和半角逗号(`,`)和分号(`;`)
+  required bool   is_recommend    = 3; // 是否为推荐标签
+  repeated int32  category_id     = 4; // 关联分类标签id
+  
+  optional int32  user_count      = 21; // 标签订阅用户数
+  optional bool   is_subscribe    = 22; // 标签是否被访问者订阅
+  
+  optional int64  create_admin_id = 96;
+  optional int32  create_time     = 97;
+  optional int64  update_admin_id = 98;
+  optional int32  update_time     = 99;
+}
+
+// 关联标签的资源，根据类型＋id可以唯一确定一个资源
+message Resource {
+  required string resource_type = 1; // 资源类型
+  required string resource_id   = 2; // 资源id
+}
+
+// 获取推荐标签
+message GetRecommendTagResponse {
+  repeated Tag recommend_tag = 1;
+}
+
+// 获取所有标签分类
+message GetCategoryResponse {
+  repeated Category category = 1;
+}
+
+// 根据分类id分页获取标签请求
+message GetCategoryTagListRequest {
+  required int32 category_id  = 1;
+  required int32 tag_size     = 2;
+  optional bytes offset_index = 3;
+}
+
+// 根据分类id分页获取标签响应
+message GetCategoryTagListResponse {
+  repeated Tag   tag          = 1;
+  required bool  has_more     = 2; // 是否还有更多
+  required bytes offset_index = 3; // 翻页偏移索引
+}
+
+// 分页获取某个用户订阅的标签列表请求
+message GetUserTagListRequest {
+  required int64 user_id      = 1;
+  required int32 tag_size     = 2;
+  optional bytes offset_index = 3;
+}
+
+// 分页获取某个用户订阅的标签列表响应
+message GetUserTagListResponse {
+  repeated Tag   tag          = 1;
+  required bool  has_more     = 2; // 是否还有更多
+  required bytes offset_index = 3; // 翻页偏移索引
+}
+
+// 分页获取某个资源下关联的标签列表请求
+message GetResourceTagListRequest {
+  required Resource resource     = 1;
+  required int32    tag_size     = 2;
+  optional bytes    offset_index = 3;
+}
+
+// 分页获取某个资源下关联的标签列表响应
+message GetResourceTagListResponse {
+  repeated Tag   tag          = 1;
+  required bool  has_more     = 2; // 是否还有更多
+  required bytes offset_index = 3; // 翻页偏移索引
+}
+
+// 创建用户订阅标签请求
+message CreateSubscribeTagRequest {
+  repeated int32 tag_id = 1;
+}
+
+// 创建用户订阅标签响应
+message CreateSubscribeTagResponse {
+  enum Result {
+    SUCC = 0;
+    
+    FAIL_UNKNOWN             = 99;
+  }
+  optional Result result    = 1 [default = FAIL_UNKNOWN];
+  optional string fail_text = 2;
+}
+
+// 删除用户订阅标签请求
+message DeleteSubscribeTagRequest {
+  repeated int32 tag_id = 2;
+}
+
+// 删除用户订阅标签响应
+message DeleteSubscribeTagResponse {
+  enum Result {
+    SUCC = 0;
+    
+    FAIL_UNKNOWN             = 99;
+  }
+  optional Result result    = 1 [default = FAIL_UNKNOWN];
+  optional string fail_text = 2;
+}
+
+// 标签服务
+service TagService {
+  
+  // 获取推荐标签
+  rpc GetRecommendTag (weizhu.EmptyRequest) returns (GetRecommendTagResponse);
+  
+  // 获取所有标签分类
+  rpc GetCategory (weizhu.EmptyRequest) returns (GetCategoryResponse);
+  
+  // 根据分类id分页获取标签
+  rpc GetCategoryTagList (GetCategoryTagListRequest) returns (GetCategoryTagListResponse);
+  
+  // 分页获取某个用户订阅的标签列表
+  rpc GetUserTagList (GetUserTagListRequest) returns (GetUserTagListResponse);
+  
+  // 分页获取某个资源下关联的标签列表
+  rpc GetResourceTagList (GetResourceTagListRequest) returns (GetResourceTagListResponse);
+  
+  // 创建用户订阅标签
+  rpc CreateSubscribeTag (CreateSubscribeTagRequest) returns (CreateSubscribeTagResponse);
+  
+  // 删除用户订阅标签
+  rpc DeleteSubscribeTag (DeleteSubscribeTagRequest) returns (DeleteSubscribeTagResponse);
+}

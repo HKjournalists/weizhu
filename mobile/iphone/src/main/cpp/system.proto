@@ -1,0 +1,208 @@
+import "weizhu.proto";
+
+package weizhu.system;
+
+option java_package = "com.weizhu.proto";
+option java_outer_classname = "SystemProtos";
+option optimize_for = LITE_RUNTIME;
+
+message SystemConfigStatePush {
+}
+
+message SystemNewVersionStatePush {
+}
+
+// 用户配置,包括客户端和h5页面
+// 注: 客户端需要在以下情况更新配置：
+//   1.启动app进程
+//   2.登陆账号成功
+//   3.注销账号成功
+//   4.收到更新配置push
+message UserConfig {
+  required string http_api_url           = 1; // http短链接接口，格式为http url。例: http://192.168.88.34:8090/api/pb
+  required string socket_conn_addr       = 2; // tcp长连接地址，格式为host:port。例: 192.168.88.34:8091
+  required string image_upload_url       = 3; // 图片上传url, 格式为http url。例: http://192.168.88.34:8092/upload/user
+  optional string video_upload_url       = 4; // 视频上传url
+  repeated string webrtc_ice_server_addr = 5; // webrtc地址，可多个。格式为 uri@user:password 或者 uri
+  repeated string weizhu_url_prefix      = 6; // 微助url地址前缀。匹配此前缀的web地址，访问都需要带上身份cookie
+}
+
+// 管理员配置
+message AdminConfig {
+  required string webapp_mobile_url_prefix = 1;
+  required string webapp_web_url_prefix    = 2;
+  required string webapp_upload_url_prefix = 3;
+}
+
+// boss配置
+message BossConfig {
+  required string webapp_admin_url_prefix  = 1;
+  required string webapp_mobile_url_prefix = 2;
+  required string webapp_web_url_prefix    = 3;
+  required string webapp_upload_url_prefix = 4;
+}
+
+// 图片配置
+message ImageConfig {
+  required string image_url_prefix     = 1; // 原图访问前缀
+  required string image_60_url_prefix  = 2; // 60x60缩略图访问前缀
+  required string image_120_url_prefix = 3; // 120x120缩略图访问前缀
+  required string image_240_url_prefix = 4; // 240x240缩略图访问前缀
+  required string image_480_url_prefix = 5; // 480x480缩略图访问前缀
+}
+
+// 动态配置.可到profile后台动态设置
+message DynamicConfig {
+  required string name  = 1; // 配置名
+  required string value = 2; // 配置值
+}
+
+message VideoConfig {
+  required string video_url_prefix = 1; // 视频访问前缀
+}
+
+message NewVersion {
+  required string version_name = 1;
+  required string feature_text = 2;
+  required string download_url = 3;
+  optional int32  version_code = 4;
+  optional string check_md5    = 5; // 安装包md5
+}
+
+message GetUserConfigResponse {
+  required UserConfig    user    = 1;
+  required ImageConfig   image   = 2;
+  repeated DynamicConfig dynamic = 3;
+  optional VideoConfig   video   = 4;
+}
+
+message GetAdminConfigResponse {
+  required AdminConfig   admin   = 1;
+  required ImageConfig   image   = 2;
+  repeated DynamicConfig dynamic = 3;
+  optional VideoConfig   video   = 4;
+}
+
+message GetBossConfigResponse {
+  required BossConfig  boss  = 1;
+  required ImageConfig image = 2;
+  optional VideoConfig video = 3;
+}
+
+message CheckNewVersionResponse {
+  optional NewVersion new_version = 1;
+}
+
+message SendFeedbackRequest {
+  required string feedback_content = 1;
+}
+
+message UpdateBadgeNumberRequest {
+  required int32 badge_number = 1;
+}
+
+// 获取被授权的url请求
+message GetAuthUrlRequest {
+  required string url = 1;
+}
+
+// 获取被授权的下载url响应
+message GetAuthUrlResponse {
+  enum Result {
+    SUCC                 = 0; // 获取授权url成功
+    
+    FAIL_UNKNOWN         = 99;
+  }
+  // 授权url访问时，需要设置的cookie
+  message AuthCookie {
+    required string name  = 1;
+    required string value = 2;
+  }
+  optional Result     result      = 1 [default = FAIL_UNKNOWN];
+  optional string     fail_text   = 2;
+  optional string     auth_url    = 3; // 被授权的url
+  repeated AuthCookie auth_cookie = 4; // 授权url访问时需要设置的cookie
+}
+
+service SystemService {
+
+  // 获取用户配置
+  rpc GetUserConfig (weizhu.EmptyRequest) returns (GetUserConfigResponse);
+  
+  // 获取管理员配置
+  rpc GetAdminConfig (weizhu.EmptyRequest) returns (GetAdminConfigResponse);
+  
+   // 获取管理员配置
+  rpc GetBossConfig (weizhu.EmptyRequest) returns (GetBossConfigResponse);
+  
+  // 检查是否有新版本
+  rpc CheckNewVersion (weizhu.EmptyRequest) returns (CheckNewVersionResponse);
+  
+  // 发送反馈
+  rpc SendFeedback (SendFeedbackRequest) returns (weizhu.EmptyResponse);
+  
+  // iphone设备更新APNs提醒数字
+  rpc UpdateBadgeNumber (UpdateBadgeNumberRequest) returns (weizhu.EmptyResponse);
+  
+  // 获取授权url
+  rpc GetAuthUrl (GetAuthUrlRequest) returns (GetAuthUrlResponse);
+  
+  // 已废弃, 获取app配置
+  rpc GetConfig (weizhu.EmptyRequest) returns (GetConfigResponse);
+  
+  // 已废弃，获取app配置V2版本
+  rpc GetConfigV2 (weizhu.EmptyRequest) returns (GetConfigV2Response);
+  
+}
+
+// Deprecated 已废弃
+message Config {
+  required string http_api_url               = 1;
+  required string socket_conn_host           = 2;
+  required int32  socket_conn_port           = 3;
+  required string upload_avatar_url          = 4;
+  required string upload_im_image_url        = 5;
+  required string upload_im_file_url         = 6;
+  required string avatar_url                 = 7;
+  required string im_image_url               = 8;
+  required string im_file_url                = 9;
+  required string discover_image_url         = 10;
+  required string discover_icon_url          = 11;
+  required string discover_item_url          = 12;
+  required string upload_community_image_url = 13;
+  required string community_image_url        = 14;
+}
+
+// Deprecated 已废弃
+message ConfigV2 {
+  required string http_api_url               = 1;  // http短链接接口，格式为http url。例: http://192.168.88.34:8090/api/pb
+  required string socket_conn_addr           = 2;  // tcp长连接地址，格式为host:port。例: 192.168.88.34:8091
+  required string avatar_url_prefix          = 3;  // 头像访问地址前缀，需要和具体的头像图片名称组成完整的访问url。例: http://192.168.88.34:8081/avatar/
+  required string avatar_upload_url          = 4;  // 头像上传url, 格式为http url。例: http://192.168.88.34:8092/upload/avatar
+  required string im_image_url_prefix        = 5;  // im图片访问地址前缀，需要和具体的图片名称组成完整得访问url。例: http://192.168.88.34:8081/im/image/
+  required string im_image_upload_url        = 6;  // im图片上传url, 格式为http url。例: http://192.168.88.34:8092/upload/im/image
+  required string discover_image_url_prefix  = 7;  // 发现图片访问地址前缀，需要和具体的发现图片名称组成完整的访问url。例: http://192.168.88.34:8081/avatar/
+  required string discover_image_upload_url  = 8;  // 发现图片上传url, 格式为http url。例: http://192.168.88.34:8092/upload/discover/image
+  required string discover_item_url_prefix   = 9;  // 发现条目访问地址前缀，需要和具体的发现条目id组成完整的访问url。例: http://192.168.88.34:8080/mobile/discover/item_content?item_id=
+  required string community_image_url_prefix = 10; // 社区图片访问地址前缀，需要和具体的社区图片名称组成完整的访问url。例: http://192.168.88.34:8081/community/image/
+  required string community_image_upload_url = 11; // 社区图片上传url, 格式为http url。例: http://192.168.88.34:8092/upload/community/image
+  optional string scene_home_url             = 12; // 场景首页url。格式为http url。例: http://192.168.88.34/weizhu-scene/test/index.html
+  required string scene_image_url_prefix     = 13; // 场景图片访问地址前缀，需要和具体的社区图片名称组成完整的访问url。例: http://192.168.88.34:8081/scene/image/
+  optional string recommend_image_url        = 14; // 推荐显示的图片，没有的话不需要显示
+  required string image_upload_url           = 15; // 通用图片上传地址，需要身份cookie
+  required string image_url_prefix           = 16; // 原图访问前缀
+  required string image_60_url_prefix        = 17; // 60x60缩略图访问前缀
+  required string image_120_url_prefix       = 18; // 120x120缩略图访问前缀
+  required string image_240_url_prefix       = 19; // 240x240缩略图访问前缀
+  required string image_480_url_prefix       = 20; // 480x480缩略图访问前缀
+}
+
+// Deprecated 已废弃
+message GetConfigResponse {
+  required Config config = 1;
+}
+
+// Deprecated 已废弃
+message GetConfigV2Response {
+  required ConfigV2 config = 2; 
+}

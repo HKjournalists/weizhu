@@ -1,0 +1,4 @@
+com/weizhu/service/credits/test/TestMD5.class
+com/weizhu/service/credits/test/CreditsServiceTest.class
+com/weizhu/service/credits/test/CreditsServiceTestModule.class
+com/weizhu/service/credits/test/AdminCreditsServiceTest.class

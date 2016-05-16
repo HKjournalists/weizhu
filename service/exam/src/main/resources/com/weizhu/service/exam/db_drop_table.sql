@@ -1,0 +1,10 @@
+DROP TABLE IF EXISTS weizhu_exam_question;
+DROP TABLE IF EXISTS weizhu_exam_option;
+DROP TABLE IF EXISTS weizhu_exam_exam;
+DROP TABLE IF EXISTS weizhu_exam_exam_question;
+DROP TABLE IF EXISTS weizhu_exam_user_answer;
+DROP TABLE IF EXISTS weizhu_exam_user_result;
+DROP TABLE IF EXISTS weizhu_exam_question_category;
+DROP TABLE IF EXISTS weizhu_exam_question_category_join_question;
+DROP TABLE IF EXISTS weizhu_exam_exam_join_category;
+DROP TABLE IF EXISTS weizhu_exam_user_question;

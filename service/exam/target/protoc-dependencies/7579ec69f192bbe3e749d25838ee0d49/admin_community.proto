@@ -1,0 +1,478 @@
+import "community.proto";
+import "weizhu.proto";
+
+package weizhu.admin.community;
+
+option java_package         = "com.weizhu.proto";
+option java_outer_classname = "AdminCommunityProtos";
+
+message GetCommunityResponse {
+  required string community_name     = 1; // 社区名称
+
+}
+
+message SetCommunityRequest {
+  required string  community_name             = 1; // 社区名称
+}
+
+message SetCommunityResponse {
+  enum Result {
+    SUCC                                 = 0;
+    FAIL_PERMISSION_DENIED               = 1; //无此操作权限    
+    FAIL_COMMUNITY_NAME_INVALID          = 2; //社区名称错误
+     
+    FAIL_UNKNOWN             = 99;
+  }
+  
+  optional Result result          = 1 [default = FAIL_UNKNOWN]; // 返回结果
+  optional string fail_text       = 2; // 错误文本
+}
+
+message UpdateBoardOrderRequest {
+  required string  board_id_order_str         = 1; // 版块id序列
+}
+
+message UpdateBoardOrderResponse {
+  enum Result {
+    SUCC                                 = 0;
+    FAIL_PERMISSION_DENIED               = 1; //无此操作权限    
+    FAIL_BOARD_ID_ORDER_STR_INVALID      = 2; //版块id序列错误
+     
+    FAIL_UNKNOWN             = 99;
+  }
+  
+  optional Result result          = 1 [default = FAIL_UNKNOWN]; // 返回结果
+  optional string fail_text       = 2; // 错误文本
+}
+
+// board_name没值时为全量查询，有值时为按名称搜索
+message GetBoardListRequest {
+  optional string board_name       = 1; // 板块名称
+}
+
+message GetBoardListResponse {
+  repeated weizhu.community.Board board = 1; // 所有板块
+}
+
+
+message CreateBoardRequest {
+  required string board_name       = 1; // 板块名称，最多10个字
+  required string board_icon       = 2; // 板块图标. 带后缀名图片名称，格式(md5.jpg). 根据community image服务地址可以拼接为完整访问url
+  required string board_desc       = 3; // 板块介绍描述，最多10个字
+  optional int32  parent_board_id  = 4; // 父板块id，不填该字段表示为根板块
+  optional int32  allow_model_id   = 5; // 访问模型id
+  
+}
+
+message CreateBoardResponse {
+  enum Result {
+    SUCC                      = 0;
+    FAIL_BOARD_NAME_INVALID   = 1; // 板块名称错误。或者板块是非叶子板块，不能发表帖子
+    FAIL_BOARD_ICON_INVALID   = 2; // 板块图标错误
+    FAIL_BOARD_DESC_INVALID   = 3; // 板块介绍描述错误
+    FAIL_PARENT_BOARD_INVALID = 4; // 父板块不存在
+    
+    FAIL_UNKNOWN              = 99;
+  }
+  
+  optional Result result     = 1 [default = FAIL_UNKNOWN]; // 返回结果
+  optional string fail_text  = 2; // 错误文本
+  optional int32  boad_id    = 3; // 创建成功后的板块id
+
+}
+
+message UpdateBoardRequest {
+  required int32  board_id         = 1; // 板块id
+  required string board_name       = 2; // 板块名称，最多10个字
+  required string board_icon       = 3; // 板块图标. 带后缀名图片名称，格式(md5.jpg). 根据community image服务地址可以拼接为完整访问url
+  required string board_desc       = 4; // 板块介绍描述，最多10个字
+  optional int32  parent_board_id  = 5; // 父板块id，不填该字段表示为根板块
+  optional int32  allow_model_id   = 6; // 访问模型id
+  
+}
+
+message UpdateBoardResponse {
+  enum Result {
+    SUCC                      = 0;
+    FAIL_BOARD_NAME_INVALID   = 1; // 板块名称错误。或者板块是非叶子板块，不能发表帖子
+    FAIL_BOARD_ICON_INVALID   = 2; // 板块图标错误
+    FAIL_BOARD_DESC_INVALID   = 3; // 板块介绍描述错误
+    FAIL_PARENT_BOARD_INVALID = 4; // 父板块不存在
+    FAIL_BOARD_INVALID        = 5; // 板块不存在
+    
+    FAIL_UNKNOWN              = 99;
+  }
+  
+  optional Result result     = 1 [default = FAIL_UNKNOWN]; // 返回结果
+  optional string fail_text  = 2; // 错误文本
+
+}
+
+message DeleteBoardRequest {
+  required int32  board_id         = 1; // 板块id
+  optional bool   is_force_delete  = 2; // 在板块下有帖子的情况下是否强制删除
+}
+
+message DeleteBoardResponse {
+  enum Result {
+    SUCC                               = 0;
+    FAIL_PERMISSION_DENIED             = 1; //无此操作权限    
+    FAIL_BOARD_NOT_EXIST               = 2; //版块id不存在
+    FAIL_BOARD_EXIST_POST              = 3; //版块下有帖子，不能删除，若想强制删除，请设置 is_force_delete＝true
+    FAIL_BOARD_EXIST_CHILDREN_BOARD    = 4; //版块下有子板块，不能删除
+    
+    FAIL_UNKNOWN             = 99;
+  }
+  
+  optional Result result    = 1 [default = FAIL_UNKNOWN]; // 返回结果
+  optional string fail_text = 2; // 错误文本
+}
+
+// 1.当没有任何条件时，获取所有帖子数据（用于全量搜索）
+// 2.当length有值时，获取定量的帖子（用于分页查询）
+// 3.当boad_id或post_title有值时，获取符合条件的帖子列表（用于帖子搜索）
+message GetPostListRequest {
+  
+  optional int32                          board_id       = 1; // 板块id
+  optional string                         post_title     = 2; // 帖子标题,最多50个字
+  optional int32                          start          = 3; // 开始位置
+  optional int32                          length         = 5; // 查询的条数
+  repeated weizhu.community.Post.State    state          = 6; // 状态列表
+  repeated int64                          create_user_id = 7; // 帖子创建者用户id
+}
+
+message GetPostListResponse {
+  repeated weizhu.community.Post   post             = 1; // 帖子列表
+  required int32                   total_size       = 2; // 符合条件的帖子总数
+  required int32                   filtered_size    = 3; 
+  repeated weizhu.community.Board  ref_board        = 4; // 分类列表
+}
+
+message ExportPostListRequest {
+  
+  optional int32                          board_id       = 1; // 板块id
+  optional string                         post_title     = 2; // 帖子标题,最多50个字
+  optional int32                          last_post_id   = 3; // 上次获取最后一个帖子id
+  required int32                          size           = 4; // 获取帖子数量
+  repeated weizhu.community.Post.State    state          = 5; // 状态列表
+}
+
+message ExportPostListResponse {
+  repeated weizhu.community.Post   post             = 1; // 帖子列表
+  required bool                    has_more         = 2; // 是否还有更多
+  repeated weizhu.community.Board  ref_board        = 3; // 板块列表
+}
+
+message DeletePostRequest {
+  repeated int32 post_id = 1;
+}
+
+message DeletePostResponse {
+  enum Result {
+    SUCC                      = 0;
+    FAIL_PERMISSION_DENIED    = 1; //无此操作权限 
+    FAIL_POST_NOT_EXIST       = 2; // 帖子不存在
+       
+    
+    FAIL_UNKNOWN              = 99;
+  }
+  
+  optional Result result    = 1 [default = FAIL_UNKNOWN]; // 返回结果
+  optional string fail_text = 2; // 错误文本
+}
+
+// 将帖子迁移到其他版块
+message MigratePostRequest {
+  repeated int32    post_id        = 1; // 帖子id列表
+  required int32    board_id       = 2; // 板块id
+}
+
+message MigratePostResponse {
+  enum Result {
+    SUCC                      = 0;
+    FAIL_PERMISSION_DENIED    = 1; // 无此操作权限
+    FAIL_BOARD_NOT_EXIST      = 2; // 版块不存在
+    FAIL_POST_INVALID         = 3; // 帖子id列表错误
+    
+    FAIL_UNKNOWN              = 99;
+  }
+  
+  optional Result result    = 1 [default = FAIL_UNKNOWN]; // 返回结果
+  optional string fail_text = 2; // 错误文本
+}
+
+message GetCommentListRequest {
+  required int32                          post_id          = 1; // 帖子id
+  optional int32                          start            = 2; // 开始位置
+  required int32                          length           = 3; // 查询的条数
+  repeated weizhu.community.Post.State    state            = 4; // 状态列表
+}
+
+message GetCommentListResponse {
+  repeated weizhu.community.Comment  comment          = 1; // 评论列表
+  required int32                     total_size       = 2; // 符合条件的帖子总数
+  required int32                     filtered_size    = 3; 
+}
+
+message DeleteCommentRequest {
+  required int32 post_id    = 1;
+  required int32 comment_id = 2;
+}
+
+message DeleteCommentResponse {
+  enum Result {
+    SUCC                   = 0;
+    FAIL_PERMISSION_DENIED = 1; // 无此操作权限
+    FAIL_POST_NOT_EXIST    = 2; // 帖子不存在
+    FAIL_COMMENT_NOT_EXIST = 3; // 评论不存在
+       
+    FAIL_UNKNOWN           = 99;
+  }
+  
+  optional Result result    = 1 [default = FAIL_UNKNOWN]; // 返回结果
+  optional string fail_text = 2; // 错误文本
+}
+
+// 帖子置顶
+message SetStickyPostRequest {
+  required int32 post_id    = 1; // 帖子id
+  required bool  is_Sticky  = 2; // is_Sticky=true为置顶，is_Sticky=false为取消置顶
+}
+
+message SetStickyPostResponse {
+  enum Result {
+    SUCC                                   = 0;
+    FAIL_PERMISSION_DENIED                 = 1; // 无此操作权限
+    FAIL_POST_NOT_EXIST                    = 2; // 帖子不存在
+    FAIL_STICKY_POST_COUNT_OUT_OF_RANGE    = 3; // 置顶帖数量超出范围,每个板块下最多10个
+    
+    FAIL_UNKNOWN           = 99;
+  }
+  
+  optional Result result    = 1 [default = FAIL_UNKNOWN]; // 返回结果
+  optional string fail_text = 2; // 错误文本
+}
+
+// 帖子推荐
+message RecommendPostRequest {
+  required int32 post_id         = 1; // 帖子id
+  required bool  is_recommend    = 2; // is_recommended=true为推荐，is_recommended=false为取消推荐
+}
+
+message RecommendPostResponse {
+  enum Result {
+    SUCC                                        = 0;
+    FAIL_PERMISSION_DENIED                      = 1; // 无此操作权限
+    FAIL_POST_NOT_EXIST                         = 2; // 帖子不存在
+    FAIL_RECOMMENDED_POST_COUNT_OUT_OF_RANGE    = 3; // 推荐帖数量超出范围,最多10个
+    
+    FAIL_UNKNOWN           = 99;
+  }
+  
+  optional Result result    = 1 [default = FAIL_UNKNOWN]; // 返回结果
+  optional string fail_text = 2; // 错误文本
+}
+
+// 获取推荐贴
+message GetRecommendPostResponse {
+  repeated weizhu.community.Post   post             = 1; // 帖子列表
+  repeated weizhu.community.Board  ref_board        = 2; // 板块列表
+}
+
+message ExportCommentListRequest {
+  required int32 post_id      = 1; // 帖子id
+  required int32 size         = 2; // 获取数据大小，不能为0，最大100.超过100自动裁剪为100
+  optional bytes offset_index = 3; // 获取数据偏移索引。初次获取，不设此字段。翻页时传入上次获取到的值
+}
+
+message ExportCommentListResponse {
+  repeated weizhu.community.Comment comment      = 1; // 评论列表
+  required bool                     has_more     = 2; // 是否还有更多
+  required bytes                    offset_index = 3; // 翻页偏移索引
+  optional weizhu.community.Post    ref_post     = 4; 
+}
+
+message CreateBoardTagRequest {
+  required int32  board_id  = 1; // 板块id
+  repeated string tag       = 2; // 标签
+}
+
+message CreateBoardTagResponse {
+  enum Result {
+    SUCC                    = 0;
+    FAIL_BOARD_NOT_EXIST    = 1; // 父板块不存在
+    FAIL_TAG_INVALID        = 2; // 标签不可用
+    
+    FAIL_UNKNOWN              = 99;
+  }
+  
+  optional Result result     = 1 [default = FAIL_UNKNOWN]; // 返回结果
+  optional string fail_text  = 2; // 错误文本
+}
+
+message DeleteBoardTagRequest {
+  required int32  board_id  = 1; // 板块id
+  repeated string tag       = 2; // 标签
+}
+
+message DeleteBoardTagResponse {
+  enum Result {
+    SUCC                    = 0;
+    FAIL_BOARD_NOT_EXIST    = 1; // 父板块不存在
+    FAIL_TAG_INVALID        = 2; // 标签不可用
+    
+    FAIL_UNKNOWN              = 99;
+  }
+  
+  optional Result result     = 1 [default = FAIL_UNKNOWN]; // 返回结果
+  optional string fail_text  = 2; // 错误文本
+}
+
+message GetBoardTagRequest {
+  required int32  board_id  = 1; // 板块id
+}
+
+message GetBoardTagResponse {
+  repeated string tag       = 1; // 标签
+}
+
+message CreateCommentRequest {
+  required int32  post_id          = 1; // 帖子id
+  optional int32  reply_comment_id = 2; // 回复评论id,如果评论主贴 则为空
+  required string content          = 3; // 评论内容
+  required int64  create_user_id   = 4; // 创建人id
+}
+
+message CreateCommentResponse {
+  enum Result {
+    SUCC                         = 0;
+    FAIL_POST_NOT_EXIST          = 1; // 帖子不存在
+    FAIL_REPLY_COMMENT_NOT_EXIST = 2; // 回复的评论id不存在
+    FAIL_CONTENT_INVALID         = 3; // 评论内容错误
+    FAIL_USER_NOT_EXIST          = 4; // 用户不存在
+    
+    FAIL_UNKNOWN                 = 99;
+  }
+  
+  optional Result result     = 1 [default = FAIL_UNKNOWN]; // 返回结果
+  optional string fail_text  = 2; // 错误文本, 供客户端展示
+  optional int32  comment_id = 3; // 创建成功后的评论id
+}
+message ExportPostLikeListRequest {
+  required int32 post_id      = 1; // 帖子id
+  required int32 size         = 2; // 获取数据大小，不能为0，最大100.超过100自动裁剪为100
+  optional bytes offset_index = 3; // 获取数据偏移索引。初次获取，不设此字段。翻页时传入上次获取到的值
+}
+
+message ExportPostLikeListResponse {
+  repeated weizhu.community.PostLike  post_like    = 1; // 用户ID
+  required bool                       has_more     = 2; // 是否还有更多
+  required bytes                      offset_index = 3; // 翻页偏移索引
+  optional weizhu.community.Post      ref_post     = 4; 
+}
+
+message CreatePostRequest {
+  required int32  board_id   = 1; // 板块id
+  required string title      = 2; // 帖子标题
+  optional string text       = 3; // 帖子文本内容，可为空
+  optional string image_name = 4; // 帖子图片内容，可为空
+  repeated string tag        = 5; // 标签
+  required int64  create_user_id  = 6; // 创建人id
+  
+}
+
+message CreatePostResponse {
+  enum Result {
+    SUCC                = 0;
+    FAIL_BOARD_INVALID  = 1; // 板块不存在。或者板块是非叶子板块，不能发表帖子
+    FAIL_TITLE_INVALID  = 2; // 标题错误
+    FAIL_TEXT_INVALID   = 3; // 文本内容错误
+    FAIL_IMAGE_INVALID  = 4; // 图片错误
+    FAIL_TAG_INVALID    = 5; // 标签不可用
+    FAIL_USER_NOT_EXIST = 6; // 用户不存在
+    
+    FAIL_UNKNOWN       = 99;
+  }
+  
+  optional Result result    = 1 [default = FAIL_UNKNOWN]; // 返回结果
+  optional string fail_text = 2; // 错误文本, 供客户端展示
+  optional int32  post_id   = 3; // 创建成功后的帖子id
+}
+
+
+service CommunityService {
+  
+  // 获取社区基本信息
+  rpc GetCommunity (weizhu.EmptyRequest) returns (GetCommunityResponse);
+  
+  // 更新社区信息
+  rpc SetCommunity (SetCommunityRequest) returns (SetCommunityResponse);
+  
+  // 更新社区信息
+  rpc UpdateBoardOrder (UpdateBoardOrderRequest) returns (UpdateBoardOrderResponse);
+  
+  
+  // 获取板块列表
+  rpc GetBoardList (GetBoardListRequest) returns (GetBoardListResponse);
+ 
+  // 创建版块
+  rpc CreateBoard (CreateBoardRequest) returns (CreateBoardResponse);
+  
+  // 更新版块
+  rpc UpdateBoard (UpdateBoardRequest) returns (UpdateBoardResponse);
+
+  // 删除版块
+  rpc DeleteBoard (DeleteBoardRequest) returns (DeleteBoardResponse);
+   
+         
+  // 获取板块下帖子列表
+  rpc GetPostList (GetPostListRequest) returns (GetPostListResponse);
+  
+  // 导出板块下帖子列表
+  rpc ExportPostList (ExportPostListRequest) returns (ExportPostListResponse);
+  
+  // 删除帖子
+  rpc DeletePost (DeletePostRequest) returns (DeletePostResponse);
+  
+  // 将帖子迁移到其他版块
+  rpc MigratePost (MigratePostRequest) returns (MigratePostResponse); 
+  
+  
+  // 获取帖子评论列表
+  rpc GetCommentList (GetCommentListRequest) returns (GetCommentListResponse);
+  
+  // 删除评论
+  rpc DeleteComment (DeleteCommentRequest) returns (DeleteCommentResponse);
+  
+  
+  // 帖子置顶
+  rpc SetStickyPost (SetStickyPostRequest) returns (SetStickyPostResponse);
+  
+  // 帖子推荐
+  rpc RecommendPost (RecommendPostRequest) returns (RecommendPostResponse);
+  
+  // 获取推荐贴
+  rpc GetRecommendedPost (weizhu.EmptyRequest) returns (GetRecommendPostResponse);
+  
+  // 导出评论列表
+  rpc ExportCommentList (ExportCommentListRequest) returns (ExportCommentListResponse);
+  
+  // 创建标签
+  rpc CreateBoardTag (CreateBoardTagRequest) returns (CreateBoardTagResponse);
+  
+  // 删除标签
+  rpc DeleteBoardTag (DeleteBoardTagRequest) returns (DeleteBoardTagResponse);
+  
+  // 获取标签
+  rpc GetBoardTag (GetBoardTagRequest) returns (GetBoardTagResponse);
+  
+  // 创建评论
+  rpc CreateComment (CreateCommentRequest) returns (CreateCommentResponse);
+  
+  // 导出点赞人员
+  rpc ExportPostLikeList (ExportPostLikeListRequest) returns (ExportPostLikeListResponse);
+  
+  // 创建帖子
+  rpc CreatePost (CreatePostRequest) returns (CreatePostResponse);
+
+}

@@ -1,0 +1,243 @@
+<div class="page-wrapper-inner">
+    <div class="row">
+        <div class="col-xs-12">
+            <h1 class="page-header tx_yh">题库管理</h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="form-inline">
+                        <div class="form-item">
+                            <label>考题名称</label>
+                            <input id="dt-sch-name" type="text" placeholder="关键字" class="form-control" />
+                        </div>
+                        <button id="dt-sch-btn" type="button" class="btn btn-default btn-search">查找</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-xs-6 form-inline">
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-primary" id="btn-add">添加考题</button>
+                                <button type="submit" class="btn btn-primary" id="btn-import">导入考题</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="table-responsive">
+                                <table class="table table-striped table-bordered table-hover" id="dataTables-examquestion">
+                                    <thead>
+                                        <tr>
+                                            <th style="width:1%;"><input type="checkbox" name="table-item" /></th>
+	                                        <th style="width:40%;">考题名称</th>
+	                                        <th style="width:5%;">考题类型</th>
+	                                        <th>选项</th>
+	                                        <th style="width:12%;">创建人</th>
+	                                        <th style="width:16%;">创建时间</th>
+	                                        <th style="width:5%;">操作</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div>
+                                <button type="submit" class="btn btn-primary" id="move-question">迁移</button>
+                                <button type="submit" class="btn btn-primary" id="delete-question">删除</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="dialog-edit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="false" style="display: none;">
+        <div class="modal-dialog" style="width:600px;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title" id="myModalLabel">添加考题</h4>
+                </div>
+
+                <form role="form" class="form-job bv-form">
+                    <input type="hidden" name="question_id"/>
+                    <div class="modal-body" style="height:400px;overflow-y:auto;">
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <div class="form-group">
+                                        <label>考题类型<span class="brand-warning">*</span></label>
+                                        <div style="width:200px;" class="combobox" id="edit-questiontype">
+					                        <input type="text" style="width: 180px;" readonly="true" />
+					                        <span class="caret"></span>
+					                        <div class="combobox-list" style="width:200px;">
+					
+					                        </div>
+					                    </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <div class="form-group">
+                                        <label>所属题库<span class="brand-warning">*</span></label>
+                                        <span class="question_bank_name"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <div class="form-group">
+                                        <label>考题题目<span class="brand-warning">*</span></label>
+                                        <input type="text" style="width:380px;" name="question_name" class="form-control form-item" maxlength="190" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="options-wrap">
+	                            <div class="row option-item">
+	                                <div class="col-xs-12">
+	                                    <div class="form-group">
+	                                        <label>考题答案<span class="brand-warning">*</span></label>
+	                                        <input style="width:380px;" type="text" name="option_name" class="form-control form-item" maxlength="190" />
+	                                        <input class="option-checkbox" type="checkbox" name="option_result">
+	                                    </div>
+	                                </div>
+	                            </div>
+	                            <div class="row option-item">
+	                                <div class="col-xs-12">
+	                                    <div class="form-group">
+	                                        <label></label>
+	                                        <input style="width:380px;" type="text" name="option_name" class="form-control form-item" maxlength="190" />
+	                                        <input class="option-checkbox" type="checkbox" name="option_result">
+	                                    </div>
+	                                </div>
+	                            </div>
+	                            <div class="row">
+	                                <div class="col-xs-12">
+	                                    <div>
+	                                        <label></label>
+	                                        <span class="tip-item">单个答案限制190字以内；点击答案后方单选/多选框，标记正确答案。</span>
+	                                    </div>
+	                                </div>
+	                            </div>
+	                            <div class="row">
+	                                <div class="col-xs-12">
+	                                    <div class="form-group">
+	                                        <label></label>
+	                                        <button type="button" class="btn btn-default btn-additem">添加一条</button>
+	                                    </div>
+	                                </div>
+	                            </div>
+                            </div>
+                            <div class="row" style="display:none;">
+                                <div class="col-xs-12">
+                                    <div class="form-group">
+                                        <label>考题答案<span class="brand-warning">*</span></label>
+                                        <div style="width:200px;" class="combobox" id="edit-trueorfalse">
+					                        <input type="text" style="width: 180px;" readonly="true" />
+					                        <span class="caret"></span>
+					                        <div class="combobox-list" style="width:200px;">
+					
+					                        </div>
+					                    </div>
+                                    </div>
+                                </div>
+                            </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                        <button type="button" class="btn btn-primary" id="btn-save-edit">保存</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="dialog-quesiton-review" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="false" style="display: none;">
+        <div class="modal-dialog" style="width:500px;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title" id="myModalLabel"></h4>
+                </div>
+
+                <div class="modal-body" style="max-height:400px;overflow-y:auto;">
+                	<div class="option-list">
+                	</div>
+            	</div>
+	            <div class="modal-footer">
+	                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+	            </div>
+	    	</div>
+        </div>
+    </div>
+    <div class="modal fade" id="dialog-move" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="false" style="display: none;">
+        <div class="modal-dialog" style="width:500px;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title">迁移考题</h4>
+                </div>
+                <div class="modal-body">
+                   <div class="row">
+	                    <div class="col-xs-12">
+	                        <label class="fl">题库名称</label>
+			                <div class="form-contral">
+		                        <div style="width:200px;" class="combobox" id="exambank-list">
+		                            <input type="text" style="width: 180px;" readonly="true" />
+		                            <span class="caret"></span>
+		                            <div class="combobox-list">
+		
+		                            </div>
+		                        </div>
+		                    </div>
+	                    </div>
+	                </div> 
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="submit" class="btn btn-primary" id="btn-save-move">保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="dialog-import" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="false" style="display: none;">
+        <div class="modal-dialog" style="width:500px;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title" id="myModalLabel">导入考题</h4>
+                </div>
+                <div class="modal-body">
+                    <iframe style="display:none;" id="examQuestionUpload" name="fileupload"></iframe>
+                    <form target="fileupload" action="./api/adminExam/import_question.json" method="POST" enctype="multipart/form-data">
+                        <div class="form-inline">
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <div class="form-group">
+                                        <p class="help-block">将您的信息填入表单后上传。<span class="brand-warning">填写时请勿修改、挪动表单内项目，请勿修改文件名。</span></p>
+                                    </div>
+                                </div>
+                                <div class="col-xs-12">
+                                    <div class="form-group">
+                                        <a class="btn btn-default" href="./static/res/exam_template.xlsx" target="_blank">模板下载</a>
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="file" name="import_question_file" value="文件上传" />
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="submit" class="btn btn-primary" value="上传" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

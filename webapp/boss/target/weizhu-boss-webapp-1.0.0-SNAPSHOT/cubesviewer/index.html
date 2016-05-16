@@ -1,0 +1,155 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-us" xml:lang="en-us" >
+<head>
+
+    <title>CubesViewer GUI Local</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="robots" content="NONE,NOARCHIVE" />
+
+	<link rel="stylesheet" href="../static/cubesviewer/css/blueprint/screen.css" type="text/css" media="screen, projection">
+	<link rel="stylesheet" href="../static/cubesviewer/css/blueprint/print.css" type="text/css" media="print">
+	<!--[if lt IE 8]> <link rel="stylesheet" href="../static/cubesviewer/css/blueprint/ie.css" type="text/css" media="screen, projection"> <!¡[endif]-->
+
+	<link rel="stylesheet" type="text/css" href="../static/cubesviewer/css/cvapp.css" />
+
+
+    <!-- CubesViewer CSS resources -->
+    <link type="text/css" rel="stylesheet" href="../static/cubesviewer/js/jqueryui/jquery-ui.min.css" />
+    <link type="text/css" rel="stylesheet" href="../static/cubesviewer/css/jqgrid/ui.jqgrid.css" media="screen" />
+    <link type="text/css" rel="stylesheet" href="../static/cubesviewer/js/qtip/jquery.qtip.css"  />
+    <link type="text/css" rel="stylesheet" href="../static/cubesviewer/js/wiky/wiky.math.css" />
+    <link type="text/css" rel="stylesheet" href="../static/cubesviewer/js/nvd3/nv.d3.min.css" />
+
+    <link type="text/css" rel="stylesheet" href="../static/cubesviewer/css/cubesviewer/cubesviewer.css" />
+
+    <!-- CubesViewer JS dependencies -->
+
+    <script type="text/javascript" src="../static/cubesviewer/js/jquery/jquery.js"></script>
+    <script type="text/javascript" src="../static/cubesviewer/js/jquery/jquery.cookie.js"></script>
+    <script type="text/javascript" src="../static/cubesviewer/js/jqueryui/jquery-ui.min.js"></script>
+
+    <script type="text/javascript" src="../static/cubesviewer/js/dateformat/dateformat.js"></script>
+
+    <script type="text/javascript" src="../static/cubesviewer/js/jquery/jquery.sticky.js"></script> <!-- for CubesViewer GUI -->
+    <script type="text/javascript" src="../static/cubesviewer/js/jquery/jquery.blockUI.js"></script>
+
+    <script type="text/javascript" src="../static/cubesviewer/js/wiky/wiky.js"></script>
+    <script type="text/javascript" src="../static/cubesviewer/js/wiky/wiky.math.js"></script>
+    <script type="text/javascript" src="../static/cubesviewer/js/flotr2/flotr2.min.js"></script>
+
+    <script type="text/javascript" src="../static/cubesviewer/js/d3js/d3.v3.js"></script>
+    <script type="text/javascript" src="../static/cubesviewer/js/nvd3/nv.d3.js"></script>
+    <script type="text/javascript" src="../static/cubesviewer/js/qtip/jquery.qtip.js"></script>
+
+    <script type="text/javascript" src="../static/cubesviewer/js/jqgrid/i18n/grid.locale-en.js" ></script>
+    <script type="text/javascript" src="../static/cubesviewer/js/jqgrid/migrate-jquery-browser.js" ></script>
+    <script type="text/javascript" src="../static/cubesviewer/js/jqgrid/jquery.jqGrid.min.js" ></script>
+
+    <script type="text/javascript" src="../static/cubesviewer/js/cubes/cubes.js"></script>
+
+    <!-- Cubesviewer modules -->
+
+    <script type="text/javascript" src="../static/cubesviewer/js/cubesviewer/cubesviewer.js"></script>
+    <script type="text/javascript" src="../static/cubesviewer/js/cubesviewer/cubesviewer.cache.js"></script>
+    <script type="text/javascript" src="../static/cubesviewer/js/cubesviewer/cubesviewer.views.js"></script>
+    <script type="text/javascript" src="../static/cubesviewer/js/cubesviewer/cubesviewer.views.cube.js"></script>
+    <script type="text/javascript" src="../static/cubesviewer/js/cubesviewer/cubesviewer.views.cube.explore.js"></script>
+    <script type="text/javascript" src="../static/cubesviewer/js/cubesviewer/cubesviewer.views.cube.datefilter.js"></script>
+    <script type="text/javascript" src="../static/cubesviewer/js/cubesviewer/cubesviewer.views.cube.rangefilter.js"></script>
+    <script type="text/javascript" src="../static/cubesviewer/js/cubesviewer/cubesviewer.views.cube.series.js"></script>
+    <script type="text/javascript" src="../static/cubesviewer/js/cubesviewer/cubesviewer.views.cube.chart.js"></script>
+    <script type="text/javascript" src="../static/cubesviewer/js/cubesviewer/cubesviewer.views.cube.facts.js"></script>
+    <script type="text/javascript" src="../static/cubesviewer/js/cubesviewer/cubesviewer.views.cube.dimensionfilter.js"></script>
+    <script type="text/javascript" src="../static/cubesviewer/js/cubesviewer/cubesviewer.views.cube.columns.js"></script>
+    <script type="text/javascript" src="../static/cubesviewer/js/cubesviewer/cubesviewer.views.cube.export.js"></script>
+    <script type="text/javascript" src="../static/cubesviewer/js/cubesviewer/cubesviewer.views.undo.js"></script>
+    <script type="text/javascript" src="../static/cubesviewer/js/cubesviewer/cubesviewer.gui.js"></script>
+    <script type="text/javascript" src="../static/cubesviewer/js/cubesviewer/cubesviewer.gui.serializing.js"></script>
+    <!-- <script type="text/javascript" src="../static/cubesviewer/js/cubesviewer/cubesviewer.gui.localeswitcher.js"></script>  -->
+	<style>
+		a.btn-default {
+		    display: inline-block;
+		    position: relative;
+		    padding: 0;
+		    line-height: normal;
+		    margin-right: .1em;
+		    cursor: pointer;
+		    vertical-align: middle;
+		    text-align: center;
+		    overflow: visible;
+		    border: 1px solid #aed0ea;
+		    background: #d7ebf9 url("images/ui-bg_flat_80_d7ebf9_40x100.png") 50% 50% repeat-x;
+		    font-weight: bold;
+		    color: #2779aa;
+		    padding: 7px 10px;
+		    margin: 10px 0px 0px 4px;
+		    text-decoration: none;
+		}
+	</style>
+
+<script type="text/javascript">
+
+	// Initialize CubesViewer when document is ready
+	$(document).ready(function() {
+
+		var cubesUrl = "https://boss.wehelpu.cn:8444";
+
+		cubesviewer.init({
+	        cubesUrl: cubesUrl
+	    });
+
+		cubesviewer.gui.init({
+	        container: $('#cubesviewer').get(0)
+		});
+
+	    // Start Cubesviewer system
+        cubesviewer.refresh();
+
+        $('.cv-gui-panel').sticky({topSpacing:0});
+
+        
+        $('.load-user').click(function(){
+    		$.ajax({
+    			url: '../api/stats/load_dim.json?dim_name=user',
+    			dataType: 'json',
+    			success: function(json){
+    				if(json.result == 'SUCC'){
+    					alert('用户数据加载成功！');
+    				}				
+    			}
+    		})
+    	});
+        
+        $('.load-discover').click(function(){
+    		$.ajax({
+    			url: '../api/stats/load_dim.json?dim_name=discover',
+    			dataType: 'json',
+    			success: function(json){
+    				if(json.result == 'SUCC'){
+    					alert('发现数据加载成功！');
+    				}				
+    			}
+    		})
+    	});
+	});
+
+</script>
+
+
+</head>
+
+<body id="">
+	<div class="btn-group">
+		<a href="javascript:void(0);" class="btn-default load-user">加载用户数据</a>
+		<a href="javascript:void(0);" class="btn-default load-discover">加载发现数据</a>
+	</div>
+	<!-- Cubes Viewer GUI container -->
+	<div id="cubesviewer">
+	    <div class="cv-gui-panel" >
+	    </div>
+	    <div class="cv-gui-workspace">
+	    </div>
+	</div>
+</body>
+
+</html>

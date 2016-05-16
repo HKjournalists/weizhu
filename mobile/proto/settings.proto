@@ -1,0 +1,47 @@
+import "weizhu.proto";
+
+package weizhu.settings;
+
+option java_package = "com.weizhu.proto";
+option java_outer_classname = "SettingsProtos";
+// option optimize_for = LITE_RUNTIME;
+
+message Settings {
+  message DoNotDisturb {
+    required bool  enable     = 1; // 是否启用免打扰
+    optional int32 begin_time = 2; // 从0点开始的秒数，取值范围 [0,86399]. 默认为0,小于0的值视为0,大于86399的值视为86399
+    optional int32 end_time   = 3; // 从0点开始的秒数，取值范围 [0,86399]. 默认为86399,小于0的值视为0,大于86399的值视为86399
+  }
+
+  required int64        user_id        = 1;
+  optional DoNotDisturb do_not_disturb = 2;
+}
+
+// 设置免打扰时段请求
+message SetDoNotDisturbRequest {
+  required Settings.DoNotDisturb do_not_disturb = 1;
+}
+
+// 设置通用返回响应
+message SettingsResponse {
+  required Settings settings = 1;
+}
+
+// 获取用户设置请求 (服务端内部使用)
+message GetUserSettingsRequest {
+  repeated int64 user_id = 1;
+}
+
+// 获取用户设置响应 (服务端内部使用)
+message GetUserSettingsResponse {
+  repeated Settings settings = 1;
+}
+
+service SettingsService {
+  // 获取配置
+  rpc GetSettings (weizhu.EmptyRequest) returns (SettingsResponse);
+  // 设置免打扰时段
+  rpc SetDoNotDisturb (SetDoNotDisturbRequest) returns (SettingsResponse);
+  // 获取用户设置 (服务端内部使用)
+  rpc GetUserSettings (GetUserSettingsRequest) returns (GetUserSettingsResponse);
+}

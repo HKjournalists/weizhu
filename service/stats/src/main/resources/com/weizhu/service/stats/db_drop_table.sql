@@ -1,0 +1,10 @@
+DROP TABLE IF EXISTS weizhu_stats_dim_date;
+DROP TABLE IF EXISTS weizhu_stats_dim_company;
+DROP TABLE IF EXISTS weizhu_stats_dim_user;
+DROP TABLE IF EXISTS weizhu_stats_dim_discover_item;
+DROP TABLE IF EXISTS weizhu_stats_fact_weizhu_version;
+DROP TABLE IF EXISTS weizhu_stats_fact_admin_action;
+DROP TABLE IF EXISTS weizhu_stats_fact_user_access;
+DROP TABLE IF EXISTS weizhu_stats_fact_user_action;
+DROP TABLE IF EXISTS weizhu_stats_fact_user_discover;
+DROP TABLE IF EXISTS weizhu_stats_fact_user_login;

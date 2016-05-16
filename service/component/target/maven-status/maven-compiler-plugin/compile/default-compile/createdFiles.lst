@@ -1,0 +1,6 @@
+com/weizhu/service/component/ComponentServiceImpl.class
+com/weizhu/service/component/ComponentServiceModule.class
+com/weizhu/service/component/score/ScoreDB.class
+com/weizhu/service/component/score/ScoreManager.class
+com/weizhu/service/component/AdminComponentServiceImpl.class
+com/weizhu/service/component/score/ScoreCache.class

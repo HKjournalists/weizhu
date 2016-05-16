@@ -1,0 +1,17 @@
+com/weizhu/service/user/test/DumpUserToStats$TeamInfo.class
+com/weizhu/service/user/test/DumpUserToStats.class
+com/weizhu/service/user/test/DumpLogToStats$1.class
+com/weizhu/service/user/test/AdminUserServiceTest.class
+com/weizhu/service/user/test/DumpLogToStats$ApiItem.class
+com/weizhu/service/user/test/UserServiceTest.class
+com/weizhu/service/user/test/DumpUserForExam.class
+com/weizhu/service/user/test/FindEmptyTeam.class
+com/weizhu/service/user/test/DumpUserToStats$UserInfo.class
+com/weizhu/service/user/test/FindUserNotLogin.class
+com/weizhu/service/user/test/DumpLogToStats.class
+com/weizhu/service/user/test/FindEmptyTeam$Team.class
+com/weizhu/service/user/test/DeleteUser.class
+com/weizhu/service/user/test/DumpUserLogin$UserLoginInfo.class
+com/weizhu/service/user/test/DumpUserLogin.class
+com/weizhu/service/user/test/UserServiceTestModule.class
+com/weizhu/service/user/test/FindUserNotLogin$Team.class

@@ -1,0 +1,40 @@
+
+import "exam.proto";
+
+package weizhu.exam.dao;
+
+option java_package = "com.weizhu.service.exam";
+option java_outer_classname = "ExamDAOProtos";
+
+// 考试索引
+message ExamIndex {
+  required int32 exam_id    = 1;
+  required int32 start_time = 2;
+  required int32 end_time   = 3;
+}
+
+// 考试索引列表，用于缓存
+message ExamIndexList {
+  repeated ExamIndex exam_index   = 1; // 索引
+  optional int32     expired_time = 2; // 失效时间。该索引列表在此时间之前有效
+}
+
+// 考试考题关联信息
+message ExamQuestion {
+  required int32 exam_id     = 1;
+  required int32 question_id = 2;
+  required int32 score       = 3;
+}
+
+// 考试信息
+message ExamInfo {
+  required weizhu.exam.Exam exam                        = 1;
+  repeated ExamQuestion     exam_question               = 2;
+  repeated int32            random_question_category_id = 3;
+  optional int32            random_question_num         = 4;
+}
+
+message ExamUserAnswer {
+  required int32                  exam_id     = 1;
+  repeated weizhu.exam.UserAnswer user_answer = 2;
+}

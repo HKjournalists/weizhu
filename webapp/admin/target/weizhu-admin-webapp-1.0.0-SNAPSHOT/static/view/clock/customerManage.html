@@ -1,0 +1,224 @@
+<div id="clock-customer-wrap" data-options="region:'center',border:false" class="easyui-layout" style="width:100%;height:100%;">
+		 <div data-options="region:'north',border:false" style="width: 100%;">
+			<div class="easyui-panel" data-options="border:false">
+            	<div style="padding:10px 20px;">
+                	<form id="clock-customer-search-form" class="easyui-form form-layout-inline" method="get">
+                	<div class="form-item">
+                		<label>状态：</label>
+                		<input class="easyui-combobox" type="text" name="hasproduct" data-options="valueField:'value',textField:'name',data:[{name:'全部',value:''},{name:'已成交',value:'true'},{name:'未成交',value:'false'}],editable:false,panelHeight:'auto'"></input>
+                	</div>
+                	<div class="form-item">
+                		<label>所属销售：</label>
+                		<input type="text" name="sale_by" style="width:40px;"></input>
+                	</div>
+                	<div class="form-item">
+                		<label>顾客姓名：</label>
+                		<input class="easyui-textbox" type="text" name="customer_name"></input>
+                	</div>
+                	<a href="javascript:void(0)" class="easyui-linkbutton reset-btn" iconCls="icon-reset">重置</a>
+                    <a href="javascript:void(0)" class="easyui-linkbutton search-btn" iconCls="icon-search"><%=lang.common.search_btn%></a>
+                	</form>
+            	</div>
+        	</div>
+        </div>
+        <div data-options="region:'center',border:false">
+        <table id="clock-customer-table" style="width:100%;height:100%"></table>
+        </div>
+        <div class="easyui-window" id="clock-customer-edit" data-options="title:'新建顾客信息',collapsible:false,maximizable:false,minimizable:false,closed: true,modal:true,width:500,height:500">
+        	<div class="easyui-layout" style="width:1005;height:100%">
+        		<div style="padding:10px 12px;">
+        			<form id="clock-customer-edit-form" class="easyui-form form-layout-column" method="post" data-options="novalidate:true">
+						<input type="hidden" name="customer_id"/>
+						<div class="form-item">
+							<label style="width:108px">姓名</label>
+							<input class="easyui-textbox form-item-box" type="text" name="customer_name" data-options="required:true,width:350,prompt:'请输入1~20位中英文',validType:'length[1,20]'"/>
+						</div>
+						<div class="form-item">
+							<label style="width:108px">手机号</label>
+							<input class="easyui-textbox form-item-box" type="text" name="mobile_no" data-options="required:true,width:350,prompt:'请输入11位数字',validType:['mobile','length[1,190]']"/>
+						</div>
+						<div class="form-item">
+							<label style="width:108px">性别</label>
+                        	<input class="easyui-combobox form-item-box" type="text" name="gender" data-options="required:true,width:350,valueField:'value',textField:'name',data:[{name:'男',value:'MALE'},{name:'女',value:'FEMALE'}],editable:false,panelHeight:'auto'" />
+						</div>
+						<div class="form-item">
+							<label style="width:108px">是否开启提醒</label>
+                        	<input class="easyui-combobox form-item-box" type="text" name="is_remind" data-options="required:true,width:350,valueField:'value',textField:'name',data:[{name:'开启',value:true},{name:'关闭',value:false}],editable:false,panelHeight:'auto'" />
+						</div>
+						<div class="form-item">
+							<label style="width:108px">提前提醒天数</label>
+							<input class="easyui-textbox form-item-box" type="text" name="days_ago_remind" data-options="width:350,prompt:'请输入数字',validType:['number','length[1,190]']"">
+						</div>
+						<div class="form-item" style="display:none">
+							<label style="width:108px">标签</label>
+							<div class="clock-customer-addicon">
+								<a href="javascript:void(0)" name="">增加标签</a>
+							</div>
+						</div>
+						<div class="form-item">
+							<label style="width:108px">生日</label>
+							<input name="birthday_solar">
+						</div>
+						<div class="form-item" style="display:none">
+							<label style="width:108px" >生日（阴历）</label>
+							<input name="birthday_lunar" class="">
+						</div>
+						<div class="form-item">
+							<label style="width:108px" >结婚纪念日</label>
+							<input name="wedding_solar">
+						</div>
+						<div class="form-item" style="display:none">
+							<label style="width:108px">结婚纪念日（阴历）</label>
+							<input name="wedding_lunar" class="">
+						</div>
+						<div class="form-item">
+							<label style="width:108px">详细住址</label>
+							<input class="easyui-textbox form-item-box" type="text" name="address" data-options="width:350,height:50,required:false,multiline:true">
+						</div>
+						<div class="form-item">
+							<label style="width:108px">备注</label>
+							<input class="easyui-textbox form-item-box" type="text" name="remark" data-options="width:350,required:false,multiline:true,height:50">
+						</div>
+					</form>
+        		</div>
+        		<div region="south" border="false" style="text-align:right;padding:10px 12px;">
+			      <a href="javascript:void(0)" class="easyui-linkbutton finish-btn">完成</a>
+			      <a href="javascript:void(0)" class="easyui-linkbutton over-btn">取消</a>
+			    </div>
+        	</div>
+        </div>
+     <div id="clock-customer-import-win" class="easyui-window" data-options="title:'导入顾客信息',collapsible:false,maximizable:false,minimizable:false,closed: true,modal:true,width:400,height:180">
+        <div class="easyui-layout" style="width:100%;height:100%;">
+            <div region="center" border="false" style="padding:10px 12px;">
+                <form id="clock-customer-import-form" class="easyui-form form-layout-column" method="post" data-options="novalidate:true" enctype="multipart/form-data">
+                    <div class="form-item">
+                        <p>请按照<a href="javascript:void(0)" class="download-btn" src_url="">顾客导入模板</a>填写您要导入的顾客信息后上传。<i class="important-info">填写时请勿修改、挪动表单内项目，请勿修改文件名。</i></p>
+                    </div>
+                    <div class="form-item">
+                        <input class="easyui-filebox" name="import_customer_file" style="width:350px" data-options="buttonText:'选择文件'">
+                    </div>
+                </form>
+            </div>
+            <div region="south" border="false" style="text-align:right;padding:10px 12px;">
+                <a href="javascript:void(0)" class="easyui-linkbutton edit-save" onclick='Wz.clock.customerManage.importcustomer();' data-options="iconCls:'icon-ok'">上传</a>
+                <a href="javascript:void(0)" class="easyui-linkbutton edit-cancel" onclick="$(this).parents('.easyui-window').window('close');" data-options="iconCls:'icon-cancel'">取消</a>
+            </div>
+        </div>
+    </div>
+    <div id="clock-customer-assign" class="easyui-window" data-options="title:'指派',collapsible:false,maximizable:false,minimizable:false,closed: true,modal:true,width:850,height:450">
+     <div class="easyui-layout" style="width:835px;height:400px">
+    	 <div data-options="region:'north',border:false" style="width: 100%;height:60px;">
+    	 	<div class="easyui-panel" data-options="border:false">
+    	 		<div style="padding:10px 20px;">
+                	<form id="clock-customer-assign-form" class="easyui-form form-layout-inline" method="get">
+						<div class="form-item">
+							<label>部门</label>
+							<input name="team_id" />
+						</div>
+						<div class="form-item">
+							<label>职务</label>
+							<input name="position_id" />
+						</div>
+						<div class="form-item">
+							<label>姓名</label>
+							<input name="user_name" class="easyui-textbox" type="text"/>
+						</div>
+						<a href="javascript:void(0)" class="easyui-linkbutton reset-btn" iconCls="icon-reset">重置</a>
+                    	<a href="javascript:void(0)" class="easyui-linkbutton search-btn" iconCls="icon-search"><%=lang.common.search_btn%></a>
+					</form>
+    	 		</div>
+    		 </div>
+    	</div>
+		<div data-options="region:'center',border:false">
+        <table id="clock-customer-assign-table" style="width:100%;height:100%"></table>
+        </div>
+        <div region="south" border="false" style="text-align:right;padding:10px 10px;">
+        	<a href="javascript:void(0)" class="easyui-linkbutton point-btn">指派确定</a>
+        </div>
+	</div>
+    </div>
+    <div class="easyui-window" id="clock-customer-product" data-options="title:'产品选择',collapsible:false,maximizable:false,minimizable:false,closed: true,modal:true,width:870,height:480">
+    	<div class="easyui-layout" style="width:850px;height:400px;">
+    		<div data-options="region:'north',border:false">
+    			<div class="easyui-panel" data-options="border:false" style="height:80px;width:100%">
+    				<div style="padding:20px 10px">
+    					<form id="get-product-list" class="easyui-form form-layout-inline" method="get">
+    					<div class="form-item">
+                			<label>产品名称：</label>
+							<input class="easyui-textbox" type="text" name="product_name"></input>
+                		</div>
+                   	<a href="javascript:void(0)" class="easyui-linkbutton search-btn" iconCls="icon-search"><%=lang.common.search_btn%></a>
+    					</form>
+    				</div>
+    			</div>
+    		</div>
+    		<div data-options="region:'west',border:false" style="height:400px;width:425px;">
+    			<table id="customer-product-list"></table>
+    		</div>
+    		<div data-options="region:'east',border:false" style="height:400px;width:425px;">
+    			<table id="choose-product-list"></table>
+    		</div>
+    		<div region="south" style="text-align:right;padding:10px 12px;heighgt:100px">
+			      <a href="javascript:void(0)" class="easyui-linkbutton next-btn">完成</a>
+			      <a href="javascript:void(0)" class="easyui-linkbutton over-btn">取消</a>
+			    </div>
+    	</div>
+    </div>
+    <div class="easyui-window" id="customer_communicate_remark" data-options="title:'沟通记录',collapsible:false,maximizable:false,minimizable:false,closed: true,modal:true,width:600,height:300">
+    	<div class="easyui-layout" style="width:100%;height:100%;">
+    		<div data-options="region:'center',border:false">
+        		<table id="customer_communicate_table" style="width:100%;height:100%"></table>
+        	</div>
+    	</div>
+    </div>
+    <div class="easyui-window" id="customer_product_operation" data-options="title:'购买产品列表',collapsible:false,maximizable:false,minimizable:false,closed: true,modal:true,width:600,height:300">
+    	<div class="easyui-layout" style="width:100%;height:100%">
+    		<div data-options="region:'center',border:false">
+    			<table id="customer_product_list"></table>
+    		</div>
+    	</div>
+    
+    </div>
+    <div class="easyui-window" id="customer_product_add" data-options="title:'新增购买产品',collapsible:false,maximizable:false,minimizable:false,closed: true,modal:true,width:350,height:200">
+    	<div class="easyui-layout" style="width:100%;height:100%;">
+    		<div data-options="region:'center',border:false"" style="padding:10px 12px">
+    			<form class="easyui-form form-layout-inline" method="get" id="new-customer-product">
+    				<div class="form-item">
+    					<label>产品名称</label>
+    					<input name="product_name" data-option="required:true">
+    				</div>
+    				<div class="form-item" style="display:none">
+    					<label>产品id</label>
+    					<input name="product_id">
+    					<input name="new_product_id">
+    					<input name="old_product_id">
+    				</div>
+    				<div class="form-item" style="display:none">
+    					<label>顾客id</label>
+    					<input name="customer_id">
+    				</div>
+    				<div class="form-item">
+    					<label>提醒周期</label>
+    					<input name="remind_period_day" class="easyui-textbox">
+    				</div>
+    				<div class="form-item">
+    					<label>购买日期</label>
+    					<input class="easyui-datebox" name="buy_time_old">
+    					<input name="buy_time" style="display:none">
+    				</div>
+    			</form>
+    		</div>
+    		<div data-options="region:'south',border:false" style="text-align:right;paddong:10px 15px">
+    			 <a href="javascript:void(0)" class="easyui-linkbutton finish-btn">完成</a>
+    		</div>
+    	</div>
+    </div>
+    <div style="display:none">
+    <input  id="birthday_lunar_zhuanhuan">
+    <input  id="wedding_lunar_zhuanhuan">
+    </div>
+	<div id="customer_user_search_tb" style="padding:2px 5px;">
+		姓名: <input class="easyui-textbox" type="text" name="keyword" data-options="width:100" />
+		<a href="javascript:void(0)" class="easyui-linkbutton search-btn" iconCls="icon-search">搜索</a>
+	</div>
+</div>

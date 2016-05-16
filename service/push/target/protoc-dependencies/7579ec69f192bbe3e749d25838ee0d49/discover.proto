@@ -1,0 +1,283 @@
+import "weizhu.proto";
+
+package weizhu.discover;
+
+option java_package = "com.weizhu.proto";
+option java_outer_classname = "DiscoverProtos";
+// option optimize_for = LITE_RUNTIME;
+
+// 发现页banner结构
+message Banner {
+  required int32  banner_id   = 1;
+  required string banner_name = 2; // banner 显示名称或者title
+  required string image_name  = 3; // banner 图片名称，根据发现模块静态文件服务地址可以拼接出完整的图片url
+  optional string item_id     = 4; // banner 点击后跳转item id
+  required int32  create_time = 5; // banner 创建时间
+}
+
+// 发现模块结构
+message Module {
+  // 模块分类结构
+  message Category {
+    required int32  category_id   = 1; // 分类id
+    required string category_name = 2; // 分类名称
+  }
+
+  required int32    module_id   = 1; // 模块id
+  required string   module_name = 2; // 模块名称
+  required string   icon_name   = 3; // 模块图标名称，根据发现模块静态文件服务地址可以拼接出完整的icon url
+  repeated Category category    = 4; // 模块包含的分类, 每个分类目录名称字数最多为6个,分类最多为6类不可重复
+}
+
+// 条目结构
+message Item {
+  required int64  item_id        = 1; // 条目id
+  required string item_name      = 2; // 条目名称
+  optional string icon_name      = 3; // 条目图标名称，根据发现模块静态文件服务地址可以拼接出完整的icon url
+  required int32  create_time    = 4; // 条目创建时间
+  required string item_desc      = 5; // 标题下面显示的条目描述
+  optional bool   enable_score   = 6; // 是否开启打分功能
+  optional bool   enable_comment = 7; // 是否启用评论功能
+}
+
+// 条目内容结构
+message ItemContent {
+  required Item item = 1; // 条目结构
+  
+  // 条目内容类型
+  oneof content_type {
+    string redirect_url = 101;
+    int32  exam_id      = 102;
+  }
+}
+
+// 推荐显示的模块结构
+message RecommendModule {
+  required Module module      = 1; // 模块基本信息
+  required int32  category_id = 2; // 点击后进入模块的默认分类
+  required Item   item        = 3; // 推荐显示的Item
+}
+
+// 评论结构
+message Comment {
+  required int64  comment_id   = 1; // 评论id
+  required int32  comment_time = 2; // 评论时间
+  required int64  user_id      = 3; // 评论作者id
+  required string content      = 4; // 评论内容
+}
+
+// 获取发现页首页相关信息响应
+message GetDiscoverHomeResponse {
+  repeated Banner          banner           = 1; // 发现首页banner
+  repeated RecommendModule recommend_module = 2; // 发现页中部横条展示的推荐模块
+  repeated Module          module           = 3; // 发现页下方展示的方形模块
+}
+
+// 获取模块某个分类下的条目列表请求
+message GetModuleItemListRequest {
+  required int32 module_id         = 1; // 模块id
+  required int32 category_id       = 2; // 模块分类id
+  optional bytes list_index_begin  = 3; // 从该列表索引处开始获取数据，不设置此字段，则从列表起始位置开始获取.
+  optional bytes list_index_end    = 4; // 此字段已废弃，不要再使用了!!! 获取列表数据到该列表索引处为止，不设置此字段，则获取列表数据到列表结尾处. 
+  required int32 item_size         = 5; // 获取item数目，必须小于等于50
+}
+
+// 获取模块某个分类下的条目列表响应
+message GetModuleItemListResponse {
+  required bool  clear_old_list   = 1; // 此字段已废弃，不要再使用了!!! 是否清除掉客户端存储的数据，如果为true，清除掉客户端该列表下所有数据。并将本次返回结果作为最新数据
+  repeated Item  item             = 2; // 条目信息
+  required bool  has_more         = 3; // 是否还有更多
+  required bytes list_index_begin = 4; // 此字段已废弃，不要再使用了!!! 本次返回列表数据开头 在列表索引的位置
+  required bytes list_index_end   = 5; // 本次返回列表数据结尾 在列表索引的位置
+}
+
+// 根据Id获取条目信息请求
+message GetItemByIdRequest {
+  repeated int64 item_id = 1; // 条目id，最多50个
+}
+
+// 根据Id获取条目信息响应
+message GetItemByIdResponse {
+  repeated Item item = 1; // 条目信息
+}
+
+// 根据Id获取条目内容请求
+message GetItemContentRequest {
+  required int64 item_id = 1; // 条目id
+}
+
+// 根据Id获取条目内容响应
+message GetItemContentResponse {
+  optional ItemContent item_content = 1; // 条目内容
+}
+
+// 根据关键字搜索条目
+message SearchItemRequest {
+  required string keyword = 1;
+}
+
+// 根据关键字搜索条目，最多返回20个条目信息
+message SearchItemResponse {
+  repeated Item item = 1; // 条目信息
+}
+
+// 获取条目浏览量请求
+message GetItemPVRequest {
+  required int64 item_id     = 1; // 条目id
+  required bool  is_incre_pv = 2; // 是否增加浏览计数
+}
+
+// 获取条目浏览量响应
+message GetItemPVResponse {
+  required int32 pv = 1; // 条目浏览量
+}
+
+// 获取条目分数请求
+message GetItemScoreRequest {
+  required int64 item_id = 1;
+}
+
+// 获取条目分数响应
+message GetItemScoreResponse {
+  optional int32 score       = 1; // 当前用户所打分数。如果没有打过分，则该值为空
+  required int32 total_score = 2; // 所有用户打分综合
+  required int32 total_user  = 3; // 打过分的用户数
+}
+
+// 给某个条目打分请求
+message ScoreItemRequest {
+  required int64 item_id = 1; // 条目id
+  required int32 score   = 2; // 分数，目前为百分制
+}
+
+// 给某个条目打分响应
+message ScoreItemResponse {
+  enum Result {
+    SUCC = 0;                     // 标记成功
+    FAIL_SCORE_INVALID       = 1; // 分数不正确
+    FAIL_ITEM_NOT_EXSIT      = 2; // 条目不存在
+    FAIL_ITEM_DISABLE        = 3; // 条目不允许打分
+    FAIL_ITEM_IS_SCORED      = 4; // 条目已被用户打过分了
+    
+    FAIL_UNKNOWN             = 99;
+  }
+  optional Result result    = 1 [default = FAIL_UNKNOWN];
+  optional string fail_text = 2;
+}
+
+// 获取某个条目下的评论列表请求
+message GetItemCommentListRequest {
+  required int64 item_id           = 1; // 条目id
+  optional int64 last_comment_id   = 2; // 上次获取到的最后一条评论id，如果时初次获取 此值为空
+  optional int32 last_comment_time = 3; // 上次获取到的最后一条评论时间戳，如果时初次获取 此值为空
+  required int32 size              = 4; // 获取数目
+}
+
+// 获取某个条目下的评论列表响应
+message GetItemCommentListResponse {
+  repeated Comment comment  = 1; // 评论列表
+  required bool    has_more = 2; // 是否还有更多
+  required int32   total    = 3; // 评论总数
+}
+
+// 评论某个条目请求
+message CommentItemRequest {
+  required int64  item_id         = 1; // 条目id
+  required string comment_content = 2; // 评论内容
+}
+
+// 评论某个条目响应
+message CommentItemResponse {
+  enum Result {
+    SUCC = 0;                 // 评论成功
+    FAIL_CONTENT_INVALID = 1; // 评论内容不正确
+    FAIL_ITEM_NOT_EXSIT  = 2; // 条目不存在
+    FAIL_ITEM_DISABLE    = 3; // 条目不允许评论
+    
+    FAIL_UNKNOWN         = 99;
+  }
+  optional Result result     = 1 [default = FAIL_UNKNOWN];
+  optional string fail_text  = 2;
+  optional int64  comment_id = 3; // 评论后产生的评论id
+}
+
+// 删除某个条目下的评论请求
+message DeleteCommentRequest {
+  required int64 comment_id = 1;
+}
+
+// 删除某个条目下的评论响应
+message DeleteCommentResponse {
+  enum Result {
+    SUCC = 0;                   // 删除评论成功
+    FAIL_COMMENT_NOT_EXSIT = 1; // 评论不存在
+    FAIL_COMMENT_OTHER     = 2; // 评论不是该用户发表，无法删除
+    
+    FAIL_UNKNOWN           = 99;
+  }
+  optional Result result     = 1 [default = FAIL_UNKNOWN];
+  optional string fail_text  = 2;
+}
+
+
+message GetItemListRequest {
+  optional int64 last_item_id = 1; // 条目id，最多50个
+  required int32 size         = 2;
+}
+
+message GetItemListResponse {
+  repeated Item item     = 1; // 条目信息
+  required bool has_more = 2;
+}
+
+// 发现服务
+service DiscoverService {
+  
+  // 获取发现页首页相关信息
+  rpc GetDiscoverHome (weizhu.EmptyRequest) returns (GetDiscoverHomeResponse);
+  
+  // 获取模块某个分类下的条目列表
+  rpc GetModuleItemList (GetModuleItemListRequest) returns (GetModuleItemListResponse);
+  
+  // 根据Id获取条目信息
+  rpc GetItemById (GetItemByIdRequest) returns (GetItemByIdResponse);
+  
+  // 根据Id获取条目内容
+  rpc GetItemContent (GetItemContentRequest) returns (GetItemContentResponse);
+  
+  // 搜索条目
+  rpc SearchItem (SearchItemRequest) returns (SearchItemResponse);
+  
+  // 刷新缓存，后台使用
+  rpc ClearCache (weizhu.EmptyRequest) returns (weizhu.EmptyResponse);
+  
+  // 获取条目列表
+  rpc GetItemList (GetItemListRequest) returns (GetItemListResponse);
+  
+  /* 浏览量相关 */
+  
+  // 获取条目浏览量
+  rpc GetItemPV (GetItemPVRequest) returns (GetItemPVResponse);
+  
+  /* 打分相关 */
+  
+  // 获取条目分数请求
+  rpc GetItemScore (GetItemScoreRequest) returns (GetItemScoreResponse);
+  
+  // 给某个条目打分请求
+  rpc ScoreItem (ScoreItemRequest) returns (ScoreItemResponse);
+  
+  /* 评论相关 */
+  
+  // 获取某个条目下所有评论列表
+  rpc GetItemAllCommentList (GetItemCommentListRequest) returns (GetItemCommentListResponse); 
+  
+  // 获取某个条目下我自己发表的评论列表
+  rpc GetItemMyCommentList (GetItemCommentListRequest) returns (GetItemCommentListResponse); 
+  
+  // 评论某个条目
+  rpc CommentItem (CommentItemRequest) returns (CommentItemResponse);
+  
+  // 删除某个条目
+  rpc DeleteComment (DeleteCommentRequest) returns (DeleteCommentResponse);
+}

@@ -1,0 +1,132 @@
+import "weizhu.proto";
+
+package weizhu.component;
+
+option java_package         = "com.weizhu.proto";
+option java_outer_classname = "ComponentProtos";
+
+// 状态
+enum State {
+  NORMAL  = 0; // all
+  DISABLE = 1; // admin
+  DELETE  = 2; // 
+}
+
+// 打分
+message Score {
+ // 打分类型
+  enum Type {
+    FIVE_STAR = 1;
+  }
+  //打分结果可见性
+  enum ResultView {
+    ALWAYS_SHOW = 1; // 无论打没打分都能看到所有的打分情况
+    AFTER_SCORE = 2; // 打完分之后才能看到所有的打分情况
+    NEVER       = 3; // 打分之前看不到打分信息，打分之后只能看到自己的打分情况
+  }
+  required int32       score_id        = 1; // 打分id
+  required string      score_name      = 2; // 打分名称
+  optional string      image_name      = 3; // 图片名字
+  optional Type        type            = 4; // 打分类型
+  optional ResultView  result_view     = 5 [default = NEVER]; // 打分结果可见性
+  optional int32       start_time      = 6; // 打分活动开始时间 若不赋值则表示当前时间之前的任何时间都可以进行打分
+  optional int32       end_time        = 7; // 打分活动结束时间 若不赋值则表示没有结束时间
+  optional int32       allow_model_id  = 8; // 可访问的权限模型id
+  
+  optional State       state           = 95 [default = NORMAL]; // 状态
+  optional int64       create_admin_id = 96; // 创建人id
+  optional int32       create_time     = 97; // 创建时间
+  optional int64       update_admin_id = 98; // 更新用户id
+  optional int32       update_time     = 99; // 更新时间
+}
+
+//用户打分
+message ScoreUser {
+  required int32 score_id    = 1; // 打分id
+  required int64 user_id     = 2; // 打分用户id
+  required int32 score_value = 3; // 分数
+  required int32 score_time  = 4; // 打分时间
+}
+
+//打分统计
+message ScoreCount {
+  required int32 score_id    = 1; // 打分id
+  required int32 user_count  = 2; // 参与打分用户数
+  required int32 total_score = 3; // 总分
+}
+
+
+// 根据Id获取打分信息请求
+message GetScoreByIdRequest {
+  repeated int32 score_id = 1; // 打分id，最多100个
+}
+
+// 根据Id获取打分信息响应
+message GetScoreByIdResponse {
+  repeated Score      score           = 1; // 打分信息
+  repeated ScoreCount ref_score_count = 2; // 统计信息
+  repeated ScoreUser  ref_score_user  = 3; // 用户打分情况
+}
+
+// 获取某个打分项的打分详情
+message GetScoreUserListRequest {
+  required int32 score_id     = 1; // 打分id
+  required int32 size         = 2; // 获取数目
+  optional bytes offset_index = 3; // 获取数据偏移索引。初次获取，不设此字段。翻页时传入上次获取到的值
+}
+
+// 获取某个打分下的打分列表响应
+message GetScoreUserListResponse {
+  repeated ScoreUser score_user   = 1; // 打分列表
+  required bool      has_more     = 2; // 是否还有更多
+  required bytes     offset_index = 3; // 翻页偏移索引
+}
+
+// 获取用户打分列表请求
+message GetUserScoreListRequest {
+  required int64 user_id      = 1; // 用户id 
+  required int32 size         = 2; // 获取数目
+  optional bytes offset_index = 3; // 获取数据偏移索引。初次获取，不设此字段。翻页时传入上次获取到的值
+}
+
+// 获取用户打分列表响应
+message GetUserScoreListResponse {
+  repeated ScoreUser score_user   = 1; // 评分列表
+  required bool      has_more     = 2; // 是否还有更多
+  required bytes     offset_index = 3; // 翻页偏移索引
+  repeated Score     ref_score    = 4; // 引用Score信息
+}
+
+message ScoreRequest{
+  required int32 score_id    = 1;//被打分对象id
+  required int32 score_value = 2;//分数
+}
+
+message ScoreResponse{
+  enum Result {
+    SUCC                 = 0; // 打分成功
+    FAIL_VALUE_INVALID   = 1; // 分数不正确
+    FAIL_SCORE_NOT_EXSIT = 2; // 打分项不存在
+    FAIL_IS_SCORED       = 3; // 已被用户打过分了
+    
+    FAIL_UNKNOWN         = 99;
+  }
+  optional Result result    = 1 [default = FAIL_UNKNOWN];
+  optional string fail_text = 2;
+}
+
+service ComponentService{
+  
+  // 根据Id获取打分信息
+  rpc GetScoreById (GetScoreByIdRequest) returns (GetScoreByIdResponse);
+  
+  // 获取打分打分列表
+  rpc GetScoreUserList (GetScoreUserListRequest) returns (GetScoreUserListResponse);
+  
+  // 获取用户打分列表
+  rpc GetUserScoreList (GetUserScoreListRequest) returns (GetUserScoreListResponse);
+  
+  //打分
+  rpc Score(ScoreRequest) returns (ScoreResponse);
+  
+}

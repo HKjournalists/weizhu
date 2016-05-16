@@ -1,0 +1,17 @@
+com/weizhu/service/allow/AllowDAOProtos$ModelRuleOrBuilder.class
+com/weizhu/service/allow/rule/PositionRule.class
+com/weizhu/service/allow/AllowServiceModule.class
+com/weizhu/service/allow/rule/AbstractRule.class
+com/weizhu/service/allow/rule/LevelRule.class
+com/weizhu/service/allow/AllowDAOProtos$ModelRule$Builder.class
+com/weizhu/service/allow/AllowDAOProtos$ModelRule$1.class
+com/weizhu/service/allow/AllowDB.class
+com/weizhu/service/allow/AllowDAOProtos$ModelRule.class
+com/weizhu/service/allow/rule/UserRule.class
+com/weizhu/service/allow/AllowServiceImpl.class
+com/weizhu/service/allow/AllowCache.class
+com/weizhu/service/allow/rule/AbstractRule$1.class
+com/weizhu/service/allow/AllowServiceImpl$RuleHolder.class
+com/weizhu/service/allow/AllowDAOProtos$1.class
+com/weizhu/service/allow/AllowDAOProtos.class
+com/weizhu/service/allow/rule/TeamRule.class

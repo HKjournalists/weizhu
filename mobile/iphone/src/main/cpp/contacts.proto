@@ -1,0 +1,78 @@
+package weizhu.contacts;
+
+option java_package = "com.weizhu.proto";
+option java_outer_classname = "ContactsProtos";
+option optimize_for = LITE_RUNTIME;
+
+// 客户信息
+message Customer {
+  required int64  user_id       = 1;  // 用户id
+  required int32  customer_id   = 2;  // 客户id
+  required string customer_name = 3;  // 客户名
+  required string mobile_no     = 4;  // 手机号
+  required bool   is_star       = 5;  // 是否标星
+  optional string company       = 6;  // 公司
+  optional string position      = 7;  // 职位
+  optional string department    = 8;  // 部门
+  optional string address       = 9;  // 地址
+  optional string email         = 10; // 邮箱
+  optional string wechat        = 11; // 微信号
+  optional int64  qq            = 12; // qq号
+  optional string remark        = 13; // 备注
+}
+
+message CreateCustomerRequest {
+  required Customer customer = 1;
+}
+
+message CreateCustomerResponse {
+  enum Result {
+    SUCC = 0;
+    FAIL_MOBILE_NO_INVALID = 1;
+  }
+  required Result result    = 1;
+  optional string fail_text = 2;
+  optional int32  customer_id   = 3;
+}
+
+message UpdateCustomerRequest {
+  required Customer customer = 1;
+}
+
+message UpdateCustomerResponse {
+  enum Result {
+    SUCC = 0;
+    FAIL_MOBILE_NO_INVALID  = 1;
+    FAIL_CUSTOMER_NOT_EXIST = 2;
+    
+    FAIL_UNKNOWN            = 99;
+  }
+  optional Result result    = 1 [default = FAIL_UNKNOWN];
+  optional string fail_text = 2;
+}
+
+message DeleteCustomerRequest {
+  repeated int32 customer_id = 1;
+}
+
+message DeleteCustomerResponse {
+}
+
+message GetCustomerListRequest {
+}
+
+message GetCustomerListResponse {
+  repeated Customer customer_list = 1;
+}
+
+// 通讯录服务
+service ContactsService {
+  // 创建客户
+  rpc CreateCustomer (CreateCustomerRequest) returns (CreateCustomerResponse);
+  // 修改客户信息
+  rpc UpdateCustomer (UpdateCustomerRequest) returns (UpdateCustomerResponse);
+  // 删除客户信息
+  rpc DeleteCustomer (DeleteCustomerRequest) returns (DeleteCustomerResponse);
+  // 获取客户信息列表
+  rpc GetCustomerList (GetCustomerListRequest) returns (GetCustomerListResponse);
+}

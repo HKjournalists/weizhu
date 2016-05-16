@@ -1,0 +1,184 @@
+import "credits.proto";
+import "weizhu.proto";
+
+package weizhu.admin.credits;
+
+option java_package         = "com.weizhu.proto";
+option java_outer_classname = "AdminCreditsProtos";
+
+message UserCreditsDelta {
+  required int64 user_id       = 1;
+  required int64 credits_delta = 2;
+}
+
+message CreditsOperation {
+  required int32            operation_id       = 1;
+  optional string           desc               = 2;
+  repeated UserCreditsDelta user_credits_delta = 3;
+  required int32            create_time        = 4;
+  required int64            create_admin       = 5;
+}
+
+message GetCreditsResponse {
+  required int64 credits = 1;
+}
+
+message AddCreditsRequest {
+  required int64  credits_delta = 1;
+  optional string desc          = 2;
+}
+
+message AddCreditsResponse {
+  enum Result {
+    SUCC              = 0;
+    FAIL_DESC_INVALID = 1;
+    
+    FAIL_UNKNOWN      = 99;
+  }
+  optional Result result    = 1 [default = FAIL_UNKNOWN];
+  optional string fail_text = 2;
+}
+
+message GetCreditsLogRequest {
+  required int32 start  = 1;
+  required int32 length = 2;
+}
+
+message GetCreditsLogResponse {
+  message CreditsLog {
+    required int64  credits_delta = 1;
+    required string desc          = 2;
+    required int32  create_time   = 3;
+    required int64  create_admin  = 4;
+  }
+  repeated CreditsLog credits_log   = 1;
+  required int32      total         = 2;
+  required int32      filtered_size = 3;
+}
+
+message GetUserCreditsRequest {
+  repeated int64 user_id = 1;
+  required int32 start   = 2;
+  required int32 length  = 3;
+}
+
+message GetUserCreditsResponse {
+  repeated weizhu.credits.Credits credits       = 1;
+  required int32                  total         = 2;
+  required int32                  filtered_size = 3;
+}
+
+message GetCreditsOrderRequest {
+  repeated int64 user_id    = 1;
+  optional bool  is_expense = 2;
+  optional int32 start_time = 3;
+  optional int32 end_time   = 4;
+  required int32 start      = 5;
+  required int32 length     = 6;
+}
+
+message GetCreditsOrderResponse {
+  repeated weizhu.credits.CreditsOrder credits_order = 1;
+  required int32                       total         = 2;
+  required int32                       filtered_size = 3;
+}
+
+message CreateCreditsOrderRequest {
+  repeated UserCreditsDelta user_credits_delta = 1;
+  required string           desc               = 2;
+}
+
+message CreateCreditsOrderResponse {
+  enum Result {
+    SUCC = 0;
+    FAIL_CREDITS_DELTA_INVALID = 1;
+    FAIL_DESC_INVALID          = 2;
+
+    FAIL_UNKNOWN               = 99;    
+  }
+  optional Result result = 1 [default = FAIL_UNKNOWN];
+  optional string fail_text = 2;
+  required int32  opteration_id = 3;
+}
+
+message ClearUserCreditsRequest {
+  repeated int64 user_id = 1;
+}
+
+message ClearUserCreditsResponse {
+  enum Result {
+    SUCC = 0;
+    
+    FAIL_UNKNOWN = 99;
+  }
+  optional Result result    = 1;
+  optional string fail_text = 2;
+}
+
+message GetCreditsRuleResponse {
+  optional string credits_rule = 1;
+}
+
+message UpdateCreditsRuleRequest {
+  required string credits_rule = 1;
+}
+
+message UpdateCreditsRuleResponse {
+  enum Result {
+    SUCC = 0;
+    
+    FAIL_UNKNOWN = 99;
+  }
+  optional Result result    = 1;
+  optional string fail_text = 2;
+}
+
+message GetCreditsOperationRequest {
+  required int32 start  = 1;
+  required int32 length = 2;
+}
+
+message GetCreditsOperationResponse {
+  repeated CreditsOperation credits_operation = 1;
+  required int32            total             = 2;
+  required int32            filtered_size     = 3;
+}
+
+message GetExpenseCreditsResponse {
+  required int64 credits = 1;
+}
+
+service GiftShopService {
+  // 获取当前公司积分
+  rpc GetCredits (weizhu.EmptyRequest) returns (GetCreditsResponse);
+  
+  // 
+  rpc AddCredits (AddCreditsRequest) returns (AddCreditsResponse);
+  
+  // 
+  rpc GetCreditsLog (GetCreditsLogRequest) returns (GetCreditsLogResponse);
+  
+  // 
+  rpc GetUserCredits (GetUserCreditsRequest) returns (GetUserCreditsResponse);
+  
+  // 
+  rpc GetCreditsOrder (GetCreditsOrderRequest) returns (GetCreditsOrderResponse);
+  
+  // 
+  rpc CreateCreditsOrder (CreateCreditsOrderRequest) returns (CreateCreditsOrderResponse);
+  
+  // 
+  rpc ClearUserCredits (ClearUserCreditsRequest) returns (ClearUserCreditsResponse);
+  
+  // 
+  rpc GetCreditsRule (weizhu.EmptyRequest) returns (GetCreditsRuleResponse);
+  
+  // 
+  rpc UpdateCreditsRule (UpdateCreditsRuleRequest) returns (UpdateCreditsRuleResponse);
+  
+  // 
+  rpc GetCreditsOperation (GetCreditsOperationRequest) returns (GetCreditsOperationResponse);
+  
+  // 
+  rpc GetExpenseCredits (weizhu.EmptyRequest) returns (GetExpenseCreditsResponse);
+}

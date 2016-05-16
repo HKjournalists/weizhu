@@ -1,0 +1,24 @@
+
+import "weizhu.proto";
+import "login.proto";
+
+package weizhu.login.dao;
+
+option java_package = "com.weizhu.service.login";
+option java_outer_classname = "LoginDAOProtos";
+
+message SmsCodeList {
+  repeated weizhu.login.SmsCode sms_code = 1;
+}
+
+message WebLoginInfo {
+  required string token       = 1;
+  required string remote_host = 2;
+  required string user_agent  = 3;
+  required int32  create_time = 4;
+}
+
+message NotifyWebLoginData {
+  required string         token   = 1;
+  required weizhu.Session session = 2; 
+}

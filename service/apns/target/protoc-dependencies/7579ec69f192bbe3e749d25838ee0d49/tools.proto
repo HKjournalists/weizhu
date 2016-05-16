@@ -1,0 +1,108 @@
+import "weizhu.proto";
+
+package weizhu.tools;
+
+option java_package = "com.weizhu.proto";
+option java_outer_classname = "ToolsProtos";
+// option optimize_for = LITE_RUNTIME;
+
+
+// Tool
+
+// Info  信息类
+// Todo  代办类
+// Guide 指导类
+
+// UI
+
+// Suite 
+// Page
+
+enum State {
+  NORMAL  = 1;
+  DISABLE = 2;
+  DELETE  = 3;
+}
+
+message Tool {
+  enum Type {
+    INFO  = 1;
+    TODO  = 2;
+    GUIDE = 3;
+  }
+
+  required int32  tool_id         = 1;
+  required string tool_name       = 2;
+  required Type   type            = 3;
+  required string data_json       = 4;
+  
+  optional State  state           = 95 [default = NORMAL];
+  optional int64  create_admin_id = 96;
+  optional int32  create_time     = 97;
+  optional int64  update_admin_id = 98;
+  optional int32  update_time     = 99;
+}
+
+message InfoDimension {
+  required int32  tool_id        = 1;
+  required int32  dimension_id   = 2;
+  required string dimension_name = 3;
+  required string data_json      = 4;
+}
+
+message InfoTag {
+  required int32  tool_id      = 1;
+  required int32  tag_id       = 2;
+  required string tag_name     = 3;
+  required int32  dimension_id = 4;
+  required string data_json    = 5;
+  optional int32  item_size    = 6;
+}
+
+message InfoItem {
+  required int32  tool_id   = 1;
+  required int32  item_id   = 2;
+  required string item_name = 3;
+  repeated int32  tag_id    = 4;
+  required string data_json = 5;
+}
+
+message InfoItemContent {
+  required int32  tool_id      = 1;
+  required int32  item_id      = 2;
+  required string content_json = 3;
+}
+
+message GetInfoHomeRequest {
+  required int32 tool_id         = 1;
+  repeated int32 selected_tag_id = 2;
+  required int32 item_size       = 3;
+  optional bytes offset_index    = 4;
+}
+
+message GetInfoHomeResponse {
+  repeated int32         hot_tag_id      = 1;
+  repeated int32         all_tag_id      = 2;
+  repeated InfoTag       ref_tag         = 3;
+  repeated InfoDimension ref_dimension   = 4;
+  repeated InfoItem      item            = 5;
+  required bool          has_more        = 6;
+  required bytes         offset_index    = 7;
+}
+
+message GetInfoItemContentRequest {
+  required int32 tool_id  = 1;
+  required int32 item_id  = 2;
+}
+
+message GetInfoItemContentResponse {
+  optional InfoItemContent item_content = 1;
+}
+
+service ToolsService {
+
+  rpc GetInfoHome (GetInfoHomeRequest) returns (GetInfoHomeResponse);
+  
+  rpc GetInfoItemContent (GetInfoItemContentRequest) returns (GetInfoItemContentResponse);
+
+}

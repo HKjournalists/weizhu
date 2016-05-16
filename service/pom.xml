@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.weizhu</groupId>
+		<artifactId>weizhu-parent</artifactId>
+		<version>1.0.0-SNAPSHOT</version>
+	</parent>
+
+	<artifactId>weizhu-service-parent</artifactId>
+	<packaging>pom</packaging>
+
+	<modules>
+		<!-- 没有依赖的Service -->
+		<module>boss</module>
+		<module>community</module>
+		<module>company</module>
+		<module>component</module>
+		<module>contacts</module>
+		<module>external</module>
+		<module>login</module>
+		<module>profile</module>
+		<module>push</module>
+		<module>qa</module>
+		<module>settings</module>
+		<module>system</module>
+		<module>tools</module>
+		<module>upload</module>
+		<module>user</module>
+		<module>webrtc</module>
+		
+		<!-- 有一个依赖的Service -->
+		<module>admin</module>
+		<module>allow</module>
+		<module>im</module>
+		<module>session</module>
+		
+		<!-- 有两个依赖的Service -->
+		<module>exam</module>
+		<module>official</module>
+		<module>survey</module>
+		<module>credits</module>
+		<module>absence</module>
+		<module>offline-training</module>
+		
+		<!-- 有三个依赖的Service -->
+		<module>discover</module>
+		
+		<!-- 有四个依赖的Service -->
+		<module>apns</module>
+		<module>scene</module>
+		
+		<!-- 有五个依赖的Service -->
+		<module>stats</module>
+	</modules>
+	
+	<dependencies>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>weizhu-proto</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>weizhu-common</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.slf4j</groupId>
+		    <artifactId>jcl-over-slf4j</artifactId>
+		    <version>${slf4j.version}</version>
+		    <scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-core</artifactId>
+			<version>${logback.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<version>${logback.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+		    <groupId>mysql</groupId>
+		    <artifactId>mysql-connector-java</artifactId>
+		    <version>${mysql-connector-java.version}</version>
+		    <scope>test</scope>
+		</dependency>
+	</dependencies>
+</project>

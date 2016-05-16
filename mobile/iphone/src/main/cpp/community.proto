@@ -1,0 +1,380 @@
+import "weizhu.proto";
+
+package weizhu.community;
+
+option java_package         = "com.weizhu.proto";
+option java_outer_classname = "CommunityProtos";
+option optimize_for = LITE_RUNTIME;
+
+// 板块
+message Board {
+  required int32  board_id         = 1; // 板块id
+  required string board_name       = 2; // 板块名称，最多10个字
+  required string board_icon       = 3; // 板块图标. 带后缀名图片名称，格式(md5.jpg). 根据community image服务地址可以拼接为完整访问url
+  required string board_desc       = 4; // 板块介绍描述，最多10个字
+  optional int32  parent_board_id  = 5; // 父板块id，不填该字段表示为根板块
+  required bool   is_leaf_board    = 6; // 是否是叶子板块。叶子板块可以发表帖子，非叶子板块不能发表帖子且必须获取下一级板块列表
+  required bool   is_hot           = 7; // 是否为热门板块
+  
+  required int32  post_total_count = 8; // 帖子总数目
+  required int32  post_new_count   = 9; // 新发的帖子数目。注意：叶子板块最大值为100，非叶子板块无上限
+  
+  optional int32  allow_model_id   = 10; // 访问模型id
+  repeated string tag              = 11; // 标签
+}
+
+// 帖子
+message Post {
+  // 帖子段落，文本与图片名称字段必有一个
+  message Part {
+    required int32  part_id    = 1; // 段落id
+    optional string text       = 2; // 文本，最长1024个字
+    optional string image_name = 3; // 图片名称. 带后缀名图片名称，格式(md5.jpg). 根据community image服务地址可以拼接为完整访问url
+  }
+  // 帖子状态
+  enum State {
+    NORMAL = 0; // 正常
+    DELETE = 1; // 已删除
+  }
+  
+  required int32  post_id              = 1; // 帖子id
+  required string post_title           = 2; // 帖子标题,最多50个字
+  repeated Part   post_part            = 3; // 帖子段落，目前只有一段，后续会扩展为多段内容。会出现段落为空的帖子，注意判断！
+  required int32  board_id             = 4; // 帖子所属板块id
+  required int64  create_user_id       = 5; // 帖子创建者用户id
+  required int32  create_time          = 6; // 帖子创建时间戳
+  required bool   is_hot               = 7; // 是否为热帖
+  optional State  state                = 8 [default = NORMAL]; // 帖子状态。客户端不必关心此字段
+  
+  required int32  comment_count        = 9; // 评论数目
+  required int32  like_count           = 10;// 赞数目
+  required bool   is_like              = 11;// 访问者是否点过赞
+  
+  optional bool   is_sticky            = 12; // 是否为置顶贴
+  optional int32  sticky_time          = 13; // 帖子置顶时间戳
+  optional bool   is_recommend         = 14; // 是否为推荐贴
+  optional int32  recommend_time       = 15; // 帖子推荐时间戳
+  repeated string tag                  = 16; // 标签
+  
+}
+
+// 评论
+message Comment {
+  // 评论状态
+  enum State {
+    NORMAL = 0; // 正常
+    DELETE = 1; // 已删除
+  }
+
+  required int32  post_id          = 1; // 所属帖子id
+  required int32  comment_id       = 2; // 评论id也是评论盖楼的楼层数
+  optional int32  reply_comment_id = 3; // 回复的评论id或者楼层数
+  required string content          = 4; // 评论内容，最多512个字
+  required int64  create_user_id   = 5; // 创建者用户id
+  required int32  create_time      = 6; // 创建时间戳
+  optional State  state            = 7 [default = NORMAL]; // 评论状态 
+  
+  optional int32  like_count       = 8;// 赞数目
+  optional bool   is_like          = 9;// 访问者是否点过赞
+}
+
+// 帖子点赞
+message PostLike {
+  required int32  post_id     = 1; // 条目id
+  required int64  user_id     = 2; // 打分用户id
+  required int32  create_time = 3; // 点赞时间
+}
+
+// 帖子新消息push结构
+message CommunityPostMessagePush {
+  required int32   post_id     = 1; // 帖子id
+  required int32   comment_id  = 2; // 回复帖子的评论id
+}
+
+// 评论新消息push结构
+message CommunityCommentMessagePush {
+  required int32   post_id          = 1; // 帖子id
+  required int32   comment_id       = 2; // 评论id
+  required int32   reply_comment_id = 3; // 回复评论的评论id
+  
+}
+
+message GetCommunityRequest {
+  repeated int32 board_latest_post_id = 1; // 各板块最新帖子id
+}
+
+message GetCommunityResponse {
+  required string community_name = 1; // 社区名称
+  required int32  post_new_count = 2; // 新发的帖子数目
+}
+
+message GetBoardListRequest {
+  repeated int32 board_latest_post_id = 1; // 各板块最新帖子id
+}
+
+message GetBoardListResponse {
+  repeated Board board = 1; // 所有板块
+}
+
+message GetPostListRequest {
+  enum ListType {
+    CREATE_TIME = 0; // 按创建时间倒序排列
+    TOP_HOT     = 1; // 按热度排序，topN个，不是全量
+  }
+  
+  required int32    board_id     = 1; // 板块id
+  required ListType list_type    = 2; // 列表类型
+  required int32    size         = 3; // 获取数据大小，不能为0，最大100.超过100自动裁剪为100
+  optional bytes    offset_index = 4; // 获取数据偏移索引。初次获取，不设此字段。翻页时传入上次获取到的值
+}
+
+message GetPostListResponse {
+  repeated Post    post         = 1; // 帖子列表
+  required bool    has_more     = 2; // 是否还有更多
+  required bytes   offset_index = 3; // 翻页偏移索引
+}
+
+message GetCommentListRequest {
+  required int32 post_id      = 1; // 帖子id
+  required int32 size         = 2; // 获取数据大小，不能为0，最大100.超过100自动裁剪为100
+  optional bytes offset_index = 3; // 获取数据偏移索引。初次获取，不设此字段。翻页时传入上次获取到的值
+}
+
+message GetCommentListResponse {
+  repeated Comment comment      = 1; // 评论列表
+  required bool    has_more     = 2; // 是否还有更多
+  required bytes   offset_index = 3; // 翻页偏移索引
+}
+
+message GetHotCommentListRequest {
+  required int32 post_id      = 1; // 帖子id
+}
+
+message GetHotCommentListResponse {
+  repeated Comment comment      = 1; // 评论列表
+}
+
+message CreatePostRequest {
+  required int32  board_id        = 1; // 板块id
+  required string title           = 2; // 帖子标题
+  optional string text            = 3; // 帖子文本内容，可为空
+  optional string image_name      = 4; // 帖子图片内容，可为空
+  repeated string tag             = 5; // 标签
+}
+
+message CreatePostResponse {
+  enum Result {
+    SUCC               = 0;
+    FAIL_BOARD_INVALID = 1; // 板块不存在。或者板块是非叶子板块，不能发表帖子
+    FAIL_TITLE_INVALID = 2; // 标题错误
+    FAIL_TEXT_INVALID  = 3; // 文本内容错误
+    FAIL_IMAGE_INVALID = 4; // 图片错误
+    FAIL_TAG_INVALID   = 5; // 标签不可用
+    
+    FAIL_UNKNOWN       = 99;
+  }
+  
+  optional Result result    = 1 [default = FAIL_UNKNOWN]; // 返回结果
+  optional string fail_text = 2; // 错误文本, 供客户端展示
+  optional int32  post_id   = 3; // 创建成功后的帖子id
+}
+
+message DeletePostRequest {
+  required int32 post_id = 1;
+}
+
+message DeletePostResponse {
+  enum Result {
+    SUCC                = 0;
+    FAIL_POST_NOT_EXIST = 1; // 帖子不存在
+    FAIL_POST_OTHER     = 2; // 其他人发表的帖子，不能删除
+    
+    FAIL_UNKNOWN        = 99;
+  }
+  
+  optional Result result    = 1 [default = FAIL_UNKNOWN]; // 返回结果
+  optional string fail_text = 2; // 错误文本, 供客户端展示
+}
+
+message LikePostRequest {
+  required int32 post_id = 1; // 帖子id
+  required bool  is_like = 2; // true:点赞 false:取消赞
+}
+
+message LikePostResponse {
+  enum Result {
+    SUCC                = 0;
+    FAIL_POST_NOT_EXIST = 1; // 帖子不存在
+    
+    FAIL_UNKNOWN        = 99;
+  }
+  optional Result result     = 1 [default = FAIL_UNKNOWN]; // 返回结果
+  optional string fail_text  = 2; // 错误文本, 供客户端展示
+}
+
+message CreateCommentRequest {
+  required int32  post_id          = 1; // 帖子id
+  optional int32  reply_comment_id = 2; // 回复评论id,如果评论主贴 则为空
+  required string content          = 3; // 评论内容
+}
+
+message CreateCommentResponse {
+  enum Result {
+    SUCC                         = 0;
+    FAIL_POST_NOT_EXIST          = 1; // 帖子不存在
+    FAIL_REPLY_COMMENT_NOT_EXIST = 2; // 回复的评论id不存在
+    FAIL_CONTENT_INVALID         = 3; // 评论内容错误
+    
+    FAIL_UNKNOWN                 = 99;
+  }
+  
+  optional Result result     = 1 [default = FAIL_UNKNOWN]; // 返回结果
+  optional string fail_text  = 2; // 错误文本, 供客户端展示
+  optional int32  comment_id = 3; // 创建成功后的评论id
+}
+
+message DeleteCommentRequest {
+  required int32 post_id    = 1;
+  required int32 comment_id = 2;
+}
+
+message DeleteCommentResponse {
+  enum Result {
+    SUCC                   = 0;
+    FAIL_COMMENT_NOT_EXIST = 1; // 评论不存在
+    FAIL_COMMENT_OTHER     = 2; // 其他人发表的评论，不能删除
+    
+    FAIL_UNKNOWN           = 99;
+  }
+  
+  optional Result result    = 1 [default = FAIL_UNKNOWN]; // 返回结果
+  optional string fail_text = 2; // 错误文本, 供客户端展示
+}
+
+message GetMyPostListRequest {
+  required int32 size         = 1; // 获取数据大小，不能为0，最大100.超过100自动裁剪为100
+  optional bytes offset_index = 2; // 获取数据偏移索引。初次获取，不设此字段。翻页时传入上次获取到的值
+}
+
+message GetMyPostListResponse {
+  repeated Post  post         = 1; // 帖子列表
+  required bool  has_more     = 2; // 是否还有更多
+  required bytes offset_index = 3; // 翻页偏移索引
+}
+
+message GetMyCommentListRequest {
+  required int32 size         = 1; // 获取数据大小，不能为0，最大100.超过100自动裁剪为100
+  optional bytes offset_index = 2; // 获取数据偏移索引。初次获取，不设此字段。翻页时传入上次获取到的值
+}
+
+message GetMyCommentListResponse {
+  repeated Comment comment      = 1; // 评论列表
+  required bool    has_more     = 2; // 是否还有更多
+  required bytes   offset_index = 3; // 翻页偏移索引
+  repeated Post    ref_post     = 4; // 评论中引用的主贴
+}
+
+// 获取推荐贴
+message GetRecommendPostResponse {
+  repeated weizhu.community.Post   post             = 1; // 帖子列表
+  repeated weizhu.community.Board  ref_board        = 2; // 板块列表
+}
+
+message LikeCommentRequest {
+  required int32 post_id    = 1; // 帖子id
+  required int32 comment_id = 2; // 评论id
+  required bool  is_like    = 3; // true:点赞 false:取消赞
+}
+
+message LikeCommentResponse {
+  enum Result {
+    SUCC                    = 0;
+    FAIL_POST_NOT_EXIST     = 1; // 帖子不存在
+    FAIL_COMMENT_NOT_EXIST  = 2; // 评论不存在
+    
+    FAIL_UNKNOWN        = 99;
+  }
+  optional Result result     = 1 [default = FAIL_UNKNOWN]; // 返回结果
+  optional string fail_text  = 2; // 错误文本, 供客户端展示
+}
+
+
+
+// 根据post_id和comment_id列表获取评论和帖子列表
+message GetPostCommentByIdRequest {
+
+  message PostCommentId {
+     required int32   post_id          = 1; // 帖子id
+     required int32   comment_id       = 2; // 评论id
+  }
+  
+  repeated PostCommentId   postCommentId      = 1; // 帖子id,和评论id的实体列表
+}
+
+message GetPostCommentByIdResponse {
+  repeated weizhu.community.Comment   comment   = 1; // 评论列表
+  repeated weizhu.community.Post      ref_post  = 2; // 帖子列表
+
+}
+
+message GetPostByIdsRequest {
+  repeated int32    post_id     = 1; // 帖子id
+}
+
+message GetPostByIdsResponse {
+  repeated Post    post         = 1; // 帖子列表
+}
+
+service CommunityService {
+  
+  // 获取社区基本信息
+  rpc GetCommunity (GetCommunityRequest) returns (GetCommunityResponse);
+  
+  // 获取板块列表
+  rpc GetBoardList (GetBoardListRequest) returns (GetBoardListResponse);
+  
+  // 获取板块下帖子列表
+  rpc GetPostList (GetPostListRequest) returns (GetPostListResponse);
+  
+  // 获取帖子评论列表
+  rpc GetCommentList (GetCommentListRequest) returns (GetCommentListResponse);
+  
+  // 获取帖子热门评论列表
+  rpc GetHotCommentList (GetHotCommentListRequest) returns (GetHotCommentListResponse);
+  
+  // 创建帖子
+  rpc CreatePost (CreatePostRequest) returns (CreatePostResponse);
+  
+  // 删除帖子
+  rpc DeletePost (DeletePostRequest) returns (DeletePostResponse);
+  
+  // 对帖子点赞or取消赞
+  rpc LikePost (LikePostRequest) returns (LikePostResponse);
+  
+  // 创建评论
+  rpc CreateComment (CreateCommentRequest) returns (CreateCommentResponse);
+  
+  // 删除评论
+  rpc DeleteComment (DeleteCommentRequest) returns (DeleteCommentResponse);
+  
+  // 获取我的帖子列表
+  rpc GetMyPostList (GetMyPostListRequest) returns (GetMyPostListResponse);
+  
+  // 获取我的评论列表
+  rpc GetMyCommentList (GetMyCommentListRequest) returns (GetMyCommentListResponse);
+  
+  // 获取推荐贴
+  rpc GetRecommendPost (weizhu.EmptyRequest) returns (GetRecommendPostResponse);
+  
+  // 对帖子点赞or取消赞
+  rpc LikeComment (LikeCommentRequest) returns (LikeCommentResponse);
+  
+  // 添加置顶帖后为兼容老版本，新建接口对应新版本
+  rpc GetPostListV2 (GetPostListRequest) returns (GetPostListResponse);
+  
+  // 根据帖子id和评论id列表，获取帖子和评论列表
+  rpc GetPostCommentById (GetPostCommentByIdRequest) returns (GetPostCommentByIdResponse);
+  
+  // 根据帖子id列表，获取帖子列表
+  rpc GetPostByIds (GetPostByIdsRequest) returns (GetPostByIdsResponse);
+}

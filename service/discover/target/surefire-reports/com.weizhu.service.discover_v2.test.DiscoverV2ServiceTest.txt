@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: com.weizhu.service.discover_v2.test.DiscoverV2ServiceTest
+-------------------------------------------------------------------------------
+Tests run: 21, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 14.099 sec

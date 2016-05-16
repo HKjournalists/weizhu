@@ -1,0 +1,35 @@
+{
+	"session": {
+		"company_id": 0,
+		"user_id": 10000124196,
+		"session_id": 0
+	},
+	"invoke": {
+		"invoke_id": 0,
+		"service_name": "TestService",
+		"function_name": "testFunction"
+	},
+	"network": {
+		"type": "WIFI",
+		"protocol": "HTTP_PB",
+		"remote_host": "127.0.0.1",
+		"remote_port": 8080
+	},
+	"weizhu": {
+		"platform": "ANDROID",
+		"version_name": "1.0.0",
+		"version_code": 0,
+		"stage": "ALPHA",
+		"build_time": 1455635782
+	},
+	"android": {
+		"device": "device",
+		"manufacturer": "LGE",
+		"brand": "google",
+		"model": "Nexus 5",
+		"serial": "02c288c1f0a697d9",
+		"release": "4.4.4",
+		"sdk_int": 19,
+		"codename": "REL"
+	}
+}

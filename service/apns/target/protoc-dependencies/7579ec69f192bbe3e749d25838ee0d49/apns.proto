@@ -1,0 +1,51 @@
+import "weizhu.proto";
+import "push.proto";
+
+package weizhu.apns;
+
+option java_package = "com.weizhu.proto";
+option java_outer_classname = "APNsProtos";
+// option optimize_for = LITE_RUNTIME;
+
+message APNsCert {
+  required string app_id        = 1;
+  required bool   is_production = 2;
+  required bytes  cert_p12      = 3;
+  required string cert_pass     = 4;
+  required int32  expired_time  = 5;
+}
+
+message UpdateDeviceTokenRequest {
+  optional int32 badge_number = 1;
+}
+
+message DeleteDeviceTokenRequest {
+  repeated int64          user_id = 1;
+  repeated weizhu.Session session = 2;
+}
+
+message DeleteDeviceTokenExpireRequest {
+  repeated int64 expire_session_id = 1;
+}
+
+message SendNotificationRequest {
+  repeated weizhu.push.PushPacket push_packet = 1;
+}
+
+service APNsService {
+
+  // 更新DeviceToken
+  rpc UpdateDeviceToken (UpdateDeviceTokenRequest) returns (weizhu.EmptyResponse);
+  
+  // 删除DeviceToken
+  rpc DeleteDeviceToken (DeleteDeviceTokenRequest) returns (weizhu.EmptyResponse);
+  
+  // 会话过期时删除DeviceToken
+  rpc DeleteDeviceTokenExpire (DeleteDeviceTokenExpireRequest) returns (weizhu.EmptyResponse);
+  
+  // 退出登录时删除DeviceToken
+  rpc DeleteDeviceTokenLogout (weizhu.EmptyRequest) returns (weizhu.EmptyResponse); 
+  
+  // 发送推送通知
+  rpc SendNotification (SendNotificationRequest) returns (weizhu.EmptyResponse);
+}

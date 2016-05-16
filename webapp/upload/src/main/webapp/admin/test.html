@@ -1,0 +1,56 @@
+<!DOCtype html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>上传测试</title>
+</head>
+<body>
+
+<form action="../api/admin/upload_discover_document.json" enctype="multipart/form-data" method="POST">
+	<input type=hidden name="getform" value="POST">
+	<table border="1">
+		<tr><td>上传发现文档(pdf): <br> <input type=file name="upload_file"></td></tr>
+		<tr><td>
+			<input type="submit" name="Send" value="Send"></input> 
+			<input type="reset" name="Clear" value="Clear" ></input>
+		</td></tr>
+	</table>
+</form>
+
+<form action="../api/admin/upload_discover_video.json" enctype="multipart/form-data" method="POST">
+	<input type=hidden name="getform" value="POST">
+	<table border="1">
+		<tr><td>上传发现视频(avi,mp4): <br> <input type=file name="upload_file"></td></tr>
+		<tr><td>
+			<input type="submit" name="Send" value="Send"></input> 
+			<input type="reset" name="Clear" value="Clear" ></input>
+		</td></tr>
+	</table>
+</form>
+
+<form action="../api/admin/upload_discover_audio.json" enctype="multipart/form-data" method="POST">
+	<input type=hidden name="getform" value="POST">
+	<table border="1">
+		<tr><td>上传发现音频(mp3): <br> <input type=file name="upload_file"></td></tr>
+		<tr><td>
+			<input type="submit" name="Send" value="Send"></input> 
+			<input type="reset" name="Clear" value="Clear" ></input>
+		</td></tr>
+	</table>
+</form>
+
+<br/>
+上传请求参数：<br/> 
+upload_file : 上传文件 <br/>
+<br/>
+返回JSON结果：<br/>
+<br/>
+上传成功：<br/>
+{"result": "SUCC", "file_name": "xxx.jpg", "file_url":"http://aaa/xxx.jpg", "file_size": 5821, "is_auth": false, "check_md5": "xxx"} <br/>
+{"result": "SUCC", "file_name": "zzz.mp4", "file_url":"http://aaa/zzz.mp4", "file_size": 10231821, "time": 356, "is_auth": true, "check_md5": "xxx"} <br/>
+<br/>
+上传失败：<br/>
+{"result": "FAIL_UNKNOWN", "fail_text": "失败原因，请提示给用户"}<br/>
+
+</body>
+</html>

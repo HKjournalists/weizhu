@@ -1,0 +1,29 @@
+INSERT INTO weizhu_customer (
+	user_id,
+	customer_id,
+	customer_name,
+	mobile_no,
+	is_star,
+	company,
+	position,
+	department,
+	address,
+	email,
+	wechat,
+	qq,
+	remark)
+VALUES (
+	10000124196,
+	1,
+	'猪头',
+	'13012341234',
+	0,
+	'公司',
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL
+);

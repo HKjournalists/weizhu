@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0" />
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <title>问答社区</title>
+    <style>
+        body,div,p,h1,h2,h3,h4,h5,h6,ul,li{padding:0;margin:0}body{font-size:14px;font-family:arial,tahoma,'Microsoft Yahei','\5b8b\4f53',sans-serif}input,textarea,a,li,ul,div{-webkit-tap-highlight-color:transparent;-webkit-touch-callout:none}.main-wrap,.page-wrap{position:absolute;width:100%;height:100%;top:0;left:0;overflow-x:hidden;background-color:#f0f1f5}.details-wrap{z-index:30}.search-wrap{margin:10px 10px;height:40px;line-height:40px;-webkit-border-radius:5px;display:-webkit-box}.search-input{background-color:#fff;border:1px solid #c7c7c7;-webkit-border-radius:5px;position:relative;-webkit-box-flex:1}.search-wrap input{width:100%;border:0;height:30px;line-height:30px;-webkit-box-sizing:border-box;padding:5px 40px;background-color:transparent;outline:0;font-size:16px;-webkit-appearance:none}input::-webkit-search-cancel-button{display:none}.search-wrap .search-del{display:inline-block;width:24px;height:24px;position:absolute;margin:8px;top:0;right:0;background:url("../static/images/qa-icons.png") no-repeat 0 -217px}.search-wrap .search-icon{position:absolute;top:0;left:2px;height:24px;width:24px;display:inline-block;margin:8px;background:url("../static/images/qa-icons.png") no-repeat 0 -145px #fff}.search-wrap .search-btn{right:0;top:0;width:60px;text-align:center;text-decoration:none;background-color:#0078ff;margin-top:2px;margin-left:5px;color:#fff;-webkit-border-radius:5px;display:block}.questions-wrap{width:100%;height:100%;overflow-x:hidden}.question-list{min-height:400px;background-color:#fff;margin-bottom:40px}.empty-content{text-align:center;margin:0 40px;padding-top:50px}.empty-content p{margin-top:15px;color:#a6a5a5}.category-nav{width:100%;overflow:hidden;background-color:#fff;border-bottom:1px solid #eaeaea;height:41px}.category-nav li{width:60px;display:inline-block;text-align:center;height:40px;line-height:40px;list-style:none;color:#a9a9a9;margin:0 10px}.category-nav .active{color:#0374ff;border-bottom:1px solid #0078ff}.question-item{background-color:#fff;padding:5px 10px;border-bottom:1px solid #eaeaea}.question-item .question-content{display:inline-block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;width:100%}.author-wrap{height:50px;display:-webkit-box}.author-wrap .avatar{width:50px;height:50px;display:inline-block;-webkit-border-radius:50%;overflow:hidden;margin-right:10px}.author-wrap .avatar img{width:100%;height:100%}.author-wrap .author-info{-webkit-box-flex:1}.author-wrap .author-info .author-name-wrap{display:block;width:100%;color:#373636;font-size:16px;height:30px;line-height:30px}.author-wrap .author-info .author-position{display:block;width:100%;color:#7f7f7f;font-size:12px;height:24px;line-height:24px}.author-wrap .author-info .like-count{float:right;display:inline-block;padding-left:30px;background:url(../static/images/qa-icons.png) no-repeat 0 -96px;text-decoration:none;color:#949494}.author-wrap .publish-time{float:right;color:#b2b2b2;font-size:12px}.question-content{line-height:25px;margin-top:5px}.question-answer{overflow:hidden;color:#7a7a7a}.question-answer p{margin:0;padding:0;font-size:12px;font-size:12px;clear:both;line-height:18px}.question-answer span{display:inline-block;float:right;text-align:right;background:url(../static/images/qa-icons.png) no-repeat 0 -192px;height:24px;line-height:24px;padding-left:30px}.question-tools{position:fixed;bottom:0;height:40px;text-align:center;width:100%;background-color:rgba(242,243,247,.8);border-top:1px solid #eee}.question-tools .question-add-btn{display:inline-block;height:24px;line-height:24px;margin-top:8px;padding-left:26px;background:url(../static/images/qa-icons.png) no-repeat 0 -240px;color:#0284fe;text-decoration:none}.answers-wrap{z-index:20}.answers-container{width:100%;height:100%;overflow:auto}.answers-wrap .answer-question{background-color:#fff;padding:5px 10px;border-top:1px solid #eee;border-bottom:1px solid #eee;margin-top:10px}.answer-info{color:#999;font-size:12px;height:24px;line-height:24px}.btn-delete{float:right;display:inline-block;text-decoration: none;corlor: #999;padding-left:30px;background:url("../static/images/qa-icons.png") no-repeat 0 -72px}.btn-delete:active{color:#007aff;background-position:0 -48px}.answer-count{float:right;display:inline-block;padding-left:30px;background:url("../static/images/qa-icons.png") no-repeat 0 -192px;margin-left:20px}.answer-list{background-color:#fff;border-top:1px solid #dedede;margin-bottom:40px;min-height:300px}.answer-item{padding:10px;border-bottom:1px solid #dedede}.answer-author{line-height:25px;height:25px;color:#999;font-size:12px}.answer-author .unlike{background-position:0 -120px}.answer-content{line-height:20px;margin-left:60px;color:#858585;word-wrap:break-word}.pageback-tools{position:fixed;bottom:0;height:40px;width:100%;background-color:rgba(242,243,247,.8);border-top:1px solid #eee;text-align:center}.btn-back{display:inline-block;height:24px;line-height:24px;margin-top:8px;padding-left:30px;text-decoration:none;font-size:16px;color:#007aff;background:url("../static/images/qa-icons.png") no-repeat 0 -24px}.answer-add-btn{height:40px;text-align:center}.btn-add{height:24px;line-height:24px;display:inline-block;text-decoration:none;padding-left:30px;margin-top:8px;color:#007aff;background:url("../static/images/qa-icons.png") no-repeat}.question-add-wrap{z-index:40}.question-form{margin-top:10px;padding-top:5px;background-color:#fff}.form-item{padding:5px 10px;border-bottom:1px solid #dcdcdc}.form-item .text-label{display:block;color:#999;height:25px;line-height:25px}.form-item textarea{resize:none;width:100%;min-height:100px;line-height:20px;margin-top:5px;padding:5px;-webkit-box-sizing:border-box;font-size:14px;border:0}.form-item .input-tip{text-align:right;font-size:12px;color:#b3b4b4}.form-item .error-tip{color:#f63}.select-options li{float:left;list-style:none;width:30%;text-align:center}.select-options .option a{padding:8px 12px;display:inline-block;margin:5px 10px;list-style:none;color:#0084ff;text-decoration:none;border:1px solid #0079ff;-webkit-border-radius:5px}.select-options .active a{color:#fff;border:1px solid #0079ff;background-color:#0084ff}.question-add-btns{clear:both;border-top:1px solid #f8f8f8;border-bottom:1px solid #d2d5db;background-color:#f0f1f5;height:40px;line-height:40px}.question-add-btns .btn{padding:5px 20px;text-decoration:none;color:#037bff;margin-top:5px;display:inline-block;height:20px;line-height:20px;-webkit-border-radius:5px;float:left}.question-add-btns .btn-save{float:right}.question-add-btns .btn-disable{color:#9a9a9a}.question-add-mainanswer{display:inline-block;font-size:25px;height:25px;line-height:25px;width:25px;float:right;background-color:#28ad03;color:#fff;text-align:center;border-radius:50%;text-decoration:none}.answer-add-wrap{z-index:40}.question-info{background-color:#fff;border-bottom:1px solid #dcdcdc}.question-info .question-content{padding:10px}.answer-field{height:300px;padding:10px;border-bottom:1px solid #efefef;background-color:#fff}.answer-field textarea{width:100%;height:100%;-webkit-box-sizing:border-box;resize:none;border:0;padding:5px;font-size:14px}.page-animate{-webkit-transition:-webkit-transform .5s}.details-wrap .details-content{background-color:#fff;height:100%;margin-top:10px}.details-wrap .question-content{font-size:16px;padding:5px 10px;border-bottom:1px solid #e0e0e0;border-top:1px solid #e0e0e0}.details-content .answer-wrap{padding:5px 10px}.details-content .answer-content{margin-top:10px;margin-left:0}.clear{clear:both}.show-msg{position:absolute;bottom:50px;width:100%;text-align:center;display:none;z-index:100}.show-msg .msg-info{display:inline-block;padding:10px 20px;background-color:rgba(27,27,27,.5);-webkit-border-radius:5px}.confirm-wrap{position:absolute;width:100%;height:100%;background-color:rgba(27,27,27,0.4);text-align:center;display:none;z-index:100}.confirm-wrap .confirm-block{width:210px;display:inline-block;background-color:#fff;padding:8px 12px;margin-top:100px;-webkit-border-radius:5px}.confirm-block .warning-icon img{height:60px}.confirm-block .confirm-msg{color:#606060;margin-top:10px}.confirm-block .confirm-btns{margin-top:10px}.confirm-btns .btn-default{display:inline-block;padding:8px 30px;border:1px solid #b3b4b4;-webkit-border-radius:5px;margin:5px;color:#027afd;text-decoration:none}.author-wrap .author-info .unlike{background-position:0 -120px}.loading-wrap{width:100%;height:100%;top:0;left:0;position:fixed;background-color:RGBA(0,0,0,0.4);z-index:100}.loading-wrap .loader{width:50px;height:50px;top:50%;left:50%;margin-top:-80px;margin-left:-35px;font-size:10px;position:absolute;text-indent:-9999em;border-top:10px solid rgba(255,255,255,0.2);border-right:10px solid rgba(255,255,255,0.2);border-bottom:10px solid rgba(255,255,255,0.2);border-left:10px solid #fff;-webkit-animation:loading .8s infinite linear;animation:loading .8s infinite linear}.loading-wrap .loader,.loading-wrap .loader:after{border-radius:50%;width:50px;height:50px}@-webkit-keyframes loading{0%{-webkit-transform:rotate(0deg);transform:rotate(0deg)}100%{-webkit-transform:rotate(360deg);transform:rotate(360deg)}}.leftmovein{-webkit-animation:leftmovein .5s}@-webkit-keyframes leftmovein{from{-webkit-transform:translateX(100%)}to{-webkit-transform:translateX(0)}}.leftmoveout{-webkit-animation:leftmoveout .5s}@-webkit-keyframes leftmoveout{from{-webkit-transform:translateX(0)}to{-webkit-transform:translateX(100%)}}.question-search-wrap{z-index:2}.question-searchmore-wrap{z-index:3}.category-question-item{background-color:#fff;margin-bottom:10px}.category-question-item .category-title{color:#a0a0a0;height:30px;line-height:30px;border-bottom:1px solid #e3e3e3;padding-left:10px}.category-question-item .category-footer{height:40px}.category-question-item .show-more{display:block;padding:0 10px;color:#0071fc;text-decoration:none;height:100%}.category-question-item .show-more .icon-search{display:inline-block;padding-left:30px;background:url(../static/images/qa-icons.png) no-repeat 0 -144px;text-decoration:none;height:24px;margin-top:8px;line-height:24px}.category-question-item .show-more .icon-right{display:inline-block;float:right;width:26px;height:26px;margin-top:8px;background:url(../static/images/qa-icons.png) no-repeat 0 -168px}.loadmore-wrap{background-color:#fff;text-align:center;margin-bottom:40px}.loadmore-wrap .fresh-loading{width:30px;height:30px;display:inline-block;-webkit-animation:loading .5s infinite linear;animation:loading .5s infinite linear}.loadmore-wrap .fresh-loading img{width:30px;height:30px}.person-card-wrap{position:fixed;width:100%;height:100%;top:0;left:0;z-index:1000;background-color:rgba(27,27,27,.6);display:none}.person-card{width:80%;background-color:#fff;margin:50px auto;-webkit-border-radius:10px}.card-header{height:20px;line-height:20px;padding:10px}.card-header .card-close{display:inline-block;width:24px;height:20px;float:right;background:url(../static/images/qa-icons.png) no-repeat 0 -266px}.card-topinfo{text-align:center}.card-avatar img{width:60px;height:60px;-webkit-border-radius:50%}.card-name{text-align:center;height:40px;margin:10px}.card-name span{display:inline-block;height:24px;line-height:24px;padding-right:40px;font-size:18px;font-weight:bold;margin-top:8px;background:url(../static/images/qa-icons.png) no-repeat right -289px;margin-left:40px}.card-name .card-male{background-position:right -312px}.card-bottominfo{background-color:#f0f4f5;padding:10px 12px 30px;-webkit-border-bottom-left-radius:10px;-webkit-border-bottom-right-radius:10px}.card-item{margin:5px 0;position:relative}.card-item .card-label{display:inline-block;height:24px;line-height:24px;padding-left:30px;color:#999;background:url(../static/images/qa-icons.png) no-repeat 0 -432px}.card-item .icon-position{background-position:0 -432px}.card-item .icon-tel{background-position:0 -384px}.card-item .icon-email{background-position:0 -360px}.card-item .icon-mobile{background-position:0 -336px}.card-item .card-item-info{display:block;word-wrap:break-word;margin-left:70px;line-height:24px;margin-top:-24px}.card-item .mobile-no{color:#009cff;text-decoration:none;display:block}.zoomIn{-webkit-animation:zoomIn .5s}@-webkit-keyframes zoomIn{from{-webkit-transform:scale(.8)}to{-webkit-transform:scale(1)}}.category-question-list,.searchmore-question-list{margin-bottom:40px}
+    </style>
+</head>
+<body>
+    <div class="main-wrap">
+        <div class="questions-wrap cur-page">
+            <div class="search-wrap">
+                <div class="search-input">
+                    <span class="search-icon">&nbsp;</span>
+                    <input autocomplete="off" type="search" class="input-search" maxlength="64" />
+                    <a href="javascript:void(0)" class="search-del" style="display:none;"></a>
+                </div>
+                <a href="javascript:void(0)" class="search-btn">搜索</a>
+            </div>
+            <div class="category-nav" id="scroll-wraper">
+                <ul id="scroller">
+                </ul>
+            </div>
+            <div class="question-list">
+				<!-- question item -->
+            </div>
+            <div class="loadmore-wrap" style="display:none;">
+            	<div class="fresh-loading"><img src="../static/images/refresh.png" /></div>
+            </div>
+            <div class="question-tools">
+            	<a href="javascript:void(0)" class="question-add-btn">我要提问</a>
+            </div>
+        </div>
+        <div class="question-search-wrap page-wrap" style="display:none;">
+        	<div class="search-wrap">
+                <div class="search-input">
+                    <span class="search-icon">&nbsp;</span>
+                    <input autocomplete="off" type="search" class="input-search" maxlength="64" />
+                    <a href="javascript:void(0)" class="search-del" style="display:none;"></a>
+                </div>
+                <a href="javascript:void(0)" class="search-btn search-cancel">取消</a>
+            </div>
+            <div class="category-question-list">
+            	
+            </div>
+            <div class="pageback-tools">
+                <a href="javascript:void(0)" page_back="question-search-wrap" class="btn-back">返回</a>
+            </div>
+        </div>
+        <div class="question-searchmore-wrap page-wrap" style="display:none;">
+        	<div class="search-wrap">
+                <div class="search-input">
+                    <span class="search-icon">&nbsp;</span>
+                    <input autocomplete="off" type="search" class="input-search" maxlength="64" />
+                    <a href="javascript:void(0)" class="search-del" style="display:none;"></a>
+                </div>
+                <a href="javascript:void(0)" class="search-btn search-cancel">取消</a>
+            </div>
+            <div class="searchmore-question-list">
+            
+            </div>
+            <div class="loadmore-wrap" style="display:none;">
+            	<div class="fresh-loading"><img src="../static/images/refresh.png" /></div>
+            </div>
+            <div class="pageback-tools">
+                <a page_back="question-searchmore-wrap" href="javascript:void(0)" class="btn-back">返回</a>
+            </div>
+        </div>
+        <div class="answers-wrap page-wrap" style="display: none;">
+            <div class="answers-container">
+                <div class="answer-question">
+                    <div class="author-wrap">
+                        <div class="avatar">
+                            <img onerror="this.src='../static/images/default-avatar.png'" src="../static/images/default-avatar.png">
+                        </div>
+                        <div class="author-info">
+                            <div class="author-name-wrap"><span class="author-name"></span><span class="publish-time"></span></div>
+                            <div class="author-position"></div>
+                        </div>
+                    </div>
+                    <div class="question-content">
+                    	<!-- question content -->
+                    </div>
+                    <div class="answer-info">
+                        <span class="answer-count">0</span>
+                        <a href="javascript:void(0)" class="btn-delete" style="display:none;">删除问题</a>
+                    </div>
+                </div>
+                <div class="answer-add-btn">
+                    <a href="javascript:void(0)" class="btn-add">添加答案</a>
+                </div>
+                <div class="answer-list">
+                    <!-- answer-item -->
+                </div>
+                <div class="loadmore-wrap" style="display:none;">
+	            	<div class="fresh-loading"><img src="../static/images/refresh.png" /></div>
+	            </div>
+            </div>
+            <div class="pageback-tools">
+                <a href="javascript:void(0)" page_back="answers-wrap" class="btn-back">返回</a>
+            </div>
+        </div>
+        <div class="details-wrap page-wrap" style="display: none;">
+            <div class="details-content">
+                <div class="question-content">
+                </div>
+                <div class="answer-wrap">
+                    <div class="author-wrap">
+                        <div class="avatar">
+                            <img onerror="this.src='../static/images/default-avatar.png'" src="../static/images/default-avatar.png">
+                        </div>
+                        <div class="author-info">
+                            <div class="author-name-wrap"><span class="author-name"></span><span class="publish-time"></span></div>
+                            <div class="author-position"><span class="author-position-name"></span><a href="javascript:void(0)" class="like-count">0</a></div>
+                        </div>
+                    </div>
+                    <div class="answer-content">
+	                	<!-- answer content -->
+                    </div>
+                    <div class="answer-info">
+                        <a href="javascript:void(0)" class="btn-delete" style="display:none;">删除答案</a>
+                    </div>
+                </div>
+            </div>
+            <div class="pageback-tools">
+                <a href="javascript:void(0)" page_back="details-wrap" class="btn-back">返回</a>
+            </div>
+        </div>
+        <div class="question-add-wrap page-wrap" style="display:none;">
+            <div class="question-form">
+                <div class="form-item">
+                    <label class="text-label">添加问题：</label>
+                    <textarea id="question-content" placeholder="别着急，请您将问题尽可能清晰、详尽的描述出来^_^" maxlength=100></textarea>
+                    <div class="input-tip">0/100</div>
+                </div>
+                <div class="form-item">
+                    <label class="text-label">选择分类:</label>
+                    <ul class="select-options">
+                    	<!-- category list -->
+                    </ul>
+                    <div class="clear"></div>
+                </div>
+            </div>
+            <div class="question-add-btns">
+                <a href="javascript:void(0)" class="btn btn-cancel">取消</a>
+                <a href="javascript:void(0)" class="btn btn-save btn-disable">发布</a>
+            </div>
+        </div>
+        <div class="answer-add-wrap page-wrap" style="display:none;">
+            <div class="question-info">
+                <p class="question-content"></p>
+            </div>
+            <div class="answer-field">
+                <textarea placeholder="来帮助TA吧..." id="answer-content"></textarea>
+            </div>
+            <div class="question-add-btns">
+                <a href="javascript:void(0)" class="btn btn-cancel">取消</a>
+                <a href="javascript:void(0)" class="btn btn-save btn-disable">发布</a>
+            </div>
+        </div>
+    </div>
+    <div class="show-msg">
+    	<div class="msg-info">无法链接到网络</div>
+    </div>
+    <div class="confirm-wrap">
+    	<div class="confirm-block">
+    		<div class="warning-icon">
+    			<img src="../static/images/warning-icon.png" />
+    		</div>
+    		<div class="confirm-msg">
+    			取消将会导致已经填写的信息丢失哦，您真的要离开么？
+    		</div>
+    		<div class="confirm-btns">
+    			<a href="javascript:void(0)" class="btn-default btn-cancel">留下</a>
+    			<a href="javascript:void(0)" class="btn-default btn-ok">离开</a>
+    		</div>
+    	</div>
+    </div>
+    <div class="loading-wrap">
+        <div class="loader">Loading...</div>
+    </div>
+    <div class="person-card-wrap">
+    	<div class="person-card zoomIn">
+    		<div class="card-header">
+    			<a href="javascript:void(0)" class="card-close"></a>
+    		</div>
+    		<div class="card-body">
+    			<div class="card-topinfo">
+    				<div class="card-avatar">
+    					<img onerror="this.src='../static/images/default-avatar.png'" src="" />
+    				</div>
+    				<div class="card-name">
+    					<span class="card-male">liyali</span>
+    				</div>
+    			</div>
+    			<div class="card-bottominfo">
+    				<div class="card-item">
+    					<label class="card-label icon-position">职位:</label>
+    					<span class="card-item-info">微助网络－产品中心－设计部－UI设计师</span>
+    				</div>
+    				<div class="card-item">
+    					<label class="card-label icon-tel">座机:</label>
+    					<span class="card-item-info">010-80677965</span>
+    				</div>
+    				<div class="card-item">
+    					<label class="card-label icon-email">邮箱:</label>
+    					<span class="card-item-info">liesdd@weizhu.com</span>
+    				</div>
+    				<div class="card-item">
+    					<label class="card-label icon-mobile">手机:</label>
+    					<span class="card-item-info"><a href="tel:15906323256" class="mobile-no">15906323256</a><a href="tel:15906323256" class="mobile-no">15906323256</a></span>
+    				</div>
+    			</div>
+    		</div>
+    	</div>
+    </div>
+    <script type="text/javascript" src="../static/js/iscroll.js"></script>
+    <script type="text/javascript" src="../static/js/zepto.js"></script>
+    <script type="text/javascript">
+    $(function(){function i(){o({type:"get",url:"../api/qa/get_category.json",dataType:"json",success:function(a){var e,b=a.category,c=[],d=[];for(e=0;e<b.length;e++)c.push('<li category_id="'+b[e].category_id+'">'+t(b[e].category_name)+"</li>"),d.push('<li class="option" category_id="'+b[e].category_id+'"><a href="javascript:void(0)">'+t(b[e].category_name)+"</a></li>");$("#scroller").html(c.join("")),$(".question-add-wrap .select-options").html(d.join("")),$("#scroller").width(function(){var a=0;return $("#scroller li").each(function(){a+=$(this).width()+20}),a}),h=new iScroll("scroll-wraper",{hScrollbar:!1,vScrollbar:!1,vScroll:!1,hScroll:!0,momentum:!0,snap:"li"}),$("#scroller li").first().trigger("click"),$(".loading-wrap").hide()}})}function j(b){o({type:"get",url:"../api/qa/get_question.json",data:{category_id:b,last_question_id:a,size:d},dataType:"json",success:function(b){var d,e,f,c=b.question||[];if(0==c.length)$(".question-list").html('<div class="empty-content"><img src="../static/images/faild-icon.png" /><p>该分类下还没有问题哦，点击下方“我要提问”，就可以提问了哦。</p></div>');else for(d=0;d<c.length;d++)e=c[d].best_answer&&c[d].best_answer.answer_content||"",f=$(['<div class="question-item" question_id="',c[d].question_id,'"><div class="question-content">',t(c[d].question_content),'</div><div class="question-answer">',"<p>",t(m(e,40)),"</p><span>",c[d].answer_num,"</span></div></div>"].join("")),f.data("data",c[d]),$(".question-list").append(f);b.has_more?($(".questions-wrap .loadmore-wrap").show(),a=""):$(".questions-wrap .loadmore-wrap").hide()}})}function k(a,c){o({type:"get",url:"../api/qa/get_answer.json",data:{question_id:a,last_answer_id:b,size:d},dataType:"json",success:function(d){var e,f,g,h;if(c&&$(".answers-wrap .answer-list").html(""),e=d.answer||[],0==e.length&&0==$(".answers-wrap .answer-list .answer-item").length)$(".answers-wrap .answer-list").append('<div class="empty-content"><img src="../static/images/faild-icon.png" /><p>还没有人回答~<br>快点帮帮TA吧</p></div>');else for(f=0;f<e.length;f++)g=e[f].user||{},h=$(['<div question_id="',a,'" answer_id="',e[f].answer_id,'" class="answer-item"><div class="author-wrap"><div class="avatar"><img onerror="this.src=\'../static/images/default-avatar.png\'" src="',g.avatar?g.avatar:"../static/images/default-avatar.png",'"></div>','<div class="author-info"><div class="author-name-wrap"><span class="author-name">',t(g.user_name||"匿名用户"),'</span><span class="publish-time">',n(1e3*e[f].create_time),'</span></div><div class="author-position"><span class="author-position-name">',t(g.team_position[0]?g.team_position[0].position?g.team_position[0].position.position_name||"":"":""),'</span><a href="javascript:void(0)" class="like-count',e[f].is_like?"":" unlike",'">',e[f].like_num,'</a></div></div></div><div class="answer-content">',t(m(e[f].answer_content,200)),'</div><div class="answer-info"><a href="javascript:void(0)"',e[f].can_delete?"":' style="display:none;"',' answer_id="',e[f].answer_id,'" class="btn-delete">删除答案</a></div></div>'].join("")),h.data("data",e[f]),$(".answers-wrap .answer-list").append(h),d.has_more?($(".answers-wrap .loadmore-wrap").show(),b=""):$(".answers-wrap .loadmore-wrap").hide()}})}function l(a){a?o({type:"get",url:"../api/qa/search_more_question.json",data:{keyword:f,last_question_id:c,category_id:a,size:d},dataType:"json",success:function(b){var d,e,g,h;if(b.question&&b.question.length>0)for(d=b.question,e=0;e<d.length;e++)g=d[e],h=$(['<div category_id="',a,'" question_id="',g.question_id,'" class="question-item"><div class="question-content">',t(g.question_content),'</div><div class="question-answer"><span>',g.answer_num,"</span></div></div>"].join("")),h.data("data",g),$(".searchmore-question-list").append(h),b.has_more?($(".question-searchmore-wrap .loadmore-wrap").show(),c=""):$(".question-searchmore-wrap .loadmore-wrap").hide();else 0==$(".searchmore-question-list .question-item").length&&$(".searchmore-question-list").html('<div class="empty-content"><img src="../static/images/faild-icon.png" /><p>真遗憾~，没有找到与“'+f+"”相关的问题；请“取消”后重新搜索。</p></div>")}}):o({type:"get",url:"../api/qa/search_question.json",data:{keyword:f},dataType:"json",success:function(a){var b,c,d,e,g,h,i,j;if($(".category-question-list").html(""),a.category&&a.category.length>0)for(b=a.category,c=0;c<b.length;c++){for(d=b[c],e=d.question,g=$(['<div class="category-question-item"><div class="category-title">',d.category_name,'</div><div class="question-item-list">',"</div><div",e.length<3?' style="display:none;"':"",' class="category-footer"><a category_id="',d.category_id,'" href="javascript:void(0)" class="show-more"><span class="icon-search">查看更多</span><span class="icon-right">&nbsp;</span>',"</a></div></div>"].join("")),h=0;h<e.length&&3!=h;h++)i=e[h],j=$(['<div question_id="',i.question_id,'" class="question-item"><div class="question-content">',i.question_content,'</div><div class="question-answer"><span>',i.answer_num,"</span></div></div>"].join("")),j.data("data",i),g.find(".question-item-list").append(j);$(".category-question-list").append(g)}else $(".category-question-list").html('<div class="empty-content"><img src="../static/images/faild-icon.png" /><p>真遗憾~，没有找到与“'+f+"”相关的问题；请“取消”后重新搜索。</p></div>");$(".cur-page").hasClass("question-search-wrap")||(r($(".question-search-wrap")),history.pushState("question-search-wrap","","#question-search-wrap"))}})}function m(a,b){return a.length>b&&(a=a.substr(0,b)+"..."),a}function n(a){var d,b=new Date,c=new Date(a);return b.getFullYear()!=c.getFullYear()?c.getFullYear()+"-"+("00"+(c.getMonth()+1)).slice(-2)+"-"+("00"+c.getDate()).slice(-2)+" "+("00"+c.getHours()).slice(-2)+":"+("00"+c.getMinutes()).slice(-2):b.getMonth()!=c.getMonth()?("00"+(c.getMonth()+1)).slice(-2)+"-"+("00"+c.getDate()).slice(-2)+" "+("00"+c.getHours()).slice(-2)+":"+("00"+c.getMinutes()).slice(-2):b.getDate()>c.getDate()?(d="",d+=b.getDate()==c.getDate()+1?"昨天 ":("00"+(c.getMonth()+1)).slice(-2)+"-"+("00"+c.getDate()).slice(-2)+" ",d+("00"+c.getHours()).slice(-2)+":"+("00"+c.getMinutes()).slice(-2)):("00"+c.getHours()).slice(-2)+":"+("00"+c.getMinutes()).slice(-2)}function o(a){a=a||{},""!=a.url&&$.ajax({type:a.type||"get",url:a.url,data:a.data||{_t:(new Date).getTime()},dataType:a.dataType||"json",timeout:3e4,success:function(b){a.success&&a.success(b)},error:function(b){b.status>=500?p("服务器异常"):timeout?p("请求超时"):p("无法链接到网络"),a.error&&a.error(b)}})}function p(a){$(".show-msg .msg-info").text(a),$(".show-msg").show(),setTimeout(function(){$(".show-msg").hide()},2e3)}function q(a){var b,c,d,e,f,g;a=a||{},b=a.msg||a.msg,c=a.okbtn||"确定",d=a.cancelbtn||"取消",e=a.okfun||function(){},f=a.cancelfun||function(){},g=$(".confirm-wrap"),g.find(".confirm-msg").text(b),g.find(".btn-cancel").text(d),g.find(".btn-ok").text(c),g.show(),g.find(".btn-cancel").one("click",function(){g.hide(),f()}),g.find(".btn-ok").one("click",function(){g.hide(),e()})}function r(a){a.show().addClass("leftmovein"),setTimeout(function(){a.removeClass("leftmovein"),a.siblings(".cur-page").removeClass("cur-page"),a.addClass("cur-page")},500)}function s(a){a.addClass("leftmoveout"),setTimeout(function(){a.removeClass("leftmoveout").hide(),a.find(".answer-list,.category-question-list,.searchmore-question-list,.question-content,.answer-content").html(""),a.hasClass("cur-page")&&(a.removeClass("cur-page"),$(".questions-wrap").addClass("cur-page"))},500)}function t(a){return a=a||"",a&&(a=a.replace(/</g,"&lt;"),a=a.replace(/>/g,"&gt;"),a=a.replace(/ /g,"&nbsp;"),a=a.replace(/"/g,"&quot;")),a}var f,g,a="",b="",c="",d=20,h=null;i(),$(".input-search").bind("input",function(){this.value.length>0?$(this).next().show():$(this).next().hide()}),$(document).on("tap",".search-del",function(){$(this).prev().val("").focus().trigger("input")}),$("#scroller").on("click","li",function(){$(this).hasClass("active")||($(this).siblings(".active").removeClass("active"),$(this).addClass("active"));var b=$(this).attr("category_id");a="",$(".question-list").html(""),j(b),$(this).prev().length>0?h.scrollToElement($(this).prev()[0],500):h.scrollTo(0,0,500)}),$(document).on("tap",".question-item",function(){var e,c=$(this).data("data"),d=c.user||{};c.can_delete?$(".answers-wrap .answer-question .btn-delete").show().attr("question_id",c.question_id):$(".answers-wrap .answer-question .btn-delete").hide(),$(".answers-wrap .answer-question .author-name").text(d.user_name||"匿名用户"),$(".answers-wrap .answer-question .avatar").data("data",d),$(".answers-wrap .answer-question .avatar img").attr("src",d.avatar||"../static/images/default-avatar.png"),e=d.team_position[0]?d.team_position[0].position||{}:{},$(".answers-wrap .answer-question .author-position").text(e.position_name||""),$(".answers-wrap .answer-question .publish-time").text(n(1e3*c.create_time)),$(".answers-wrap .answer-question .question-content").text(c.question_content),$(".answers-wrap .answer-question .answer-count").text(c.answer_num),$(".answers-wrap .btn-add").data("question",c),$(".answers-wrap .answer-list").html(""),b="",k(c.question_id,!0),r($(".answers-wrap")),history.pushState("answers-wrap","","#answers-wrap")}),$(document).on("tap",".answer-item",function(a){var b,c;return $(a.target).hasClass("like-count")||$(a.target).hasClass("btn-delete")||"img"==a.target.tagName.toLowerCase()?!1:(b=$(this).data("data"),c=b.user||{},$(".details-wrap .question-content").text($(".answers-wrap .question-content").text()),b.can_delete?$(".details-wrap .btn-delete").show().attr("answer_id",b.answer_id):$(".details-wrap .btn-delete").hide(),$(".details-wrap .author-name").text(c.user_name||"匿名用户"),$(".details-wrap .avatar").data("data",c),$(".details-wrap .avatar img").attr("src",c.avatar||"../static/images/default-avatar.png"),$(".details-wrap .author-position .author-position-name").text(c.team_position[0]?c.team_position[0].position.position_name:""),$(".details-wrap .publish-time").text(n(1e3*b.create_time)),$(".details-wrap .answer-content").text(b.answer_content),$(".details-wrap .like-count").text(b.like_num),b.is_like?$(".details-wrap .like-count").removeClass("unlike"):$(".details-wrap .like-count").addClass("unlike"),$(".details-wrap .like-count").attr("answer_id",b.answer_id),$(".details-wrap .btn-delete").attr("answer_id",b.answer_id),r($(".details-wrap")),history.pushState("details-wrap","","#details-wrap"),void 0)}),$(document).on("tap",".answers-wrap .btn-add",function(){$("#answer-content").val("").trigger("input"),$(".answer-add-wrap .btn-save").addClass("btn-disable");var a=$(this).data("question");$(".answer-add-wrap .question-content").text(a.question_content),$(".answer-add-wrap .btn-save").attr("question_id",a.question_id),r($(".answer-add-wrap")),history.pushState("answer-add-wrap","","#answer-add-wrap")}),$("textarea").bind("input",function(){"question-content"==this.id&&$(this).next().text(this.value.length+"/100"),0==this.value.length?$(".cur-page .btn-save").addClass("btn-disable"):$(".cur-page .btn-save").removeClass("btn-disable")}),$(document).on("click",".answer-add-wrap .btn-save",function(){var a,b;return $(this).hasClass("btn-disable")?!1:($("#answer-content").blur(),a=$("#answer-content").val(),b=$(this).attr("question_id"),""==a?(p("您还没有填写答案哦^_^"),$("#answer-content").focus(),void 0):($(".loading-wrap").show(),o({type:"post",url:"../api/qa/add_answer.json",data:{answer_content:a,question_id:b},dataType:"json",success:function(a){var c,d;$(".loading-wrap").hide(),"SUCC"==a.result?(p("发布成功"),c=$(".question-item[question_id='"+b+"']"),d=c.data("data"),d.answer_num+=1,c.data("data",d),c.find(".question-answer span").text(d.answer_num),$(".answers-wrap .answer-question .answer-count").text(d.answer_num),$("#answer-content").val(""),k(b,!0),s($(".answer-add-wrap")),history.go(-1)):p(a.fail_text)},error:function(){$(".loading-wrap").hide()}}),void 0))}),$(document).on("tap",".search-btn",function(){return $(this).hasClass("search-cancel")?($(".input-search").val("").trigger("input"),$("#scroller li").first().trigger("click"),s($(".question-search-wrap,.question-searchmore-wrap")),!1):(f=$(this).prev().find(".input-search").val(),""==f?!1:($(".category-question-list").html(""),$(".input-search").val(f).trigger("input"),$(".input-search").blur(),l(),void 0))}),$(document).on("keyup",".input-search",function(a){if(13==a.keyCode)if($(".cur-page").hasClass("questions-wrap"))$(".questions-wrap .search-btn").trigger("tap");else{if(f=$(this).val(),""==f)return!1;$(".input-search").val(f).trigger("input"),$(".cur-page").hasClass("question-search-wrap")?($(".category-question-list").html(""),l()):($(".searchmore-question-list").html(""),l(g))}}),$(document).on("tap",".show-more",function(){var a=$(this).attr("category_id");$(".searchmore-question-list").html(""),g=a,l(a),r($(".question-searchmore-wrap")),history.pushState("question-searchmore-wrap","","#question-searchmore-wrap")}),$(document).on("tap",".pageback-tools .btn-back",function(){s($("."+$(this).attr("page_back"))),history.go(-1)}),$(document).on("tap",".answer-add-wrap .btn-cancel",function(){""!=$("#answer-content").val()?q({msg:"取消将会导致已经填写的信息丢失哦，您真的要离开么？",okbtn:"离开",cancelbtn:"留下",okfun:function(){s($(".answer-add-wrap")),history.go(-1)}}):(s($(".answer-add-wrap")),history.go(-1))}),$(document).on("click",".question-add-wrap .btn-cancel",function(){""!=$("#question-content").val()?q({msg:"取消将会导致已经填写的信息丢失哦，您真的要离开么？",okbtn:"离开",cancelbtn:"留下",okfun:function(){s($(".question-add-wrap")),history.go(-1)}}):(s($(".question-add-wrap")),history.go(-1))}),$(document).on("tap",".question-tools .question-add-btn",function(){$(".question-add-wrap .select-options .active").removeClass("active"),$(".question-add-wrap .btn-save").addClass("btn-disable"),$(".category-nav .active").length>0&&$(".question-add-wrap .select-options li[category_id='"+$(".category-nav .active").attr("category_id")+"']").addClass("active"),$("#question-content").val("").trigger("input"),r($(".question-add-wrap")),history.pushState("question-add-wrap","","#question-add-wrap")}),$(document).on("click",".question-add-wrap .btn-save",function(){var a,b;return $(this).hasClass("btn-disable")?!1:($("#question-content").blur(),a=$("#question-content").val(),b=$(".question-add-wrap .select-options .active").attr("category_id"),""==a?(p("您还没有填写问题哦^_^"),$("#question-content").focus(),void 0):($(".loading-wrap").show(),o({type:"post",url:"../api/qa/add_question.json",data:{question_content:a,category_id:b},dataType:"json",success:function(a){$(".loading-wrap").hide(),"SUCC"==a.result?(p("发布成功"),$(".category-nav li[category_id='"+b+"']").trigger("click"),s($(".question-add-wrap")),history.go(-1)):p(a.fail_text)},error:function(){$(".loading-wrap").hide()}}),void 0))}),$(document).on("tap",".select-options .option",function(){$(this).hasClass("active")||($(this).siblings(".active").removeClass("active"),$(this).addClass("active"))}),$(document).on("click",".like-count",function(a){var b,c,d,e,f;return a.stopPropagation(),a.preventDefault(),b=$(this),c=b.parents(".answer-item"),0==c.length&&(d=$(this).attr("answer_id"),c=$('.answers-wrap .answer-item[answer_id="'+d+'"]')),e=c.data("data"),(f=b.hasClass("unlike"))?(o({type:"post",url:"../api/qa/like_answer.json",data:{answer_id:e.answer_id,is_like:f},dataType:"json",success:function(a){var d;"SUCC"==a.result&&(f?(d=parseInt(b.text())+1,b.text(d),c.find(".like-count").text(d).removeClass("unlike"),e.like_num=d,e.is_like=!0,c.data("data",e),b.removeClass("unlike")):(d=parseInt(b.text())-1,b.text(d),c.find(".like-count").text(d).addClass("unlike"),e.like_num=d,e.is_like=!1,c.data("data",e),b.addClass("unlike")))}}),!1):!1}),$(".answers-wrap .answers-container").bind("scroll",function(){var a,c;if(this.scrollHeight-this.scrollTop-this.offsetHeight<100){if(a=$(".answers-wrap .answer-item").last(),b==a.attr("answer_id")||"none"==$(".answers-wrap .loadmore-wrap").css("display"))return;b=a.attr("answer_id"),c=a.attr("question_id"),k(c)}}),$(".questions-wrap").bind("scroll",function(){var b,c;if(this.scrollHeight-this.scrollTop-this.offsetHeight<100){if(b=$(".questions-wrap .question-item").last(),a==b.attr("question_id")||"none"==$(".questions-wrap .loadmore-wrap").css("display"))return;a=b.attr("question_id"),c=$("#scroller .active").attr("category_id"),j(c)}}),$(".question-searchmore-wrap").bind("scroll",function(){var a,b;if(this.scrollHeight-this.scrollTop-this.offsetHeight<100){if(a=$(".question-searchmore-wrap .question-item").last(),c==a.attr("question_id")||"none"==$(".question-searchmore-wrap .loadmore-wrap").css("display"))return;c=a.attr("question_id"),b=a.attr("category_id"),l(b)}}),$(document).on("click",".btn-delete",function(a){var b,c,d;return a.stopPropagation(),a.preventDefault(),b=$(this),c=b.attr("question_id"),d=b.attr("answer_id"),c?q({msg:"确定要删除该问题吗？",okfun:function(){o({type:"post",url:"../api/qa/delete_question.json",data:{question_id:c},dataType:"json",success:function(a){"SUCC"==a.result?($('.question-item[question_id="'+c+'"]').remove(),"none"!=$(".answers-wrap").css("display")&&$(".answers-wrap .btn-back").trigger("tap")):p(a.fail_text)}})}}):q({msg:"确定要删除该答案吗？",okfun:function(){o({type:"post",url:"../api/qa/delete_answer.json",data:{answer_id:d},dataType:"json",success:function(a){var b,c,e,f;"SUCC"==a.result?(b=$('.answers-wrap .answer-item[answer_id="'+d+'"]'),c=b.attr("question_id"),b.remove(),"none"!=$(".details-wrap").css("display")&&$(".details-wrap .btn-back").trigger("tap"),e=$(".question-item[question_id='"+c+"']"),f=e.data("data"),f.answer_num-=1,e.data("data",f),e.find(".question-answer span").text(f.answer_num),$(".answers-wrap .answer-question .answer-count").text(f.answer_num)):p(a.faild_text)}})}}),!1}),$(".questions-wrap .question-list").swipeLeft(function(){$("#scroller .active").next().trigger("click")}).swipeRight(function(){$("#scroller .active").prev().trigger("click")}),window.onpopstate=function(){$(".cur-page").hasClass("questions-wrap")||$("."+history.state).siblings(".cur-page").hasClass(history.state)||(s($(".cur-page")),$("."+history.state).siblings(".cur-page").removeClass("cur-page"),$("."+history.state).addClass("cur-page"))},$(document).on("tap",".author-wrap .avatar",function(a){var b,c,d,e,f,g,h;if(a.stopPropagation(),a.preventDefault(),b=$(this).data("data"),$(this).parents(".answer-item").length>0&&(b=$(this).parents(".answer-item").data("data").user),""!=b.user_id){for($(".person-card .card-avatar img").attr("src",b.avatar||"../static/images/default-avatar.png"),$(".person-card .card-name span").text(b.user_name),"男"==b.gender?$(".person-card .card-name span").addClass("card-male"):$(".person-card .card-name span").removeClass("card-male"),c=[],d=b.team_position[0].team||[],e=0;e<d.length;e++)c.push(d[e].team_name);if(c.push(b.team_position[0].position.position_name||""),$(".person-card .icon-position").next().text(c.join("-")),f=[],""!=b.phone_no)for(g=b.phone_no.split(","),e=0;e<g.length;e++)f.push('<a href="tel:'+g[e]+'" class="mobile-no">'+g[e]+"</a>");if(f=f.join(""),$(".person-card .icon-tel").next().html(f||"暂无"),$(".person-card .icon-email").next().text(b.email||"暂无"),h=[],""!=b.mobile_no)for(g=b.mobile_no.split(","),e=0;e<g.length;e++)h.push('<a href="tel:'+g[e]+'" class="mobile-no">'+g[e]+"</a>");h=h.join(""),$(".person-card .icon-mobile").next().html(h||"暂无"),$(".cur-page").removeClass("cur-page"),$(".person-card-wrap").show().addClass("cur-page"),history.pushState("person-card-wrap","","#person-card-wrap")}return!1}),$(document).on("tap",".card-close",function(){$(".person-card-wrap").hide(),history.go(-1)})});
+    </script>
+</body>
+</html>

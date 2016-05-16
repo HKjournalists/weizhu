@@ -1,0 +1,125 @@
+<div id="training-course-wrap" data-options="region:'center',border:false" class="easyui-layout" style="width:100%;height:100%;">
+    <div data-options="region:'north',border:false" style="width: 100%;">
+        <div class="easyui-panel" data-options="border:false">
+            <div style="padding:10px 20px;">
+                <form id="training-search-form" class="easyui-form form-layout-inline" method="get">
+                	<div class="form-item">
+                		<label>课程名称：</label>
+                		<input name="course_name" type="text" class="easyui-textbox">
+                	</div>
+                    <a href="javascript:void(0)" class="easyui-linkbutton search-btn" iconCls="icon-search"><%=lang.common.search_btn%></a>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div data-options="region:'center',border:false">
+        <table id="training-course-table" style="width:100%;height: 100%;"></table>
+    </div>
+    <div id="training-course-edit-win" class="easyui-window" data-options="title:'新建课程',collapsible:false,maximizable:false,minimizable:false,closed: true,modal:true,width:550,height:330">
+        <div class="easyui-layout" style="width:100%;height:100%;">
+            <div region="center" border="false" style="padding:10px 12px;">
+                <form id="training-course-edit-form" class="easyui-form form-layout-column form-label-100" method="post" data-options="novalidate:true">
+                	<input type="hidden" name="train_id"/>
+                    <div class="form-item">
+                        <label>课程名称：</label>
+                        <input class="easyui-textbox form-item-box" type="text" name="course_name" data-options="required:true,width:375,prompt:'您可以在这里输入课程名称，1~190个字符',validType:'length[1,190]'" />
+                    </div>
+                    <div class="form-item">
+                        <label>课程图片：</label>
+                        <input type="text" name="image_name"/>
+                    </div>
+                    <div class="form-item">
+                        <label>课程简介：</label>
+                        <input class="easyui-textbox form-item-box" type="text" name="course_desc" data-options="width:375,height:80,multiline:true,prompt:'您可以在这里输入课程的描述，1~1000个字符',validType:'length[1,1000]'" />
+                    </div>
+                </form>
+            </div>
+            <div region="south" border="false" style="text-align:right;padding:10px 12px;">
+                <a href="javascript:void(0)" class="easyui-linkbutton edit-save" onclick='Wz.offlineTraining.courseManage.saveCourse();' data-options="iconCls:'icon-ok'">保存</a>
+                <a href="javascript:void(0)" class="easyui-linkbutton edit-cancel" onclick="$(this).parents('.easyui-window').window('close');" data-options="iconCls:'icon-cancel'">取消</a>
+            </div>
+        </div>
+    </div>
+    <div id="training-course-itemlist-win" class="easyui-window" data-options="title:'关联课件',collapsible:false,maximizable:false,minimizable:false,closed: true,modal:true,width:800,height:500">
+        <div class="easyui-layout" style="width:100%;height:100%;">
+        	<input type="hidden" name="train_id" />
+            <div region="center" border="false" style="padding:10px 12px;">
+            	<table id="offline-course-itemlist-table" style="width:100%;height: 100%;"></table>
+            </div>
+            <div region="south" border="false" style="text-align:right;padding:10px 12px;">
+                <a href="javascript:void(0)" class="easyui-linkbutton edit-cancel" onclick="$(this).parents('.easyui-window').window('close');" data-options="iconCls:'icon-cancel'">关闭</a>
+            </div>
+        </div>
+    </div>
+    <div id="training-course-selectitem-win" class="easyui-window" data-options="title:'添加课件',collapsible:false,maximizable:false,minimizable:false,closed: true,modal:true,width:600,height:600">
+        <div class="easyui-layout" style="width:100%;height:100%;">
+            <div region="center" border="false" style="padding:10px 12px;">
+                <form id="offline-course-selectitem-form" class="easyui-form form-layout-column" method="post" data-options="novalidate:true">
+        			<input type="hidden" name="train_id" />
+                    <div class="form-item">
+                    	<div style="width: 550px;height:230px;">
+	                        <table id="offline-course-allitem-table"></table>
+	                        <div id="offline-course-allitem-talbe-tb" style="padding:2px 5px;">
+					        	标题: <input class="easyui-textbox" type="text" name="item_name" data-options="width:110" />
+						        <a href="javascript:void(0)" class="easyui-linkbutton search-btn" iconCls="icon-search">搜索</a>
+						    </div>                    	
+                    	</div>
+                    	<div style="width: 550px;height:230px;">
+                       		<table id="offline-course-item-selected-table"></table>
+                    	</div>
+                    </div>
+                </form>
+            </div>
+            <div region="south" border="false" style="text-align:right;padding:10px 12px;">
+                <a href="javascript:void(0)" class="easyui-linkbutton edit-save" data-options="iconCls:'icon-ok'">保存</a>
+                <a href="javascript:void(0)" class="easyui-linkbutton edit-cancel" onclick="$(this).parents('.easyui-window').window('close');" data-options="iconCls:'icon-cancel'">取消</a>
+            </div>
+        </div>
+    </div>
+    <div id="training-course-result-win" class="easyui-window" data-options="title:'认证讲师',collapsible:false,maximizable:false,minimizable:false,closed: true,modal:true,width:1000,height:500">
+        <div class="easyui-layout" style="width:100%;height:100%;">
+        	<div region="west" border="false" style="padding:10px 12px;width:300px;" data-options="title:'培训信息',split:true">
+              	<div class="offline-course-info-wrap">
+              		<h4 class="offline-course-title"></h4>
+              		<div class="offline-course-info">
+              		</div>
+              		<img class="offline-course-img" src="../static/images/vodDefault.png"/>
+              		<div class="offline-course-desc content-fieldset">
+              			<label>培训介绍：</label>
+              			<p></p>
+              		</div>
+              		<div class="offline-course-arrangement content-fieldset">
+              			<label>培训安排：</label>
+              			<p></p>
+              		</div>
+              		<div class="offline-course-courses content-fieldset">
+              			<label>培训相关课程：</label>
+              			<p></p>
+              		</div>
+              	</div>
+            </div>
+            <div region="center" border="false" data-options="title:'学员信息',split:true">
+            	<table id="offline-course-result-user-table" style="width:100%;height: 100%;"></table>
+                <div id="offline-course-result-talbe-tb" style="padding:2px 5px;">
+			    	  签到状态: <input class="easyui-combobox" type="text" name="is_check_in" data-options="valueField:'value',textField:'name',data:[{name:'全部',value:''},{name:'已签到',value:'true'},{name:'未签到',value:'false'}],editable:false,panelHeight:'auto'"></input>
+			    	  请假状态: <input class="easyui-combobox" type="text" name="is_leave" data-options="valueField:'value',textField:'name',data:[{name:'全部',value:''},{name:'已请假',value:'true'},{name:'未请假',value:'false'}],editable:false,panelHeight:'auto'"></input>
+				     <a href="javascript:void(0)" class="easyui-linkbutton search-btn" iconCls="icon-search">搜索</a>
+				 </div>
+            </div>
+            <div region="south" border="false" style="text-align:right;padding:5px 12px;height:42px;" data-options="split:true">
+                <a href="javascript:void(0)" class="easyui-linkbutton edit-cancel" onclick="$(this).parents('.easyui-window').window('close');" data-options="iconCls:'icon-cancel'">关闭</a>
+            </div>
+        </div>
+    </div>
+    <div id="training-course-show-ercode-win" class="easyui-window" data-options="title:'签到二维码',collapsible:false,maximizable:false,minimizable:false,closed: true,modal:true,width:220,height:350">
+        <div class="easyui-layout" style="width:100%;height:100%;">
+            <div region="center" border="false">
+            	<iframe class="ercode-show" style="width:200px;height:200px;"></iframe>
+            	<p style="text-align:center;">*您可以在二维码图片上点击鼠标右键，将图片另存到本地</p>
+            </div>
+            <div region="south" border="false" style="text-align:right;padding:5px 12px;height:42px;" data-options="split:true">
+                <a href="javascript:void(0)" class="easyui-linkbutton edit-cancel" onclick="$(this).parents('.easyui-window').window('close');" data-options="iconCls:'icon-cancel'">关闭</a>
+            </div>
+        </div>
+    </div>
+</div>

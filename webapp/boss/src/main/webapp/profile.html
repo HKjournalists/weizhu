@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Profile管理</title>
+<link rel="stylesheet" type="text/css" href="static/jquery-easyui/themes/gray/easyui.css">
+<link rel="stylesheet" type="text/css" href="static/jquery-easyui/themes/icon.css">
+<script type="text/javascript" src="static/jquery-easyui/jquery.min.js"></script>
+<script type="text/javascript" src="static/jquery-easyui/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="static/jquery-easyui/extension/datagrid-cellediting.js"></script>
+<script type="text/javascript" src="static/jquery-easyui/locale/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="static/js/main.js"></script>
+<style>
+.datagrid-cell {
+  font-family:monaco
+}
+</style>
+<script type="text/javascript">
+$(function(){
+	$('#profile_datagrid').datagrid('enableCellEditing').datagrid('gotoCell', {
+		index: 0,
+		field: 'name'
+	});
+});
+</script>
+</head>
+<body class="easyui-layout">
+<div data-options="region:'center'">
+	<table id="profile_datagrid" class="easyui-datagrid"
+		data-options="
+			title:'Profile列表',
+			fit:true,
+			border:true,
+			fitColumns:true,
+			autoRowHeight:true,
+			toolbar:'#profile_datagrid_toolbar',
+			striped:true,
+			method:'post',
+			nowrap:false,
+			idField:'name',
+			rownumbers:true,
+			remoteSort:false,
+			loader:function(param, success, error) {
+				$.ajax({
+					type:'post',
+					url:'api/profile/get_profile.json',
+					data:param,
+					success:function(ret){
+						if (ret.result == 'SUCC') {
+							success(ret.profile);
+						} else {
+							$.messager.alert('错误:' + ret.result, ret.fail_text, 'error');
+							error();
+						}
+					},
+					error:function(){
+						$.messager.alert('网络错误', '网络错误', 'error');
+						error();
+					}
+				});
+			},
+			clickToEdit:false,
+			dblclickToEdit:true
+		">
+		<thead>
+			<tr>
+				<th data-options="field:'name',width:'30%',align:'left',sortable:true,order:'asc',fixed:true">名称</th>
+				<th data-options="field:'value',width:'30%',align:'left',editor:'textarea'">取值</th>
+				<th data-options="field:'comment',width:'30%',align:'left',editor:'textarea'">注释</th>
+			</tr>
+		</thead>
+	</table>
+</div>
+
+<div id="profile_datagrid_toolbar">
+	<input id="profile_company_combobox" class="easyui-combobox" 
+		data-options="
+			valueField:'company_id',
+			textField:'company_name',
+			mode:'remote',
+			panelHeight:200,
+			loader:function(param,success,error){
+				$.ajax({
+					type:'post',
+					url:'api/company/get_company_list.json',
+					data:param,
+					success:function(ret){
+						if (ret.result == 'SUCC') {
+							success(ret.company);
+						} else {
+							$.messager.alert('错误:' + ret.result, ret.fail_text, 'error');
+							error();
+						}
+					},
+					error:function(){
+						$.messager.alert('网络错误', '网络错误', 'error');
+						error();
+					}
+				});
+			},
+			onSelect:function(record){
+				$('#profile_datagrid').datagrid('load', {
+				   company_id:record.company_id,
+				   name_prefix:$('#profile_nameprefix_searchbox').searchbox('getValue')
+				});
+			}
+		">
+	<input id="profile_nameprefix_searchbox" class="easyui-searchbox" 
+		data-options="
+			prompt:'输入名称前缀',
+			searcher:function(value){
+				$('#profile_datagrid').datagrid('load', {
+				   company_id:$('#profile_company_combobox').combobox('getValue'),
+				   name_prefix:value
+				});
+			}
+		">
+	<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-reload',plain:true" onclick="reloadProfileDatagrid()">刷新</a>
+	<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true" onclick="addProfile()">添加</a>
+	<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-save',plain:true" onclick="saveProfileDatagrid()">保存</a>
+	<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-undo',plain:true" onclick="undoProfileDatagrid()">取消更改</a>
+	
+	<script type="text/javascript">
+		function reloadProfileDatagrid() {
+			$('#profile_datagrid').datagrid('load', {
+				company_id:$('#profile_company_combobox').combobox('getValue'),
+				name_prefix:$('#profile_nameprefix_searchbox').searchbox('getValue')
+			});
+		}
+		
+		function addProfile() {
+			$.messager.prompt('添加profile', '请输入profile name', function(profile_name){
+				$('#profile_datagrid').datagrid('insertRow', {
+					index: 0,
+					row: {
+						name:profile_name,
+						value:''
+					}
+				});
+            });
+		}
+	
+		function saveProfileDatagrid(){
+			var profiles = $('#profile_datagrid').datagrid('getChanges');
+			if (profiles.length <= 0) {
+				$.messager.alert('信息', '内容没有修改', 'info');
+				return;
+			}
+			
+			var updateProfileNameStr = '以下profile将被修改:<br/>';
+			for (var i=0; i<profiles.length; ++i) {
+				updateProfileNameStr+=profiles[i].name + '<br/>';
+			}
+			
+			$.messager.confirm('确定修改么?', updateProfileNameStr, function(ret){
+                if (ret){
+                	$.ajax({
+        				type:'post',
+        				url:'api/profile/set_profile.json',
+        				data: {
+        					company_id: $('#profile_company_combobox').combobox('getValue'),
+        					profile_json: JSON.stringify(profiles)
+        				},
+        				success:function(ret){
+        					if (ret.result == 'SUCC') {
+        						$.messager.alert(ret.result, '保存成功', 'info');
+        						reloadProfileDatagrid();
+        					} else {
+        						$.messager.alert(ret.result, ret.fail_text, 'error');
+        					}
+        				},
+        				error:function(){
+        					$.messager.alert('网络错误', '网络错误', 'error');
+        				}
+        			});
+                }
+            });
+	    }
+		
+		function undoProfileDatagrid() {
+			$('#profile_datagrid').datagrid('rejectChanges');
+		}
+	</script>
+	
+</div>
+</body>
+</html>
